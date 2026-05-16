@@ -94,7 +94,7 @@
                 </div>
 
                 <div class="nav-group">
-                    <div class="nav-group-label">المجتمع</div>
+                    <div class="nav-group-label">المجتمع والدعم</div>
 
                     <a href="{% url 'community:community_view'%}" class="nav-link-item {% block nav_community %}{% endblock %}">
                         <span class="nav-label">المجتمع</span>
@@ -102,6 +102,11 @@
                         <!-- {% if community_notifications %}
                         <span class="nav-badge">{{ community_notifications }}</span>
                     {% endif %} -->
+                    </a>
+                    <a href="{% url 'map:support_map_view'%}" class="nav-link-item">
+                        <span class="nav-label">خريطة الدعم</span>
+                        <i class="bi bi-map nav-icon"></i>
+                        
                     </a>
                 </div>
 

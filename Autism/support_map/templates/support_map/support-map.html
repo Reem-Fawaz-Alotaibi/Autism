@@ -8,15 +8,20 @@
 {% block content %}
 
 <div class="map-header">
+    <form method="GET" class="search-form">
+
+    <input type="text" name="search" placeholder="ابحث عن مركز..." class="search-input" value="{{ request.GET.search }}">
+
+    <button type="submit" class="search-btn">
+        <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+
+</form>
     <h2>خريطة مراكز الدعم في مناطق السعودية</h2>
     <p>
         اضغط على المنطقة لعرض المراكز والخدمات المتوفرة فيها
     </p>
 </div>
-<a href="{% url 'map:create_place_view' %}" class="add-place-btn">
-    <i class="bi bi-plus-circle"></i>
-    إضافة مركز
-</a>
 <div class="map-legend">
 
     <div class="legend-item">
@@ -107,38 +112,33 @@
     data-y="{{ place.y_position }}"
     style="display: none;"
     onclick="showPlaceCard(
+        '{{ place.id }}',
         '{{ place.name }}',
         '{{ place.description }}',
-        '{{ place.region }}',
+        '{{ place.get_region_display }}',
         '{{ place.address }}',
         '{{ place.phone_number }}',
         '{{ place.website }}',
-        '{{ place.get_place_type_display }}'
+        '{{ place.get_place_type_display }}',
+        '{{ place.place_type }}'
     )"
 >
     <i class="fa-solid fa-location-dot"></i>
 </div>
 
 {% endfor %}
-
-
-
+{% if request.user.is_staff %}
+<a href="{% url 'map:create_place_view' %}" class="add-place-btn">
+    <i class="bi bi-plus-circle"></i>
+    إضافة مركز
+</a>
+{%endif%}
     <div class="place-detail-card" id="placeCard">
-
-        <div class="place-detail-media">
-
-            <div class="place-image-placeholder">
-
-                <i class="fa-solid fa-puzzle-piece"></i>
-
-            </div>
-
-        </div>
 
         <div class="place-detail-body">
 
             <div
-                class="place-type-badge place-type-government"
+                class="place-type-badge "
                 id="placeTypeBadge"
             >
             </div>
@@ -181,73 +181,120 @@
                 </div>
 
             </dl>
+            <div class="place-actions">
+                {% if request.user.is_staff %}
+                <a id="editPlaceBtn" class="action-btn edit-btn">
+                    <i class="fa-solid fa-pen"></i>
+                    تعديل
+                </a>
 
+                <a id="deletePlaceBtn" class="action-btn delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                    <i class="fa-solid fa-trash"></i>
+                    حذف
+                </a>
+                {%endif%}
+                <button class="like-icon-btn" id="likeBtn">
+                    <i class="fa-regular fa-heart"></i>
+                </button>
+            </div>
         </div>
-
     </div>
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    تأكيد الحذف
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                هل أنت متأكد من حذف المكان؟
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    إلغاء
+                </button>
+                <a id="confirmDeleteBtn" class="btn btn-danger">
+                    حذف
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
 <script>
 
 const card = document.getElementById("placeCard");
-
 const regions = document.querySelectorAll(".region");
-
+const hasSearch =window.location.search.includes("search=");
 const markers = document.querySelectorAll(".map-marker");
 markers.forEach(marker => {
-
-    marker.style.left =
-        marker.dataset.x + "%";
-
-    marker.style.top =
-        marker.dataset.y + "%";
-
+    const x = marker.dataset.x.replace(",", ".");
+    const y = marker.dataset.y.replace(",", ".");
+    marker.style.left = x + "%";
+    marker.style.top = y + "%";
 });
-
-
+if(hasSearch){
+    markers.forEach(marker => {
+        marker.style.display = "grid";});
+}
 regions.forEach(region => {
-
     region.addEventListener("click", function(e){
-
         e.stopPropagation();
-
-        const selectedRegion =
-            this.dataset.region;
-
-
+        const selectedRegion =this.dataset.region;
         markers.forEach(marker => {
-
             if(marker.dataset.region === selectedRegion){
-
                 marker.style.display = "grid";
             }
 
             else{
-
                 marker.style.display = "none";
             }
-
         });
-
     });
-
 });
-
-
 document.addEventListener("click", function(){
-
     card.style.display = "none";
-
 });
-
-
 function showPlaceCard(
+    id,
     name,
     description,
     city,
     address,
     phone,
     website,
-    type
+    type,
+    typeClass
 ){
+    const editBtn =document.getElementById("editPlaceBtn");
+        if(editBtn){
+            editBtn.href =
+                `/edit/${id}/`;}
+
+    const deleteBtn =document.getElementById("confirmDeleteBtn");
+        if(deleteBtn){
+            deleteBtn.href =
+                `/delete/${id}/`;}
+
+    document.getElementById("likeBtn").onclick =
+    async function(){
+
+        const response =await fetch(`/like/${id}/`);
+        const data =await response.json();
+        const icon =document.querySelector("#likeBtn i");
+        if(data.liked){
+            icon.classList.remove("fa-regular");
+            icon.classList.add("fa-solid");
+        }
+        else{
+            icon.classList.remove("fa-solid");
+            icon.classList.add("fa-regular");
+        }
+
+    }
 
     event.stopPropagation();
 
@@ -287,6 +334,8 @@ function showPlaceCard(
         document.getElementById("placeTypeBadge");
 
     badge.innerText = type;
+    badge.className = "place-type-badge";
+    badge.classList.add(typeClass);
 
 }
 

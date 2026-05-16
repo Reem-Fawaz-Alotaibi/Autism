@@ -124,6 +124,7 @@
             </a>
 
             <button type="button" class="delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                <i class="fa-solid fa-trash"></i>
              حذف 
             </button>
 
@@ -222,6 +223,7 @@
     </button>
 
     <button type="button" class="delete-btn-comment" data-bs-toggle="modal" data-bs-target="#deleteCommentModal{{ comment.id }}">
+        <i class="fa-solid fa-trash"></i>
         حذف
     </button>
 
@@ -270,7 +272,7 @@
 
                 <a href="{% url 'community:delete_comment_view' comment.id %}"
                    class="btn btn-danger">
-
+                    <i class="fa-solid fa-trash"></i>
                     حذف
 
                 </a>
@@ -370,7 +372,7 @@
 
                 <a href="{% url 'community:delete_post_view' post.id %}"
                    class="btn btn-danger">
-
+                    <i class="fa-solid fa-trash"></i>
                     حذف
 
                 </a>
