@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect ,get_object_or_404
 from django.http import HttpRequest, HttpResponse
 from .forms import PostForm, CommentForm
-from .models import Post,Like,Comment
+from .models import Post,Like,Comment, Report
 from django.db.models import Q
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
+
 
 
 # Create your views here.
@@ -22,6 +24,8 @@ def community_view (request:HttpResponse):
         Q(tags__icontains=search)|
         Q(user__first_name__icontains=search)
         )
+    for post in posts:
+        post.tags_list = post.tags.split(',')
 
     return render (request, 'community/community_feed.html', {
         'posts': posts,
@@ -29,6 +33,7 @@ def community_view (request:HttpResponse):
         'food_count': food_count,
         'play_count': play_count,
         'education_count': education_count,
+        'reasons': Report.REASONS
         })
 
 def create_post_view(request: HttpRequest):
@@ -51,14 +56,13 @@ def create_post_view(request: HttpRequest):
 
     return render(request, 'community/create_post.html', {'form': form})
 
-def details_post_view(request, post_id):
+def details_post_view(request:HttpRequest, post_id):
 
     post = get_object_or_404(Post, id=post_id)
+    post.tags_list = post.tags.split(',')
     is_liked = False
-
     if request.user.is_authenticated:
         is_liked = Like.objects.filter(post=post,user=request.user).exists()
-    
 
     if request.method == 'POST':
         form = CommentForm(request.POST)
@@ -72,10 +76,16 @@ def details_post_view(request, post_id):
         form = CommentForm()
 
 
-    return render(request,'community/details_post.html',{'post': post, 'form': form,'is_liked': is_liked,})
+    return render(request,'community/details_post.html',{'post': post, 'form': form,'is_liked': is_liked,'reasons': Report.REASONS})
+
+def posts_by_tag(request:HttpRequest, tag_name):
+
+    posts = Post.objects.filter(tags__icontains=tag_name)
+
+    return render(request, 'community/posts_by_tag.html', {'posts': posts, 'tag_name': tag_name,})
 
 
-def like_post_view(request, post_id):
+def like_post_view(request:HttpRequest, post_id):
 
     post = get_object_or_404(Post, id=post_id)
 
@@ -90,7 +100,7 @@ def like_post_view(request, post_id):
     return redirect('community:details_post_view',post_id=post.id)
 
 
-def edit_post_view(request, post_id):
+def edit_post_view(request:HttpRequest, post_id):
 
     post = get_object_or_404(Post,id=post_id,user=request.user)
 
@@ -107,14 +117,14 @@ def edit_post_view(request, post_id):
 
     return render(request,'community/edit_post.html',{'form': form})
 
-def delete_post_view(request, post_id):
+def delete_post_view(request:HttpRequest, post_id):
     post = get_object_or_404(Post,id=post_id,user=request.user)
     post.delete()
 
     return redirect('community:community_view')
 
 
-def edit_comment_view(request, comment_id):
+def edit_comment_view(request:HttpRequest, comment_id):
 
     comment = get_object_or_404(Comment,id=comment_id,user=request.user)
 
@@ -124,12 +134,29 @@ def edit_comment_view(request, comment_id):
 
     return redirect('community:details_post_view',post_id=comment.post.id)
 
-def delete_comment_view(request, comment_id):
+
+def delete_comment_view(request:HttpRequest, comment_id):
 
     comment = get_object_or_404(Comment,id=comment_id,user=request.user)
     post_id = comment.post.id
     comment.delete()
 
     return redirect('community:details_post_view',post_id=post_id)
+
+
+@login_required
+def report_post(request:HttpRequest, post_id):
+
+    post = get_object_or_404(Post, id=post_id)
+
+    if request.method == 'POST':
+
+        reason = request.POST.get('reason')
+        already_reported = Report.objects.filter(user=request.user,post=post).exists()
+
+        if not already_reported:
+            Report.objects.create(user=request.user,post=post,reason=reason)
+
+    return redirect('community:community_view')
 
 

@@ -40,10 +40,38 @@
                     ⋯
                 </button>
                 <div class="dropdown-menu">
-                    <a href="#">
-                        🚩 إبلاغ
-                    </a>
-                </div>
+                  <button class="report-btn" onclick="openReportModal()">
+                      <i class="fa-solid fa-flag"></i>
+                      إبلاغ عن المحتوى
+                  </button>
+              </div>
+
+              <div class="report-modal" id="reportModal">
+                  <div class="report-box">
+
+                      <h3>سبب الإبلاغ</h3>
+
+                      <form method="POST" action="{% url 'community:report_post' post.id %}">
+                          {% csrf_token %}
+
+                          {% for value, label in reasons %}
+                              <label>
+                                  <input type="radio" name="reason" value="{{ value }}">
+                                  {{ label }}
+                              </label>
+                          {% endfor %}
+                          <div class="report-actions">
+                            <button type="submit" class="send-report">
+                                إرسال البلاغ
+                            </button>
+                            <button type="button" class="cancel-report" onclick="closeReportModal()">
+                                إلغاء
+                            </button>
+                        </div>
+                      </form>
+
+                  </div>
+              </div>
             </div>
 
         </div>
@@ -61,11 +89,12 @@
         <!-- TAGS -->
 
         <div class="tags">
-          {% for tag in post.tags.split %}
 
-          <a href="#" class="tag">
-                {{ tag }}
-            </a>
+            {% for tag in post.tags_list %}
+
+                <a href="{% url 'community:posts_by_tag' tag %}" class="tag">
+                    #{{ tag }}
+                </a>
 
             {% endfor %}
 
@@ -76,8 +105,8 @@
         <div class="post-footer">
 
             <div class="post-stats">
-                <span>♡ {{ post.likes.count }} إعجاب</span>
-                <span>💬 {{ post.comments.count }} تعليق</span>
+                <span><i class="bi bi-heart-fill"></i> {{ post.likes.count }} إعجاب</span>
+                <span><i class="bi bi-chat"></i>  {{ post.comments.count }} تعليق</span>
             </div>
 
             
@@ -171,12 +200,8 @@
     <div class="comment-actions">
 
         <button
-            type="submit"
-            class="publish-comment"
-        >
-
+            type="submit" class="publish-comment">
             حفظ
-
         </button>
 
         <button
@@ -192,11 +217,11 @@
 
 <div class="comment-buttons">
 
-    <button data-comment="{{ comment.id }}" class="edit-btn">
+    <button data-comment="{{ comment.id }}" class="open-edit-btn">
         تعديل
     </button>
 
-    <button type="button" class="delete-btn" data-bs-toggle="modal" data-bs-target="#deleteCommentModal{{ comment.id }}">
+    <button type="button" class="delete-btn-comment" data-bs-toggle="modal" data-bs-target="#deleteCommentModal{{ comment.id }}">
         حذف
     </button>
 
@@ -405,6 +430,16 @@
         });
 
     });
+
+function openReportModal(){
+    document.getElementById("reportModal").style.display = "flex";
+}
+
+function closeReportModal(){
+    document.getElementById("reportModal").style.display = "none";
+}
+
+
 
 </script>
 {% endblock %}

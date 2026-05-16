@@ -1,0 +1,93 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}
+#{{ tag_name }}
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'community/css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="community-container">
+
+    <div class="main">
+
+        <div class="post">
+
+            <div class="post-text">
+                المنشورات المرتبطة بـ #{{ tag_name }}
+            </div>
+
+        </div>
+
+        {% if posts %}
+
+            {% for post in posts %}
+
+            <div class="post">
+
+                <div class="post-header">
+
+                    <div class="user">
+
+                        <div class="avatar red">
+                            {{ post.user.first_name|first }}{{ post.user.last_name|first }}
+                        </div>
+
+                        <div class="user-info">
+                            {{ post.user.first_name }}
+                            <span>منذ {{ post.created_at|timesince }}</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="post-text">
+                    {{ post.title }}
+                </div>
+
+                <div class="tags">
+
+                    {% for tag in post.tags_list %}
+
+                        <a href="{% url 'posts_by_tag' tag %}">
+                            #{{ tag }}
+                        </a>
+                    {% endfor %}
+
+                </div>
+
+                <div class="post-footer">
+
+                    <div class="stats">
+                        <span>{{ post.likes.count }} إعجاب</span>
+                        <span>{{ post.comments.count }} تعليق</span>
+                    </div>
+
+                    <a href="{% url 'community:details_post_view' post.id %}" class="join-btn">
+                        دخول النقاش
+                    </a>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty-posts">
+                لا توجد منشورات لهذا التاق
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}
