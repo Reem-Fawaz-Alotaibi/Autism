@@ -5,6 +5,7 @@ from django.db.models import Q,Count
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from .models import Post, Like, Comment, CommentLike
+from django.contrib.auth.models import User
 # Create your views here.
 
 def community_view (request:HttpResponse):
@@ -165,3 +166,18 @@ def like_comment_view(request, comment_id):
         CommentLike.objects.create(comment=comment, user=request.user)  
 
     return redirect(request.META.get('HTTP_REFERER') or 'community:community_view')
+
+
+@login_required
+def user_posts_view(request, user_id):
+
+    user = get_object_or_404(User, id=user_id)
+
+    posts = Post.objects.filter(user=user).order_by('-created_at')
+    posts_count = posts.count()
+
+    return render(request, 'community/user_posts.html', {
+        'profile_user': user,
+        'posts': posts,
+        'posts_count': posts_count,
+    })

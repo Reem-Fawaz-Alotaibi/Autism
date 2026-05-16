@@ -5,7 +5,7 @@ from django.contrib import messages
 from .forms import SignUpForm
 from django.contrib.auth.decorators import login_required
 from .models import Profile
-from community.models import Like, CommentLike
+from community.models import Like, CommentLike,Post
 
 def signup_view(request):
     form = SignUpForm(request.POST or None)
@@ -88,6 +88,7 @@ def profile(request):
     total_liked_posts = Like.objects.filter(user=request.user).count()
     total_liked_comments = CommentLike.objects.filter(user=request.user).count()
     total_likes_count = total_liked_posts + total_liked_comments
+    posts_count = Post.objects.filter(user=request.user).count()
 
     profile, created = Profile.objects.get_or_create(
         user=request.user
@@ -96,6 +97,7 @@ def profile(request):
     return render(request, "accounts/profile.html", {
         "profile": profile,
         'total_likes_count': total_likes_count,
+        'posts_count': posts_count,
     })
 
 @login_required

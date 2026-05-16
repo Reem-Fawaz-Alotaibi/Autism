@@ -1,0 +1,166 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}منشورات {{ profile_user.username }}{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'accounts/css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="likes-page">
+
+    <!-- HEADER (نفس اللايكات) -->
+    <div class="likes-header">
+        <div>
+            <h1>منشورات {{ profile_user.username }}</h1>
+            <p>جميع المنشورات التي نشرها المستخدم</p>
+        </div>
+    </div>
+
+    <!-- POSTS SECTION -->
+    <div class="likes-section active">
+
+        {% if posts %}
+
+        {% for post in posts %}
+
+        <div class="post-card">
+
+            <!-- AUTHOR -->
+            <div class="post-header">
+
+                <div class="post-author">
+
+                    <div class="author-avatar">
+                        {{ post.user.username|first|upper }}
+                    </div>
+
+                    <div class="author-info">
+
+                        <span class="author-name">
+                            {{ post.user.username }}
+                        </span>
+
+                        <span class="post-meta">
+                            {{ post.created_at|timesince }} مضت
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- CONTENT -->
+            <h2 class="post-title">
+                {{ post.title }}
+            </h2>
+
+            <p class="post-body">
+                {{ post.content|truncatewords:40 }}
+            </p>
+
+            {% if post.tags %}
+            <div class="post-tags">
+                <span class="post-tag">#{{ post.tags }}</span>
+            </div>
+            {% endif %}
+
+            <!-- FOOTER -->
+            <div class="post-footer">
+
+                <div class="post-stats">
+
+                    <!-- LIKES -->
+                    <span class="post-stat">
+
+                        <svg class="stat-icon"
+                            viewBox="0 0 24 24"
+                            fill="none">
+
+                            <path
+                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                                stroke-linejoin="round" />
+
+                        </svg>
+
+                        {{ post.likes_count }}
+
+                    </span>
+
+                    <!-- COMMENTS -->
+                    <span class="post-stat">
+
+                        <svg class="stat-icon"
+                            viewBox="0 0 24 24"
+                            fill="none">
+
+                            <path
+                                d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                                stroke-linejoin="round" />
+
+                        </svg>
+
+                        {{ post.comments_count }} تعليق
+
+                    </span>
+
+                </div>
+
+                <div class="post-actions">
+
+                    <a href="{% url 'community:details_post_view' post.id %}"
+                        class="enter-btn">
+                        دخول النقاش
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+        {% else %}
+
+        <!-- EMPTY STATE -->
+        <div class="likes-empty">
+
+            <div class="likes-empty-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"
+                        stroke="currentColor"
+                        stroke-width="1.7" />
+                    <circle cx="9" cy="7" r="4"
+                        stroke="currentColor"
+                        stroke-width="1.7" />
+                </svg>
+            </div>
+
+            <h3>لا توجد منشورات</h3>
+
+            <p>هذا المستخدم لم ينشر أي محتوى بعد</p>
+
+            <a href="{% url 'community:community_view' %}"
+                class="enter-btn">
+                تصفّح المجتمع
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}
