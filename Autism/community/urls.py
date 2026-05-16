@@ -9,7 +9,9 @@ urlpatterns=[
     path('details_post/<int:post_id>/', views.details_post_view, name='details_post_view'),
     path('like_post/<int:post_id>/', views.like_post_view, name='like_post_view'),
     path('edit_post/<int:post_id>/',views.edit_post_view,name='edit_post_view'),
+    path('tag/<str:tag_name>/', views.posts_by_tag, name='posts_by_tag'),
     path('delete_post/<int:post_id>/',views.delete_post_view,name='delete_post_view'),
     path('edit_comment/<int:comment_id>/',views.edit_comment_view,name='edit_comment_view'),
     path('delete_comment/<int:comment_id>/',views.delete_comment_view,name='delete_comment_view'),
+    path('report/<int:post_id>/',views.report_post,name='report_post'),
 ]

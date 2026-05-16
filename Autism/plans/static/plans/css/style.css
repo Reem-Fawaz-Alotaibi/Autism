@@ -500,6 +500,8 @@
 }
 
 .back-btn{
+  text-decoration: none;
+  color: black;
   width:100%;
   height:48px;
   border:1px solid #ececec;
