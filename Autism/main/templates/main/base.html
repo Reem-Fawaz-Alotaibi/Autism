@@ -56,21 +56,27 @@
 
                 <div class="nav-group">
                     <div class="nav-group-label">إدارة الأطفال</div>
-
-                    <a href="{%url 'children:add_child'%}" class="nav-link-item {% block nav_add_child %}{% endblock %}">
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'children:add_child' %}" class="nav-link-item {% block nav_add_child %}{% endblock %}">
                         <span class="nav-label">إضافة طفل</span>
                         <i class="bi bi-person-plus nav-icon"></i>
                     </a>
+                    {% else %}
+                    <a href="{% url 'accounts:signin' %}" class="nav-link-item">
+                        <span class="nav-label">سجّل الدخول لإضافة طفل</span>
+                        <i class="bi bi-lock nav-icon"></i>
+                    </a>
+                    {% endif %}
 
                     <!-- Children appear here once added -->
-                    <!-- <{% if children %}
-                    {% for child in children %}
-                    <a href="{% url 'child_detail' child.id %}" class="nav-link-item child-item {% if active_child_id == child.id %}active{% endif %}">
+                    {% if user.is_authenticated %}
+                    {% for child in user.children.all %}
+                    <a href="{% url 'children:profile' child.id %}" class="nav-link-item child-item">
                         <span class="nav-label">{{ child.name }}</span>
-                        <i class="bi bi-person-circle nav-icon" style="color: var(--orange);"></i>
+                        <i class="bi bi-person-circle nav-icon"></i>
                     </a>
                     {% endfor %}
-                {% endif %}> -->
+                    {% endif %}
                 </div>
 
                 <div class="nav-group">
@@ -132,17 +138,47 @@
             <div class="sidebar-hr"></div>
 
             <div class="sidebar-profile">
-                <a href="{%url 'accounts:profile'%}" class="profile-card">
+                {% if user.is_authenticated %}
+
+                <a href="{% url 'accounts:profile' %}" class="profile-card">
                     <div class="profile-avatar">
-                        {% block user_initial %}م{% endblock %}
+                        {{ user.username|first|upper }}
                     </div>
+
                     <div class="profile-text">
-                        <div class="profile-name">{% block user_name %}اسم المستخدم{% endblock %}</div>
-                        <div class="profile-role">{% block user_role %}ولي الأمر{% endblock %}</div>
+                        <div class="profile-name">
+                            {{ user.username }}
+                        </div>
+                        <div class="profile-role">
+                            ولي الأمر
+                        </div>
                     </div>
+
                     <i class="bi bi-chevron-left profile-arrow"></i>
                 </a>
 
+                {% else %}
+
+                <a href="{% url 'accounts:signin' %}" class="profile-card">
+                    <div class="profile-avatar">
+                        <i class="bi bi-box-arrow-in-right"></i>
+                    </div>
+
+                    <div class="profile-text">
+                        <div class="profile-name">
+                            تسجيل الدخول
+                        </div>
+                        <div class="profile-role">
+                            اضغط للدخول إلى حسابك
+                        </div>
+                    </div>
+
+                    <i class="bi bi-chevron-left profile-arrow"></i>
+                </a>
+
+                {% endif %}
+
+                {% if user.is_authenticated %}
                 <form method="POST" action="{% url 'accounts:logout' %}" class="logout-form">
                     {% csrf_token %}
 
@@ -151,6 +187,7 @@
                         <i class="bi bi-box-arrow-right"></i>
                     </button>
                 </form>
+                {% endif %}
             </div>
 
         </aside>
@@ -232,7 +269,7 @@
 
     <!-- Active nav highlight helper -->
     <script>
-        
+
         document.addEventListener('DOMContentLoaded', function () {
             const current = window.location.pathname;
             document.querySelectorAll('.nav-link-item').forEach(function (link) {
@@ -241,39 +278,39 @@
                 }
             });
         });
-    
-    document.addEventListener('DOMContentLoaded', function() {
-    const faqItems = document.querySelectorAll('.faq-item');
 
-    faqItems.forEach(item => {
-        const question = item.querySelector('.faq-question');
-        
-        question.addEventListener('click', () => {
-            // إغلاق أي سؤال آخر مفتوح (اختياري)
-            faqItems.forEach(otherItem => {
-                if (otherItem !== item) {
-                    otherItem.classList.remove('active');
-                }
+        document.addEventListener('DOMContentLoaded', function () {
+            const faqItems = document.querySelectorAll('.faq-item');
+
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+
+                question.addEventListener('click', () => {
+                    // إغلاق أي سؤال آخر مفتوح (اختياري)
+                    faqItems.forEach(otherItem => {
+                        if (otherItem !== item) {
+                            otherItem.classList.remove('active');
+                        }
+                    });
+
+                    // تبديل حالة السؤال الحالي
+                    item.classList.toggle('active');
+                });
             });
 
-            // تبديل حالة السؤال الحالي
-            item.classList.toggle('active');
-        });
-    });
-
-    // تحسين حركة التنقل السلس (Smooth Scroll) للروابط الجانبية
-    document.querySelectorAll('.toc-link').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            document.querySelector(targetId).scrollIntoView({
-                behavior: 'smooth'
+            // تحسين حركة التنقل السلس (Smooth Scroll) للروابط الجانبية
+            document.querySelectorAll('.toc-link').forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    document.querySelector(targetId).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
             });
         });
-    });
-});
-    
-</script>
+
+    </script>
     {% block extra_js %}{% endblock %}
 </body>
 

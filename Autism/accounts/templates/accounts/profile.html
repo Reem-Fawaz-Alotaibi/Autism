@@ -11,7 +11,6 @@
 
 <div class="profile-page">
 
-    <!-- ══════════════ MAIN ══════════════ -->
     <main class="profile-main">
 
         <div class="page-heading">
@@ -19,26 +18,26 @@
             <p>معلوماتك الشخصية وتفضيلات الحساب.</p>
         </div>
 
-        <!-- Stats -->
         <div class="stats-row">
 
-            <a href="{% url 'accounts:likes_view' %}" class="stat-card">
+            <a href="{% url 'community:likes_view' %}" class="stat-card">
                 <div class="stat-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                         <polyline points="14 2 14 8 20 8" />
                     </svg>
                 </div>
-                <div class="stat-num">18</div>
+                <div class="stat-num">{{ total_likes_count }}</div>
                 <div class="stat-label">الإعجابات</div>
             </a>
+
             <div class="stat-card">
                 <div class="stat-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
                     </svg>
                 </div>
-                <div class="stat-num">7</div>
+                <div class="stat-num">0</div>
                 <div class="stat-label">المهارات المتتبعة</div>
             </div>
 
@@ -50,71 +49,77 @@
                         <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
                     </svg>
                 </div>
-                <div class="stat-num">3</div>
+                <div class="stat-num">0</div>
                 <div class="stat-label">منشورات المجتمع</div>
             </div>
 
         </div>
 
-        <!-- Personal Info -->
         <div class="section-title">المعلومات الشخصية</div>
 
         <div class="info-grid">
 
             <div class="info-card">
                 <div class="info-label">الاسم الكامل</div>
-                <div class="info-value">أحمد الحربي</div>
+                <div class="info-value">
+                    {{ profile.user.first_name|default:"" }}
+                    {{ profile.user.last_name|default:"" }}
+
+                    {% if not profile.user.first_name and not profile.user.last_name %}
+                    {{ profile.user.username }}
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-label">اسم المستخدم</div>
+                <div class="info-value">
+                    {{ request.user.username }}
+                </div>
             </div>
 
             <div class="info-card">
                 <div class="info-label">البريد الإلكتروني</div>
-                <div class="info-value muted">ahmad.alharbi@email.com</div>
+                <div class="info-value muted">
+                    {{ request.user.email|default:"غير متوفر" }}
+                </div>
             </div>
 
             <div class="info-card">
                 <div class="info-label">رقم الجوال</div>
-                <div class="info-value muted">+966 5X XXX XXXX</div>
+                <div class="info-value muted">
+                    {{ profile.phone|default:"غير متوفر" }}
+                </div>
             </div>
 
             <div class="info-card">
                 <div class="info-label">المدينة</div>
-                <div class="info-value">الرياض، المملكة العربية السعودية</div>
-            </div>
-
-            <div class="info-card">
-                <div class="info-label">تاريخ الانضمام</div>
-                <div class="info-value muted">مارس 2025</div>
+                <div class="info-value">
+                    {{ profile.city|default:"غير متوفر" }}
+                </div>
             </div>
 
             <div class="info-card">
                 <div class="info-label">حالة الحساب</div>
-                <div class="info-value success">✓ نشط</div>
+                <div class="info-value success">
+                    ✓ نشط
+                </div>
             </div>
-
-
 
         </div>
 
-        <!-- Actions -->
         <div class="action-row">
 
             <a href="{% url 'accounts:edit_profile' %}" class="btn-primary">
                 تعديل الملف الشخصي
             </a>
 
-            <button class="btn-outline">
-                تغيير كلمة المرور
-            </button>
-
-            <button class="btn-danger">
-                حذف الحساب
-            </button>
-
         </div>
 
     </main>
 
 </div>
+
 
 <script>
     function handleLogout() {

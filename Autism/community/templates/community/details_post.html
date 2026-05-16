@@ -4,9 +4,11 @@
 {% block title %}
 تفاصيل النقاش
 {% endblock %}
-{% block style %} <link rel="stylesheet" href="{% static 'community/css/style.css' %}"> {% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'community/css/style.css' %}">
+<link rel="stylesheet" href="{% static 'accounts/css/style.css' %}">
 
-
+{% endblock %}
 
 {% block content %}
 
@@ -49,21 +51,21 @@
         </div>
 
         <h1 class="post-title">
-           {{ post.title }}
+            {{ post.title }}
         </h1>
 
         <div class="post-content">
 
-           {{ post.content }}
+            {{ post.content }}
 
         </div>
 
         <!-- TAGS -->
 
         <div class="tags">
-          {% for tag in post.tags.split %}
+            {% for tag in post.tags.split %}
 
-          <a href="#" class="tag">
+            <a href="#" class="tag">
                 {{ tag }}
             </a>
 
@@ -76,45 +78,45 @@
         <div class="post-footer">
 
             <div class="post-stats">
-                <span>♡ {{ post.likes.count }} إعجاب</span>
-                <span>💬 {{ post.comments.count }} تعليق</span>
+                <span> {{ post.likes.count }} إعجاب</span>
+                <span> {{ post.comments.count }} تعليق</span>
             </div>
 
-            
+
             {% if request.user.is_authenticated %}
 
             <div class="post-menu">
 
-    {% if request.user == post.user %}
+                {% if request.user == post.user %}
 
-        <div class="post-actions">
+                <div class="post-actions">
 
-            <a href="{% url 'community:edit_post_view' post.id %}"
-               class="edit-btn">
-                تعديل
-            </a>
+                    <a href="{% url 'community:edit_post_view' post.id %}"
+                        class="edit-btn">
+                        تعديل
+                    </a>
 
-            <button type="button" class="delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal">
-             حذف 
-            </button>
+                    <button type="button" class="delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                        حذف
+                    </button>
 
-        </div>
-        {%else%}
-        <a href="{% url 'community:like_post_view' post.id %}"
-            class="like-btn">
+                </div>
+                {%else%}
+                <a href="{% url 'community:like_post_view' post.id %}"
+                    class="like-btn">
 
-                {% if is_liked %}
-                <i class="bi bi-heart-fill"></i>
-                    
-                {% else %}
+                    {% if is_liked %}
+                    <i class="bi bi-heart-fill"></i>
+
+                    {% else %}
                     <i class="bi bi-heart"></i>
+                    {% endif %}
+                </a>
+
                 {% endif %}
-            </a>
 
-    {% endif %}
-
-</div>
-{%endif%}
+            </div>
+            {%endif%}
 
         </div>
 
@@ -127,15 +129,15 @@
     </h2>
 
     <!-- COMMENT -->
-     {% if post.comments.all %}
-     {% for comment in post.comments.all %}
+    {% if post.comments.all %}
+    {% for comment in post.comments.all %}
 
     <div class="comment-card">
 
         <div class="comment-header">
 
             <div class="comment-avatar">
-            {{ comment.user.first_name|first }}{{comment.user.last_name|first }}
+                {{ comment.user.first_name|first }}{{comment.user.last_name|first }}
 
             </div>
 
@@ -147,116 +149,160 @@
         </div>
 
         <div class="comment-text"
-     id="comment-text-{{ comment.id }}">
+            id="comment-text-{{ comment.id }}">
 
-    {{ comment.content }}
+            {{ comment.content }}
 
-</div>
+        </div>
 
-<form
-    method="POST"
-    action="{% url 'community:edit_comment_view' comment.id %}"
-    class="edit-comment-form"
-    id="edit-form-{{ comment.id }}"
-    style="display:none;"
->
+        <form
+            method="POST"
+            action="{% url 'community:edit_comment_view' comment.id %}"
+            class="edit-comment-form"
+            id="edit-form-{{ comment.id }}"
+            style="display:none;">
 
-    {% csrf_token %}
+            {% csrf_token %}
 
-    <textarea
-        name="content"
-        class="comment-input"
-    >{{ comment.content }}</textarea>
+            <textarea
+                name="content"
+                class="comment-input">{{ comment.content }}</textarea>
 
-    <div class="comment-actions">
+            <div class="comment-actions">
 
-        <button
-            type="submit"
-            class="publish-comment"
-        >
+                <button
+                    type="submit"
+                    class="publish-comment">
 
-            حفظ
+                    حفظ
 
-        </button>
+                </button>
 
-        <button
-            type="button" class="cancel-btn" data-comment="{{ comment.id }}">
-            إلغاء
-        </button>
+                <button
+                    type="button" class="cancel-btn" data-comment="{{ comment.id }}">
+                    إلغاء
+                </button>
 
-    </div>
+            </div>
 
-</form>
+        </form>
 
-{% if request.user == comment.user %}
+        {% if request.user == comment.user %}
 
-<div class="comment-buttons">
+        <div class="comment-buttons">
 
-    <button data-comment="{{ comment.id }}" class="edit-btn">
-        تعديل
-    </button>
+            <button data-comment="{{ comment.id }}" class="edit-btn">
+                تعديل
+            </button>
 
-    <button type="button" class="delete-btn" data-bs-toggle="modal" data-bs-target="#deleteCommentModal{{ comment.id }}">
-        حذف
-    </button>
+            <button
+                type="button"
+                class="delete-btn"
+                data-bs-toggle="modal"
+                data-bs-target="#deleteCommentModal{{ comment.id }}">
+                حذف
+            </button>
 
-</div>
+        </div>
 
-{% endif %}
+        {% endif %}
+
+
+        <!-- LIKE COMMENT -->
+
+        <div class="comment-footer" style="display: flex; gap: 15px; align-items: center; margin-top: 10px;">
+
+            <span class="post-stat">
+                {{ comment.comment_likes.count }} إعجاب
+            </span>
+
+            {% if request.user.is_authenticated %}
+
+            <form method="POST"
+                action="{% url 'community:like_comment_view' comment.id %}">
+
+                {% csrf_token %}
+
+                <button type="submit"
+                    class="like-btn liked">
+
+                    <svg class="like-icon"
+                        viewBox="0 0 24 24"
+                        fill="none">
+
+                        <path
+                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round" />
+
+                    </svg>
+
+                    <span>إعجاب</span>
+
+                </button>
+
+
+            </form>
+
+            {% endif %}
+
+        </div>
 
     </div>
     <div class="modal fade" id="deleteCommentModal{{ comment.id }}" tabindex="-1" aria-hidden="true">
 
-    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered">
 
-        <div class="modal-content">
+            <div class="modal-content">
 
-            <div class="modal-header">
+                <div class="modal-header">
 
-                <h5 class="modal-title">
-                    حذف التعليق
-                </h5>
+                    <h5 class="modal-title">
+                        حذف التعليق
+                    </h5>
 
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close">
-                </button>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                    </button>
 
-            </div>
+                </div>
 
-            <div class="modal-body">
+                <div class="modal-body">
 
-                هل أنت متأكد من حذف هذا التعليق؟
+                    هل أنت متأكد من حذف هذا التعليق؟
 
-            </div>
+                </div>
 
-            <div class="modal-footer">
+                <div class="modal-footer">
 
-                <button
-                    type="button"
-                    class="btn btn-secondary"
-                    data-bs-dismiss="modal">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
 
-                    إلغاء
+                        إلغاء
 
-                </button>
+                    </button>
 
-                <a href="{% url 'community:delete_comment_view' comment.id %}"
-                   class="btn btn-danger">
+                    <a href="{% url 'community:delete_comment_view' comment.id %}"
+                        class="btn btn-danger">
 
-                    حذف
+                        حذف
 
-                </a>
+                    </a>
+
+                </div>
 
             </div>
 
         </div>
 
     </div>
-
-</div>
     {% endfor %}
     {% else %}
 
@@ -266,27 +312,27 @@
 
     </div>
 
-{% endif %}
+    {% endif %}
 
 
 
     <!-- ADD COMMENT -->
-     {% if request.user.is_authenticated %}
+    {% if request.user.is_authenticated %}
 
     <div class="add-comment">
         <form method="POST">
-        {% csrf_token %}
+            {% csrf_token %}
 
-        <textarea required class="comment-input" placeholder="اكتب تعليقك هنا..." name="content"></textarea>
+            <textarea required class="comment-input" placeholder="اكتب تعليقك هنا..." name="content"></textarea>
 
-        <div class="comment-actions">
+            <div class="comment-actions">
 
-            <button class="publish-comment">
-                نشر التعليق
-            </button>
+                <button class="publish-comment">
+                    نشر التعليق
+                </button>
 
-        </div>
-            </form>
+            </div>
+        </form>
 
 
     </div>
@@ -298,14 +344,14 @@
 
     </div>
 
-{% endif %}
+    {% endif %}
 
 </div>
 
 <div class="modal fade"
-     id="deleteModal"
-     tabindex="-1"
-     aria-hidden="true">
+    id="deleteModal"
+    tabindex="-1"
+    aria-hidden="true">
 
     <div class="modal-dialog modal-dialog-centered">
 
@@ -344,7 +390,7 @@
                 </button>
 
                 <a href="{% url 'community:delete_post_view' post.id %}"
-                   class="btn btn-danger">
+                    class="btn btn-danger">
 
                     حذف
 
@@ -360,7 +406,7 @@
 
 <script>
 
-    function openEdit(commentId){
+    function openEdit(commentId) {
 
         document.getElementById(
             `comment-text-${commentId}`
@@ -372,7 +418,7 @@
 
     }
 
-    function closeEdit(commentId){
+    function closeEdit(commentId) {
 
         document.getElementById(
             `comment-text-${commentId}`
@@ -385,26 +431,26 @@
     }
 
     document.querySelectorAll('.open-edit-btn')
-    .forEach(button => {
+        .forEach(button => {
 
-        button.addEventListener('click', function(){
+            button.addEventListener('click', function () {
 
-            openEdit(this.dataset.comment);
+                openEdit(this.dataset.comment);
+
+            });
 
         });
-
-    });
 
     document.querySelectorAll('.close-edit-btn')
-    .forEach(button => {
+        .forEach(button => {
 
-        button.addEventListener('click', function(){
+            button.addEventListener('click', function () {
 
-            closeEdit(this.dataset.comment);
+                closeEdit(this.dataset.comment);
+
+            });
 
         });
-
-    });
 
 </script>
 {% endblock %}

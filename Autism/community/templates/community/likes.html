@@ -1,0 +1,379 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}إعجاباتي — Ehtiwa{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'accounts/css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="likes-page">
+
+    <!-- HEADER -->
+    <div class="likes-header">
+        <div>
+            <h1>إعجاباتي</h1>
+            <p>المنشورات والتعليقات التي أعجبتك</p>
+        </div>
+    </div>
+
+    <div class="likes-tabs">
+
+        <button class="likes-tab active"
+            onclick="switchTab('posts', this)">
+
+            المنشورات
+
+            <span class="likes-tab-count">
+                {{ liked_posts_count }}
+            </span>
+
+        </button>
+
+        <button class="likes-tab"
+            onclick="switchTab('comments', this)">
+
+            التعليقات
+
+            <span class="likes-tab-count">
+                {{ liked_comments_count }}
+            </span>
+
+        </button>
+
+    </div>
+
+    <!-- POSTS -->
+    <div class="likes-section active" id="tab-posts">
+
+        {% if liked_posts %}
+        {% for post in liked_posts %}
+
+        <div class="post-card">
+
+            <div class="post-header">
+
+                <div class="post-author">
+
+                    <div class="author-avatar">
+                        {{ post.user.username|first|upper }}
+                    </div>
+
+                    <div class="author-info">
+
+                        <span class="author-name">
+                            {{ post.user.username }}
+                        </span>
+
+                        <span class="post-meta">
+                            {{ post.created_at|timesince }} مضت
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <h2 class="post-title">
+                {{ post.title }}
+            </h2>
+
+            <p class="post-body">
+                {{ post.content|truncatewords:30 }}
+            </p>
+
+            {% if post.tags %}
+            <div class="post-tags">
+
+                <span class="post-tag">
+                    #{{ post.tags }}
+                </span>
+
+            </div>
+            {% endif %}
+
+            <div class="post-footer">
+
+                <!-- STATS -->
+                <div class="post-stats">
+
+                    <!-- LIKES -->
+                    <span class="post-stat">
+
+                        <svg class="stat-icon"
+                            viewBox="0 0 24 24"
+                            fill="none">
+
+                            <path
+                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                                stroke-linejoin="round" />
+
+                        </svg>
+
+                        {{ post.likes_count }}
+
+                    </span>
+
+                    <!-- COMMENTS -->
+                    <span class="post-stat">
+
+                        <svg class="stat-icon"
+                            viewBox="0 0 24 24"
+                            fill="none">
+
+                            <path
+                                d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                                stroke-linejoin="round" />
+
+                        </svg>
+
+                        {{ post.comments_count }} تعليق
+
+                    </span>
+
+                </div>
+
+                <!-- ACTIONS -->
+                <div class="post-actions">
+
+                    <form method="POST"
+                        action="{% url 'community:like_post_view' post.id %}">
+
+                        {% csrf_token %}
+
+                        <button type="submit"
+                            class="like-btn liked">
+
+                            <svg class="like-icon"
+                                viewBox="0 0 24 24"
+                                fill="none">
+
+                                <path
+                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                                    stroke="currentColor"
+                                    stroke-width="1.8"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round" />
+
+                            </svg>
+
+                            <span>إعجاب</span>
+
+                        </button>
+
+                    </form>
+
+                    <a href="{% url 'community:details_post_view' post.id %}"
+                        class="enter-btn">
+
+                        دخول النقاش
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+        {% else %}
+
+        <!-- EMPTY POSTS -->
+        <div class="likes-empty">
+
+            <div class="likes-empty-icon">
+
+                <svg viewBox="0 0 24 24" fill="none">
+
+                    <path
+                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linecap="round"
+                        stroke-linejoin="round" />
+
+                </svg>
+
+            </div>
+
+            <h3>لا توجد إعجابات بعد</h3>
+
+            <p>
+                تصفّح المجتمع وأعجب بالمنشورات التي تجدها مفيدة
+            </p>
+
+            <a href="{% url 'community:community_view' %}"
+                class="enter-btn">
+
+                تصفّح المجتمع
+
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- COMMENTS -->
+    <div class="likes-section" id="tab-comments">
+
+        {% if liked_comments %}
+        {% for comment in liked_comments %}
+
+        <div class="comment-card">
+
+            <div class="comment-body">
+
+                <div class="post-author">
+
+                    <div class="author-avatar">
+                        {{ comment.user.username|first|upper }}
+                    </div>
+
+                    <div class="author-info">
+
+                        <span class="author-name">
+                            {{ comment.user.username }}
+                        </span>
+
+                        <span class="post-meta">
+                            {{ comment.created_at|timesince }} مضت
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <p class="comment-text">
+                    {{ comment.content }}
+                </p>
+
+                <div class="comment-footer">
+
+                    <span class="post-stat">
+
+                        <svg class="stat-icon"
+                            viewBox="0 0 24 24"
+                            fill="none">
+
+                            <path
+                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                                stroke-linejoin="round" />
+
+                        </svg>
+
+                        {{ comment.likes_count|default:0 }}
+
+                    </span>
+
+                    <form method="POST"
+                        action="{% url 'community:like_comment_view' comment.id %}">
+
+                        {% csrf_token %}
+
+                        <button type="submit"
+                            class="like-btn liked">
+
+                            <svg class="like-icon"
+                                viewBox="0 0 24 24"
+                                fill="none">
+
+                                <path
+                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                                    stroke="currentColor"
+                                    stroke-width="1.8"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round" />
+
+                            </svg>
+
+                            <span>إعجاب</span>
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+        {% else %}
+
+        <!-- EMPTY COMMENTS -->
+        <div class="likes-empty">
+
+            <div class="likes-empty-icon">
+
+                <svg viewBox="0 0 24 24" fill="none">
+
+                    <path
+                        d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round" />
+
+                </svg>
+
+            </div>
+
+            <h3>لا توجد تعليقات معجب بها</h3>
+
+            <p>
+                ابدأ بالتفاعل مع تعليقات المجتمع
+            </p>
+
+            <a href="{% url 'community:community_view' %}"
+                class="enter-btn">
+
+                تصفّح المجتمع
+
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+    function switchTab(tabId, btn) {
+
+        document.querySelectorAll('.likes-tab')
+            .forEach(t => t.classList.remove('active'));
+
+        document.querySelectorAll('.likes-section')
+            .forEach(s => s.classList.remove('active'));
+
+        btn.classList.add('active');
+
+        document.getElementById('tab-' + tabId)
+            .classList.add('active');
+    }
+</script>
+
+{% endblock %}

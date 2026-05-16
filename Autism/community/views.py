@@ -1,11 +1,10 @@
 from django.shortcuts import render, redirect ,get_object_or_404
 from django.http import HttpRequest, HttpResponse
 from .forms import PostForm, CommentForm
-from .models import Post,Like,Comment
-from django.db.models import Q
+from django.db.models import Q,Count
 from django.contrib.auth import logout
-
-
+from django.contrib.auth.decorators import login_required
+from .models import Post, Like, Comment, CommentLike
 # Create your views here.
 
 def community_view (request:HttpResponse):
@@ -74,21 +73,19 @@ def details_post_view(request, post_id):
 
     return render(request,'community/details_post.html',{'post': post, 'form': form,'is_liked': is_liked,})
 
-
+@login_required
 def like_post_view(request, post_id):
 
     post = get_object_or_404(Post, id=post_id)
 
-    liked = Like.objects.filter(post=post,user=request.user)
+    like_obj = Like.objects.filter(post=post, user=request.user)
 
-    if liked.exists():
-        liked.delete()
-
+    if like_obj.exists():
+        like_obj.delete()
     else:
-        Like.objects.create(post=post,user=request.user)
+        Like.objects.create(post=post, user=request.user)
 
-    return redirect('community:details_post_view',post_id=post.id)
-
+    return redirect(request.META.get('HTTP_REFERER', 'community:community_view'))
 
 def edit_post_view(request, post_id):
 
@@ -133,3 +130,38 @@ def delete_comment_view(request, comment_id):
     return redirect('community:details_post_view',post_id=post_id)
 
 
+@login_required
+def likes_view(request):
+    liked_posts = Post.objects.filter(
+        likes__user=request.user
+    ).annotate(
+        likes_count=Count('likes', distinct=True),
+        comments_count=Count('comments', distinct=True)
+    ).order_by('-created_at')
+
+    liked_comments = Comment.objects.filter(
+        comment_likes__user=request.user
+    ).annotate(
+        likes_count=Count('comment_likes', distinct=True)
+    ).order_by('-created_at')
+
+    return render(request, 'community/likes.html', {
+        'liked_posts': liked_posts,
+        'liked_comments': liked_comments,
+        'liked_posts_count': liked_posts.count(),
+        'liked_comments_count': liked_comments.count(),
+    })
+
+
+@login_required
+def like_comment_view(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    
+    like_obj = CommentLike.objects.filter(comment=comment, user=request.user)
+
+    if like_obj.exists():
+        like_obj.delete()  
+    else:
+        CommentLike.objects.create(comment=comment, user=request.user)  
+
+    return redirect(request.META.get('HTTP_REFERER') or 'community:community_view')

@@ -1,4 +1,5 @@
 {% load static %}
+{% load socialaccount %}
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -64,7 +65,7 @@
                     </div>
 
                     <!-- Google -->
-                    <a href="/accounts/google/login/" class="btn-google">
+                    <a href="{% provider_login_url 'google' %}" class="btn-google">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path fill="#4285F4"
                                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -96,8 +97,13 @@
                                     </svg>
                                 </span>
 
-                                <input class="form-input" type="text" id="su-fname" name="first_name">
+                                <input class="form-input" type="text" id="su-fname" name="first_name" placeholder="الاسم الاول" required>
                             </div>
+
+                            {% for error in form.first_name.errors %}
+                            <p class="error-text">{{ error }}</p>
+                            {% endfor %}
+
                         </div>
 
                         <div class="form-group">
@@ -111,8 +117,13 @@
                                     </svg>
                                 </span>
 
-                                <input class="form-input" type="text" id="su-lname" name="last_name">
+                                <input class="form-input" type="text" id="su-lname" name="last_name" placeholder="اسم العائله" required>
                             </div>
+
+                            {% for error in form.first_name.errors %}
+                            <p class="error-text">{{ error }}</p>
+                            {% endfor %}
+
                         </div>
 
                     </div>
@@ -129,10 +140,40 @@
                                 </svg>
                             </span>
 
-                            <input class="form-input" type="email" id="su-email" name="email"
-                                placeholder="example@email.com">
+                            <input class="form-input" type="email" id="su-email" name="email" placeholder="example@email.com" required>
                         </div>
+
+                        {% for error in form.email.errors %}
+                        <p class="error-text">{{ error }}</p>
+                        {% endfor %}
+
                     </div>
+
+                    <!-- Username -->
+                    <div class="form-group">
+                        <label for="su-username">اسم المستخدم</label>
+
+                        <div class="input-wrap">
+                            <span class="input-icon">
+                                <svg viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2">
+
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                    <circle cx="12" cy="7" r="4" />
+                                </svg>
+                            </span>
+
+                            <input class="form-input" type="text" id="su-username" name="username" placeholder="أدخل اسم المستخدم" required>
+                        </div>
+
+                        {% for error in form.username.errors %}
+                        <p class="error-text">{{ error }}</p>
+                        {% endfor %}
+
+                    </div>
+
 
                     <!-- Password -->
                     <div class="form-group">
@@ -151,7 +192,7 @@
                                 id="su-password"
                                 name="password"
                                 placeholder="أنشئ كلمة مرور قوية"
-                                oninput="checkStrength(this.value)">
+                                oninput="checkStrength(this.value)" required>
 
                             <button class="toggle-pw"
                                 type="button"
