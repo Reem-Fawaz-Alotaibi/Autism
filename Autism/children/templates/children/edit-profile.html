@@ -106,9 +106,9 @@
                     <label for="c-sensory">الحساسية الحسية</label>
                     <div class="select-wrap">
                         <select class="form-input no-icon" id="c-sensory" name="sensory_sensitivities">
-                            <option value="sound" {% if child.sensory_sensitivities == 'sound' %}selected{% endif %}>🔊 الصوت</option>
-                            <option value="touch" {% if child.sensory_sensitivities == 'touch' %}selected{% endif %}>✋ اللمس</option>
-                            <option value="light" {% if child.sensory_sensitivities == 'light' %}selected{% endif %}>💡 الضوء</option>
+                            <option value="sound" {% if child.sensory_sensitivities == 'sound' %}selected{% endif %}> الصوت</option>
+                            <option value="touch" {% if child.sensory_sensitivities == 'touch' %}selected{% endif %}> اللمس</option>
+                            <option value="light" {% if child.sensory_sensitivities == 'light' %}selected{% endif %}> الضوء</option>
                             <option value="none" {% if child.sensory_sensitivities == 'none' %}selected{% endif %}>لا توجد</option>
                         </select>
                     </div>

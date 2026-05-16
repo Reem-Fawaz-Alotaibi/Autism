@@ -13,4 +13,8 @@ urlpatterns = [
     path('accounts/edit/profile/', views.edit_profile,name='edit_profile'),
     path('accounts/settings', views.settings_view,name='settings'),
     path('accounts/saved/centers/', views.saved_centers_view,name='saved_centers_view'),
+    path("update-email/", views.update_email, name="update_email"),
+    path("update-password/", views.update_password, name="update_password"),
+    path('accounts/logout-all/',views.logout_all_devices,name='logout_all_devices'),
+    path('accounts/delete-account/',views.delete_account,name='delete_account'),
 ]

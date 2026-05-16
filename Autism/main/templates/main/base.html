@@ -133,9 +133,9 @@
             </nav>
 
             <div class="sidebar-hr"></div>
-
             <div class="sidebar-profile">
-                {% if user.is_authenticated %}
+
+                {% if user.is_authenticated and user.username %}
 
                 <div class="profile-card">
 
@@ -163,7 +163,6 @@
 
                     <form method="POST" action="{% url 'accounts:logout' %}">
                         {% csrf_token %}
-
                         <button type="submit" class="logout-inside-btn">
                             <span>تسجيل الخروج</span>
                             <i class="bi bi-box-arrow-right"></i>
@@ -173,28 +172,31 @@
                 </div>
 
                 {% else %}
+                <div class="profile-card">
 
-                <a href="{% url 'accounts:signin' %}" class="profile-card">
-                    <div class="profile-avatar">
-                        <i class="bi bi-box-arrow-in-right"></i>
-                    </div>
+                    <a href="{% url 'accounts:signin' %}" class="profile-top">
 
-                    <div class="profile-text">
-                        <div class="profile-name">
-                            تسجيل الدخول
+                        <div class="profile-avatar">
+                            <i class="bi bi-box-arrow-in-right"></i>
                         </div>
 
-                        <div class="profile-role">
-                            اضغط للدخول إلى حسابك
+                        <div class="profile-text">
+                            <div class="profile-name">
+                                تسجيل الدخول
+                            </div>
+
+                            <div class="profile-role">
+                                اضغط للدخول إلى حسابك
+                            </div>
                         </div>
-                    </div>
 
-                    <i class="bi bi-chevron-left profile-arrow"></i>
-                </a>
+                        <i class="bi bi-chevron-left profile-arrow"></i>
 
+                    </a>
+                </div>
                 {% endif %}
-            </div>
 
+            </div>
         </aside>
 
 

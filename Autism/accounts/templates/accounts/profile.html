@@ -31,7 +31,7 @@
                 <div class="stat-label">اعجاباتي</div>
             </a>
 
-            <div class="stat-card">
+            <a href="{% url 'accounts:saved_centers_view' %}" class="stat-card">
                 <div class="stat-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
@@ -39,7 +39,7 @@
                 </div>
                 <div class="stat-num">0</div>
                 <div class="stat-label"> المراكز التي أعجبتني</div>
-            </div>
+            </a>
 
             <a href="{% url 'community:user_posts_view' user.id %}" class="stat-card">
                 <div class="stat-icon">

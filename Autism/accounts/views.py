@@ -1,11 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login,logout
+from django.contrib.auth import authenticate, login,logout,update_session_auth_hash
 from django.contrib import messages
 from .forms import SignUpForm
 from django.contrib.auth.decorators import login_required
 from .models import Profile
 from community.models import Like, CommentLike,Post
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib.sessions.models import Session
+from django.utils import timezone
 
 def signup_view(request):
     form = SignUpForm(request.POST or None)
@@ -56,18 +60,24 @@ def signin_view(request):
             username=username,
             password=password
         )
+        print("user:", user)
 
         if user is not None:
-
             login(request, user)
-
-            if not request.POST.get('remember_me'):
+            request.session.pop('is_guest', None)
+            request.session.pop('guest_name', None)
+            if request.POST.get('remember_me'):
+                request.session.set_expiry(None) 
+            else:
                 request.session.set_expiry(0)
 
             return redirect('main:home_page_view')
 
         else:
             messages.error(request, 'بيانات الدخول خاطئة')
+            return render(request, 'accounts/signin.html')
+
+
 
     return render(request, 'accounts/signin.html')
 
@@ -81,6 +91,7 @@ def reset_view(request):
 
 def guest_login(request):
     request.session['is_guest'] = True
+    request.session['guest_name'] = "زائر"
     return redirect('main:home_page_view')
 
 @login_required
@@ -136,3 +147,117 @@ def saved_centers_view(request):
     return render(request, 'accounts/saved_centers.html')
 
 
+@login_required
+def update_email(request):
+
+    if request.method == "POST":
+
+        new_email = request.POST.get("email", "").strip()
+
+        user = request.user
+
+        if User.objects.filter(email=new_email).exclude(id=user.id).exists():
+            messages.error(request, "البريد الإلكتروني مستخدم مسبقًا")
+            return redirect("accounts:settings")
+
+        old_email = user.email
+
+        user.email = new_email
+        user.save()
+
+        send_mail(
+            subject='تم تغيير البريد الإلكتروني',
+            message=f'''
+                مرحبًا {user.username}
+
+                تم تحديث البريد الإلكتروني لحسابك بنجاح.
+
+                البريد الجديد:
+                {new_email}
+
+                إذا لم تقم بهذا التغيير يرجى التواصل معنا فورًا.
+            ''',
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[new_email],
+            fail_silently=False,
+        )
+
+        messages.success(request, "تم تحديث البريد الإلكتروني بنجاح")
+
+        return redirect("accounts:settings")
+
+    return redirect("accounts:settings")
+
+
+@login_required
+def update_password(request):
+    if request.method == "POST":
+        user = request.user
+
+        old_password = request.POST.get("old_password")
+        new_password = request.POST.get("new_password")
+        confirm_password = request.POST.get("confirm_password")
+
+        if not user.check_password(old_password):
+            messages.error(request, "كلمة المرور الحالية غير صحيحة")
+            return redirect("accounts:settings")
+
+        if new_password != confirm_password:
+            messages.error(request, "كلمات المرور غير متطابقة")
+            return redirect("accounts:settings")
+
+        user.set_password(new_password)
+        user.save()
+
+        update_session_auth_hash(request, user)
+
+        messages.success(request, "تم تغيير كلمة المرور بنجاح")
+        return redirect("accounts:settings")
+
+    return redirect("accounts:settings")
+
+
+@login_required
+def logout_all_devices(request):
+
+    sessions = Session.objects.filter(
+        expire_date__gte=timezone.now()
+    )
+
+    for session in sessions:
+
+        data = session.get_decoded()
+
+        if data.get('_auth_user_id') == str(request.user.id):
+            session.delete()
+
+    logout(request)
+
+    messages.success(
+        request,
+        "تم تسجيل الخروج من جميع الأجهزة"
+    )
+
+    return redirect("accounts:signin")
+
+
+
+@login_required
+def delete_account(request):
+
+    if request.method == "POST":
+
+        user = request.user
+
+        logout(request)
+
+        user.delete()
+
+        messages.success(
+            request,
+            "تم حذف الحساب نهائيًا"
+        )
+
+        return redirect("main:home_page_view")
+
+    return redirect("accounts:settings")
