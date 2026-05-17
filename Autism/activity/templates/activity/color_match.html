@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>طابق الألوان — إحتواء</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+:root {
+  --green-dark:  #4a6e38;
+  --green-mid:   #7aad60;
+  --green-light: #d4edbc;
+  --green-pale:  #eef7e6;
+  --cream:       #faf8f3;
+  --text-dark:   #2c3e20;
+  --text-mid:    #5a6b50;
+  --text-light:  #8fa880;
+  --radius-lg:   20px;
+  --radius-md:   14px;
+}
+
+body {
+  font-family: 'Tajawal', sans-serif;
+  background: var(--cream);
+  color: var(--text-dark);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0 60px;
+  direction: rtl;
+}
+
+.page-header {
+  width: 100%;
+  background: var(--green-dark);
+  padding: 20px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+.header-logo { font-size: 22px; font-weight: 800; color: #fff; }
+.header-logo span { color: var(--green-light); }
+.header-badge {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.game-card {
+  width: 100%;
+  max-width: 680px;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--green-light);
+  padding: 36px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-dark);
+  margin-bottom: 6px;
+}
+.game-sub {
+  font-size: 14px;
+  color: var(--text-light);
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.progress-wrap {
+  width: 100%;
+  max-width: 360px;
+  background: var(--green-pale);
+  border-radius: 20px;
+  height: 8px;
+  margin-bottom: 28px;
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  background: var(--green-mid);
+  border-radius: 20px;
+  transition: width .4s ease;
+}
+
+.color-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+}
+
+.draggable-row {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  min-height: 80px;
+  padding: 8px;
+}
+
+.color-card {
+  width: 74px;
+  height: 74px;
+  border-radius: var(--radius-md);
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  border: 3px solid rgba(0,0,0,0.06);
+  transition: transform .15s, box-shadow .15s;
+  touch-action: none;
+}
+.color-card:hover { transform: scale(1.09); box-shadow: 0 6px 18px rgba(0,0,0,0.13); }
+.color-card:active { cursor: grabbing; transform: scale(1.13); }
+.color-card.dragging { opacity: .5; }
+
+.divider-label {
+  font-size: 13px;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 400px;
+}
+.divider-label::before,
+.divider-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--green-light);
+}
+
+.slots-row {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.color-slot {
+  width: 74px;
+  height: 74px;
+  border-radius: var(--radius-md);
+  border: 3px dashed #ccc;
+  background: rgba(255,255,255,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: #ccc;
+  transition: all .2s;
+}
+.color-slot.drag-over { transform: scale(1.1); border-color: var(--green-mid); background: var(--green-pale); }
+.color-slot.matched   { border-style: solid; border-color: rgba(0,0,0,0.08); cursor: default; }
+.color-slot.wrong     { animation: shake .3s ease; }
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25%      { transform: translateX(-8px); }
+  75%      { transform: translateX(8px); }
+}
+
+.success-banner {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: var(--green-pale);
+  border: 2px solid var(--green-light);
+  border-radius: var(--radius-md);
+  padding: 22px 40px;
+  margin-top: 28px;
+  animation: popIn .4s cubic-bezier(.34,1.4,.64,1);
+}
+.success-banner.show { display: flex; }
+.success-banner .star { font-size: 38px; }
+.success-banner p     { font-size: 18px; font-weight: 700; color: var(--green-dark); }
+.success-banner small { font-size: 13px; color: var(--text-light); }
+
+@keyframes popIn {
+  from { transform: scale(.7); opacity: 0; }
+  to   { transform: scale(1);  opacity: 1; }
+}
+
+.reset-btn {
+  margin-top: 20px;
+  padding: 11px 32px;
+  border-radius: 30px;
+  border: none;
+  background: var(--green-dark);
+  color: #fff;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s, transform .15s;
+}
+.reset-btn:hover  { background: var(--green-mid); transform: scale(1.03); }
+.reset-btn:active { transform: scale(.97); }
+
+@media (max-width: 520px) {
+  .page-header { padding: 16px 18px; }
+  .game-card   { padding: 22px 14px; }
+  .color-card, .color-slot { width: 60px; height: 60px; font-size: 22px; }
+}
+
+.back-bar {
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 16px;
+}
+.back-btn-game {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--cream);
+  border: 1.5px solid var(--green-light);
+  border-radius: 30px;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-mid);
+  text-decoration: none;
+  transition: all .2s;
+}
+.back-btn-game:hover {
+  border-color: var(--green-mid);
+  color: var(--green-dark);
+}
+</style>
+</head>
+<body>
+
+<br>
+<br>
+<br>
+<div class="back-bar">
+    <button class="back-btn-game" onclick="history.back()">
+         رجوع
+    </button>
+</div>
+<div class="game-card">
+  <div class="game-title">🎨 طابق الألوان</div>
+  <div class="game-sub">اسحب كل بطاقة إلى المربع اللي يطابق لونها</div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar" id="colorProgress" style="width:0%"></div>
+  </div>
+
+  <div class="color-section">
+    <div class="draggable-row" id="colorCards">
+      <div class="color-card" style="background:#FFD93D;" draggable="true" data-color="yellow" id="cc-yellow">⭐</div>
+      <div class="color-card" style="background:#FF6B6B;" draggable="true" data-color="red"    id="cc-red">🔴</div>
+      <div class="color-card" style="background:#C77DFF;" draggable="true" data-color="purple" id="cc-purple">💜</div>
+      <div class="color-card" style="background:#5BC8F5;" draggable="true" data-color="blue"   id="cc-blue">💙</div>
+      <div class="color-card" style="background:#6BCB77;" draggable="true" data-color="green"  id="cc-green">🌿</div>
+    </div>
+
+    <div class="divider-label">ضع الكارت هنا</div>
+
+    <div class="slots-row">
+      <div class="color-slot" style="background:rgba(255,107,107,0.15);border-color:#FF6B6B80;" data-target="red"    ondragover="dov(event)" ondrop="dropColor(event)" ondragleave="dlv(event)">؟</div>
+      <div class="color-slot" style="background:rgba(91,200,245,0.15);border-color:#5BC8F580;"  data-target="blue"   ondragover="dov(event)" ondrop="dropColor(event)" ondragleave="dlv(event)">؟</div>
+      <div class="color-slot" style="background:rgba(255,217,61,0.15);border-color:#FFD93D80;"  data-target="yellow" ondragover="dov(event)" ondrop="dropColor(event)" ondragleave="dlv(event)">؟</div>
+      <div class="color-slot" style="background:rgba(107,203,119,0.15);border-color:#6BCB7780;" data-target="green"  ondragover="dov(event)" ondrop="dropColor(event)" ondragleave="dlv(event)">؟</div>
+      <div class="color-slot" style="background:rgba(199,125,255,0.15);border-color:#C77DFF80;" data-target="purple" ondragover="dov(event)" ondrop="dropColor(event)" ondragleave="dlv(event)">؟</div>
+    </div>
+  </div>
+
+  <div class="success-banner" id="colorWin">
+    <div class="star">🏆</div>
+    <p>أحسنت يا بطل!</p>
+    <small>طابقت كل الألوان بشكل صحيح</small>
+  </div>
+  <button class="reset-btn" onclick="resetColor()">🔄 إعادة اللعب</button>
+</div>
+
+<script>
+  let dragId = null;
+  let matched = 0;
+  const total = 5;
+
+  function dov(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+  function dlv(e) { e.currentTarget.classList.remove('drag-over'); }
+
+  function bindDrag() {
+    document.querySelectorAll('.color-card').forEach(el => {
+      el.addEventListener('dragstart', () => { dragId = el.id; el.classList.add('dragging'); });
+      el.addEventListener('dragend',   () => el.classList.remove('dragging'));
+      el.addEventListener('touchstart', () => { dragId = el.id; el.style.opacity = '.55'; }, { passive: true });
+      el.addEventListener('touchend', e => {
+        el.style.opacity = '1';
+        const t = e.changedTouches[0];
+        el.style.display = 'none';
+        const under = document.elementFromPoint(t.clientX, t.clientY);
+        el.style.display = '';
+        if (!under) return;
+        const slot = under.closest('.color-slot');
+        if (slot) handleColor(slot);
+      });
+    });
+  }
+
+  function dropColor(e) { e.preventDefault(); dlv(e); handleColor(e.currentTarget); }
+
+  function handleColor(slot) {
+    if (!dragId) return;
+    const el = document.getElementById(dragId);
+    if (!el || slot.classList.contains('matched')) return;
+
+    if (el.dataset.color === slot.dataset.target) {
+      slot.style.background = el.style.background;
+      slot.innerHTML = el.textContent;
+      slot.style.fontSize = '26px';
+      slot.classList.add('matched');
+      slot.style.border = '3px solid ' + el.style.background;
+      el.remove();
+      matched++;
+      document.getElementById('colorProgress').style.width = (matched / total * 100) + '%';
+      if (matched === total) document.getElementById('colorWin').classList.add('show');
+    } else {
+      slot.classList.add('wrong');
+      setTimeout(() => slot.classList.remove('wrong'), 400);
+    }
+    dragId = null;
+  }
+
+  function resetColor() {
+    matched = 0;
+    document.getElementById('colorProgress').style.width = '0%';
+    document.getElementById('colorWin').classList.remove('show');
+    document.getElementById('colorCards').innerHTML = `
+      <div class="color-card" style="background:#FF6B6B;" draggable="true" data-color="red"    id="cc-red">🔴</div>
+      <div class="color-card" style="background:#5BC8F5;" draggable="true" data-color="blue"   id="cc-blue">💙</div>
+      <div class="color-card" style="background:#FFD93D;" draggable="true" data-color="yellow" id="cc-yellow">⭐</div>
+      <div class="color-card" style="background:#6BCB77;" draggable="true" data-color="green"  id="cc-green">🌿</div>
+      <div class="color-card" style="background:#C77DFF;" draggable="true" data-color="purple" id="cc-purple">💜</div>`;
+    document.querySelectorAll('.color-slot').forEach(s => {
+      s.classList.remove('matched', 'wrong');
+      s.innerHTML = '؟';
+      s.style.fontSize = '';
+      s.style.color = '';
+    });
+    bindDrag();
+  }
+
+  bindDrag();
+</script>
+</body>
+</html>

@@ -1,81 +1,146 @@
 {% extends 'main/base.html' %}
 {% load static %}
 
-{% block style %} <link rel="stylesheet" href="{% static 'activity/css/style.css' %}"> {% endblock %}
+{% block title %}الأنشطة{% endblock %}
 
+{% block style %}
+<link rel="stylesheet" href="{% static 'activity/css/style.css' %}">
+{% endblock %}
 
 {% block content %}
-<div class="gallery-container">
-    
-    <header class="gallery-header">
-        <h1>رحلة استكشاف الأنشطة</h1>
-        <p>اختر النشاط المناسب لمزاج وقدرات طفلك الصغير اليوم</p>
-    </header>
+<main class="main-content">
 
-    <div class="activities-grid">
-        
-        <div class="activity-card" style="animation-delay: 0.1s;">
-            <div class="card-image">
-                <span class="category-badge">نشاط حسي</span>
-                <img src="{% static 'images/plays.jpg' %}" alt="Activity">
+    <div class="page-top">
+        <div class="page-badge">📊 الأنشطة</div>
+        <h1 class="page-title">اختر النشاط <span>المناسب</span> لطفلك اليوم</h1>
+        <p class="page-desc">كل نشاط مصمم بعناية لدعم تطور طفلك في مجال محدد</p>
+    </div>
+
+    <div class="categories-grid" id="categoriesGrid">
+
+        <div class="cat-card" onclick="selectCategory('visual')">
+            <div class="cat-icon-wrap" style="background:#e8f5e0;">
+                <span class="cat-icon">👁️</span>
             </div>
-            <div class="card-body">
-                <h3>اللعب بالمعجون الحسي</h3>
-                <p>تطوير المهارات الحركية الدقيقة واستكشاف الملامس المختلفة بطريقة ممتعة.</p>
-                <div class="card-footer">
-                    <div class="difficulty">
-                        <span class="dot active"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                        <small style="margin-right: 5px;">سهل</small>
-                    </div>
-                    <a href="{% url 'activity:activity_detail' %}" class="btn-start">ابدأ الآن</a>
-                </div>
+            <div class="cat-info">
+                <div class="cat-name">نشاط بصري</div>
+                <div class="cat-desc">تعزيز التواصل البصري والتركيز والتتبع</div>
+                <div class="cat-count">{{ visual.count }} أنشطة متاحة</div>
             </div>
+            <div class="cat-arrow">←</div>
         </div>
 
-        <!-- كارد 2 -->
-        <div class="activity-card" style="animation-delay: 0.2s;">
-            <div class="card-image">
-                <span class="category-badge">نشاط حركي</span>
-                <img src="{% static 'images/jumps.jpg' %}" alt="Activity">
+        <div class="cat-card" onclick="selectCategory('sensory')">
+            <div class="cat-icon-wrap" style="background:#fff3e0;">
+                <span class="cat-icon">🤲</span>
             </div>
-            <div class="card-body">
-                <h3>قفز الحواجز الملونة</h3>
-                <p>تعزيز التوازن والوعي الفراغي من خلال القفز فوق شرائط ملونة آمنة.</p>
-                <div class="card-footer">
-                    <div class="difficulty">
-                        <span class="dot active"></span>
-                        <span class="dot active"></span>
-                        <span class="dot"></span>
-                        <small style="margin-right: 5px;">متوسط</small>
-                    </div>
-                    <a href="#" class="btn-start">ابدأ الآن</a>
-                </div>
+            <div class="cat-info">
+                <div class="cat-name">نشاط حسي</div>
+                <div class="cat-desc">تنمية الحواس والاستجابة للمؤثرات البيئية</div>
+                <div class="cat-count">{{ sensory.count }} أنشطة متاحة</div>
             </div>
+            <div class="cat-arrow">←</div>
         </div>
 
-        <!-- كارد 3 -->
-        <div class="activity-card" style="animation-delay: 0.3s;">
-            <div class="card-image">
-                <span class="category-badge">نشاط لغوي</span>
-                <img src="{% static 'images/water.jpg' %}" alt="Activity">
+        <div class="cat-card" onclick="selectCategory('motor')">
+            <div class="cat-icon-wrap" style="background:#fce4ec;">
+                <span class="cat-icon">🏃</span>
             </div>
-            <div class="card-body">
-                <h3>صيد الحروف المغناطيسية</h3>
-                <p>تعلم الحروف الهجائية بطريقة تفاعلية باستخدام المغناطيس والماء.</p>
-                <div class="card-footer">
-                    <div class="difficulty">
-                        <span class="dot active"></span>
-                        <span class="dot active"></span>
-                        <span class="dot active"></span>
-                        <small style="margin-right: 5px;">متقدم</small>
-                    </div>
-                    <a href="#" class="btn-start">ابدأ الآن</a>
-                </div>
+            <div class="cat-info">
+                <div class="cat-name">نشاط حركي</div>
+                <div class="cat-desc">تطوير المهارات الحركية الدقيقة والكبيرة</div>
+                <div class="cat-count">{{ motor.count }} أنشطة متاحة</div>
             </div>
+            <div class="cat-arrow">←</div>
+        </div>
+
+        <div class="cat-card" onclick="selectCategory('language')">
+            <div class="cat-icon-wrap" style="background:#e8eaf6;">
+                <span class="cat-icon">💬</span>
+            </div>
+            <div class="cat-info">
+                <div class="cat-name">نشاط لغوي</div>
+                <div class="cat-desc">تنمية مهارات التواصل والتعبير اللغوي</div>
+                <div class="cat-count">{{ language.count }} أنشطة متاحة</div>
+            </div>
+            <div class="cat-arrow">←</div>
         </div>
 
     </div>
-</div>
+
+    <div class="visual-section" id="visualSection">
+        <div class="back-row">
+            <button class="back-btn" onclick="goBack()">→ رجوع للأنشطة</button>
+            <div class="visual-badge">👁️ الأنشطة البصرية</div>
+        </div>
+        <h2 class="section-title" id="sectionTitle">اختر النشاط</h2>
+        <p class="section-sub">أنشطة تفاعلية مصممة خصيصاً لدعم تطور طفلك</p>
+        <div class="activities-grid" id="activitiesGrid"></div>
+    </div>
+
+</main>
+
+
+<script>
+  // جلب البيانات مباشرة من Django
+  const allData = {
+    visual:   {{ visual_json|safe }},
+    sensory:  {{ sensory_json|safe }},
+    motor:    {{ motor_json|safe }},
+    language: {{ language_json|safe }},
+  };
+
+  const bgColors = {
+    visual:   '#fff3e0',
+    sensory:  '#fff8e1',
+    motor:    '#fce4ec',
+    language: '#e8eaf6',
+  };
+
+  const levelDisplay = { easy:'سهل', medium:'متوسط', hard:'صعب' };
+  const labels = {
+    visual:'👁️ الأنشطة البصرية', sensory:'🤲 الأنشطة الحسية',
+    motor:'🏃 الأنشطة الحركية', language:'💬 الأنشطة اللغوية',
+  };
+  const titles = {
+    visual:'اختر النشاط البصري', sensory:'اختر النشاط الحسي',
+    motor:'اختر النشاط الحركي', language:'اختر النشاط اللغوي',
+  };
+
+  function selectCategory(type) {
+    const acts = allData[type] || [];
+    const grid = document.getElementById('activitiesGrid');
+    grid.innerHTML = '';
+    acts.forEach(act => {
+      grid.innerHTML += `
+        <a href="/activities/play/${act.id}/" class="act-card">
+          <div class="act-img-wrap" style="background:${bgColors[type]};">
+            <span class="act-emoji">${act.emoji}</span>
+          </div>
+          <div class="act-body">
+            <div class="act-tag">${act.tag}</div>
+            <div class="act-name">${act.title}</div>
+            <div class="act-desc">${act.description}</div>
+            <div class="act-footer">
+              <span class="act-level">⭐ ${levelDisplay[act.level]||act.level}</span>
+              <span class="act-start">ابدأ ←</span>
+            </div>
+          </div>
+        </a>`;
+    });
+    document.querySelector('.visual-badge').textContent = labels[type];
+    document.getElementById('sectionTitle').textContent = titles[type];
+    document.getElementById('categoriesGrid').style.display = 'none';
+    document.querySelector('.page-top').style.display = 'none';
+    document.getElementById('visualSection').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function goBack() {
+    document.getElementById('categoriesGrid').style.display = 'grid';
+    document.querySelector('.page-top').style.display = 'block';
+    document.getElementById('visualSection').classList.remove('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
 {% endblock %}

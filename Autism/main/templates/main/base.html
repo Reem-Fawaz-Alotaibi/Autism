@@ -34,7 +34,8 @@
             <div class="sidebar-logo">
                 <div class="logo-circle">
                     <!-- إضافة الرابط الجديد والتأكد من تفعيله -->
-                    <img src="https://res.cloudinary.com/ddkq9ideu/image/upload/q_auto/f_auto/v1778787766/update-logo-removebg-preview_tmgxol.png" alt="لوجو إحتواء">
+                    <img src="https://res.cloudinary.com/ddkq9ideu/image/upload/q_auto/f_auto/v1778787766/update-logo-removebg-preview_tmgxol.png"
+                        alt="لوجو إحتواء">
                 </div>
                 <div>
                     <div class="logo-title">إحتواء</div>
@@ -58,7 +59,8 @@
                 <div class="nav-group">
                     <div class="nav-group-label">إدارة الأطفال</div>
 
-                    <a href="{%url 'children:add_child'%}" class="nav-link-item {% block nav_add_child %}{% endblock %}">
+                    <a href="{%url 'children:add_child'%}"
+                        class="nav-link-item {% block nav_add_child %}{% endblock %}">
                         <span class="nav-label">إضافة طفل</span>
                         <i class="bi bi-person-plus nav-icon"></i>
                     </a>
@@ -82,12 +84,14 @@
                         <i class="bi bi-calendar-check nav-icon"></i>
                     </a>
 
-                    <a href="{% url 'activity:activity_list' %}" class="nav-link-item {% block nav_activity %}{% endblock %}">
+                    <a href="{% url 'activity:activity_list' %}"
+                        class="nav-link-item {% block nav_activity %}{% endblock %}">
                         <span class="nav-label">الأنشطة</span>
                         <i class="bi bi-activity nav-icon"></i>
                     </a>
 
-                    <a href="{%url 'edu_video:all_educational_videos_view'%}" class="nav-link-item {% block nav_videos %}{% endblock %}">
+                    <a href="{%url 'edu_video:all_educational_videos_view'%}"
+                        class="nav-link-item {% block nav_videos %}{% endblock %}">
                         <span class="nav-label">الفيديوهات</span>
                         <i class="bi bi-play-circle nav-icon"></i>
                     </a>
@@ -96,7 +100,8 @@
                 <div class="nav-group">
                     <div class="nav-group-label">المجتمع</div>
 
-                    <a href="{% url 'community:community_view'%}" class="nav-link-item {% block nav_community %}{% endblock %}">
+                    <a href="{% url 'community:community_view'%}"
+                        class="nav-link-item {% block nav_community %}{% endblock %}">
                         <span class="nav-label">المجتمع</span>
                         <i class="bi bi-people nav-icon"></i>
                         <!-- {% if community_notifications %}
@@ -172,7 +177,8 @@
                     <div class="footer-brand-col">
                         <a href="#" class="footer-logo">
                             <div class="footer-logo-circle">
-                                <i class="bi bi-heart-fill"></i>
+                                <img src="https://res.cloudinary.com/ddkq9ideu/image/upload/q_auto/f_auto/v1778787766/update-logo-removebg-preview_tmgxol.png"
+                                    alt="لوجو إحتواء">
                             </div>
                             <span class="footer-logo-name">إحتواء</span>
                         </a>
@@ -223,9 +229,32 @@
                 </div>
 
             </footer>
+            <a href="#" onclick="openChat(); return false;" class="floating-profile" aria-label="chat">
+                <i class="fas fa-robot"></i>
+            </a>
 
+            <div id="chatModal" class="chat-modal">
+                <div class="chat-box">
+                    <div class="chat-header">
+                        <span onclick="closeChat()" class="close">✕</span>
+                        <div class="chat-header-info">
+                            <i class="fas fa-robot"></i>
+                            <div>
+                                <div class="chat-header-title">
+                                    <span class="chat-online-dot"></span> مساعد إحتواء
+                                </div>
+                                <div class="chat-header-sub">متاح دائمًا للمساعدة</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="messages" id="messages"></div>
+                    <div class="input-area">
+                        <button onclick="sendMessage()">➤</button>
+                        <input type="text" id="input" placeholder="اكتب رسالتك...">
+                    </div>
+                </div>
+            </div>
         </div>
-
     </div>
 
     <!-- Bootstrap JS -->
@@ -233,7 +262,7 @@
 
     <!-- Active nav highlight helper -->
     <script>
-        
+
         document.addEventListener('DOMContentLoaded', function () {
             const current = window.location.pathname;
             document.querySelectorAll('.nav-link-item').forEach(function (link) {
@@ -242,39 +271,105 @@
                 }
             });
         });
-    
-    document.addEventListener('DOMContentLoaded', function() {
-    const faqItems = document.querySelectorAll('.faq-item');
 
-    faqItems.forEach(item => {
-        const question = item.querySelector('.faq-question');
-        
-        question.addEventListener('click', () => {
-            // إغلاق أي سؤال آخر مفتوح (اختياري)
-            faqItems.forEach(otherItem => {
-                if (otherItem !== item) {
-                    otherItem.classList.remove('active');
+        document.addEventListener('DOMContentLoaded', function () {
+            const faqItems = document.querySelectorAll('.faq-item');
+
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+
+                question.addEventListener('click', () => {
+                    // إغلاق أي سؤال آخر مفتوح (اختياري)
+                    faqItems.forEach(otherItem => {
+                        if (otherItem !== item) {
+                            otherItem.classList.remove('active');
+                        }
+                    });
+
+                    // تبديل حالة السؤال الحالي
+                    item.classList.toggle('active');
+                });
+            });
+
+            // تحسين حركة التنقل السلس (Smooth Scroll) للروابط الجانبية
+            document.querySelectorAll('.toc-link').forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    document.querySelector(targetId).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+
+        // chatbot script 
+
+        const convId = 1;
+
+    function openChat() {
+        document.getElementById("chatModal").classList.add("active");
+        loadMessages();
+    }
+
+    function closeChat() {
+        document.getElementById("chatModal").classList.remove("active");
+    }
+
+    async function loadMessages() {
+        if (!convId) return;
+
+        let res = await fetch(`/chatbot/conversation/${convId}/messages/`);
+        let data = await res.json();
+
+        let box = document.getElementById("messages");
+        box.innerHTML = "";
+
+        data.forEach(msg => {
+            let div = document.createElement("div");
+            div.classList.add("msg");
+            div.classList.add(msg.message_type === "user" ? "user" : "bot");
+            div.innerText = msg.content;
+            box.appendChild(div);
+        });
+
+        box.scrollTop = box.scrollHeight;
+    }
+
+    async function sendMessage() {
+        let input = document.getElementById("input");
+        if (!input.value.trim() || !convId) return;
+
+        await fetch(`/chatbot/conversation/${convId}/send/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken")
+            },
+            body: JSON.stringify({ content: input.value })
+        });
+
+        input.value = "";
+        loadMessages();
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            document.cookie.split(";").forEach(cookie => {
+                let c = cookie.trim();
+                if (c.startsWith(name + "=")) {
+                    cookieValue = decodeURIComponent(c.substring(name.length + 1));
                 }
             });
+        }
+        return cookieValue;
+    }
 
-            // تبديل حالة السؤال الحالي
-            item.classList.toggle('active');
-        });
+    document.getElementById("input").addEventListener("keydown", function(e) {
+        if (e.key === "Enter") sendMessage();
     });
-
-    // تحسين حركة التنقل السلس (Smooth Scroll) للروابط الجانبية
-    document.querySelectorAll('.toc-link').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            document.querySelector(targetId).scrollIntoView({
-                behavior: 'smooth'
-            });
-        });
-    });
-});
-    
-</script>
+    </script>
     {% block extra_js %}{% endblock %}
 </body>
 

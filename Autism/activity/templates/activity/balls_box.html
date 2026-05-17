@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الكور والصندوق — إحتواء</title>
+  <style>
+    
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+:root {
+  --green-dark:  #4a6e38;
+  --green-mid:   #7aad60;
+  --green-light: #d4edbc;
+  --green-pale:  #eef7e6;
+  --cream:       #faf8f3;
+  --text-dark:   #2c3e20;
+  --text-mid:    #5a6b50;
+  --text-light:  #8fa880;
+  --radius-lg:   20px;
+  --radius-md:   14px;
+}
+
+body {
+  font-family: 'Tajawal', sans-serif;
+  background: var(--cream);
+  color: var(--text-dark);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0 60px;
+  direction: rtl;
+}
+
+.page-header {
+  width: 100%;
+  background: var(--green-dark);
+  padding: 20px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+.header-logo { font-size: 22px; font-weight: 800; color: #fff; }
+.header-logo span { color: var(--green-light); }
+.header-badge {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.game-card {
+  width: 100%;
+  max-width: 680px;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--green-light);
+  padding: 36px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-dark);
+  margin-bottom: 6px;
+}
+.game-sub {
+  font-size: 14px;
+  color: var(--text-light);
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.progress-wrap {
+  width: 100%;
+  max-width: 360px;
+  background: var(--green-pale);
+  border-radius: 20px;
+  height: 8px;
+  margin-bottom: 28px;
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  background: var(--green-mid);
+  border-radius: 20px;
+  transition: width .4s ease;
+}
+
+.balls-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+.balls-row {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  min-height: 80px;
+  padding: 8px;
+}
+
+.ball {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  border: 3px solid rgba(0,0,0,0.08);
+  transition: transform .15s, box-shadow .15s;
+  touch-action: none;
+}
+.ball:hover  { transform: scale(1.1);  box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+.ball:active { cursor: grabbing; transform: scale(1.14); }
+.ball.dragging { opacity: .5; }
+
+.drop-box {
+  width: 300px;
+  min-height: 120px;
+  border-radius: var(--radius-lg);
+  border: 3px dashed var(--green-mid);
+  background: var(--green-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px;
+  transition: all .2s;
+}
+.drop-box.drag-over {
+  background: #d4edbc;
+  transform: scale(1.04);
+  border-color: var(--green-dark);
+}
+.drop-box-label {
+  font-size: 14px;
+  color: var(--text-light);
+  font-weight: 500;
+  pointer-events: none;
+}
+.box-ball {
+  font-size: 28px;
+  animation: bounceIn .3s cubic-bezier(.34,1.4,.64,1);
+}
+@keyframes bounceIn {
+  from { transform: scale(0); }
+  to   { transform: scale(1); }
+}
+
+.success-banner {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: var(--green-pale);
+  border: 2px solid var(--green-light);
+  border-radius: var(--radius-md);
+  padding: 22px 40px;
+  margin-top: 28px;
+  animation: popIn .4s cubic-bezier(.34,1.4,.64,1);
+}
+.success-banner.show { display: flex; }
+.success-banner .star { font-size: 38px; }
+.success-banner p     { font-size: 18px; font-weight: 700; color: var(--green-dark); }
+.success-banner small { font-size: 13px; color: var(--text-light); }
+
+@keyframes popIn {
+  from { transform: scale(.7); opacity: 0; }
+  to   { transform: scale(1);  opacity: 1; }
+}
+
+.reset-btn {
+  margin-top: 20px;
+  padding: 11px 32px;
+  border-radius: 30px;
+  border: none;
+  background: var(--green-dark);
+  color: #fff;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s, transform .15s;
+}
+.reset-btn:hover  { background: var(--green-mid); transform: scale(1.03); }
+.reset-btn:active { transform: scale(.97); }
+
+@media (max-width: 520px) {
+  .page-header { padding: 16px 18px; }
+  .game-card   { padding: 22px 14px; }
+  .ball        { width: 58px; height: 58px; font-size: 22px; }
+  .drop-box    { width: 240px; }
+}
+
+.back-bar {
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 16px;
+}
+.back-btn-game {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--cream);
+  border: 1.5px solid var(--green-light);
+  border-radius: 30px;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-mid);
+  text-decoration: none;
+  transition: all .2s;
+}
+.back-btn-game:hover {
+  border-color: var(--green-mid);
+  color: var(--green-dark);
+}
+  </style>
+</head>
+<body>
+
+<br>
+<br>
+<br>
+<div class="back-bar">
+    <button class="back-btn-game" onclick="history.back()">
+         رجوع
+    </button>
+</div> 
+<div class="game-card">
+  <div class="game-title">⚽ الكور والصندوق</div>
+  <div class="game-sub">اسحب كل الكور وضعها داخل الصندوق</div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar" id="ballProgress" style="width:0%"></div>
+  </div>
+
+  <div class="balls-section">
+    <div class="balls-row" id="ballsRow">
+      <div class="ball" style="background:#FF6B6B;" draggable="true" data-ball="1" id="ball1">⚽</div>
+      <div class="ball" style="background:#5BC8F5;" draggable="true" data-ball="2" id="ball2">🏀</div>
+      <div class="ball" style="background:#FFD93D;" draggable="true" data-ball="3" id="ball3">🎾</div>
+      <div class="ball" style="background:#C77DFF;" draggable="true" data-ball="4" id="ball4">🔮</div>
+      <div class="ball" style="background:#6BCB77;" draggable="true" data-ball="5" id="ball5">🎱</div>
+      <div class="ball" style="background:#FFB347;" draggable="true" data-ball="6" id="ball6">🏐</div>
+    </div>
+
+    <div class="drop-box" id="dropBox"
+         ondragover="dov(event)" ondrop="dropBall(event)" ondragleave="dlv(event)">
+      <span class="drop-box-label" id="boxLabel">📦 الصندوق — اسحب الكور هنا</span>
+    </div>
+  </div>
+
+  <div class="success-banner" id="ballWin">
+    <div class="star">🎊</div>
+    <p>رائع جداً!</p>
+    <small>وضعت كل الكور في الصندوق</small>
+  </div>
+  <button class="reset-btn" onclick="resetBalls()">🔄 إعادة اللعب</button>
+</div>
+
+<script>
+  let dragId = null;
+  let dropped = 0;
+  const total = 6;
+
+  function dov(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+  function dlv(e) { e.currentTarget.classList.remove('drag-over'); }
+
+  function bindDrag() {
+    document.querySelectorAll('.ball').forEach(el => {
+      el.addEventListener('dragstart', () => { dragId = el.id; el.classList.add('dragging'); });
+      el.addEventListener('dragend',   () => el.classList.remove('dragging'));
+      el.addEventListener('touchstart', () => { dragId = el.id; el.style.opacity = '.55'; }, { passive: true });
+      el.addEventListener('touchend', e => {
+        el.style.opacity = '1';
+        const t = e.changedTouches[0];
+        el.style.display = 'none';
+        const under = document.elementFromPoint(t.clientX, t.clientY);
+        el.style.display = '';
+        if (!under) return;
+        const box = under.closest('.drop-box');
+        if (box) handleBall(box);
+      });
+    });
+  }
+
+  function dropBall(e) { e.preventDefault(); dlv(e); handleBall(e.currentTarget); }
+
+  function handleBall(box) {
+    if (!dragId) return;
+    const el = document.getElementById(dragId);
+    if (!el) return;
+    const label = document.getElementById('boxLabel');
+    if (label) label.remove();
+    const span = document.createElement('span');
+    span.className = 'box-ball';
+    span.textContent = el.textContent;
+    box.appendChild(span);
+    el.remove();
+    dropped++;
+    document.getElementById('ballProgress').style.width = (dropped / total * 100) + '%';
+    if (dropped === total) document.getElementById('ballWin').classList.add('show');
+    dragId = null;
+  }
+
+  function resetBalls() {
+    dropped = 0;
+    document.getElementById('ballProgress').style.width = '0%';
+    document.getElementById('ballWin').classList.remove('show');
+    document.getElementById('ballsRow').innerHTML = `
+      <div class="ball" style="background:#FF6B6B;" draggable="true" data-ball="1" id="ball1">⚽</div>
+      <div class="ball" style="background:#5BC8F5;" draggable="true" data-ball="2" id="ball2">🏀</div>
+      <div class="ball" style="background:#FFD93D;" draggable="true" data-ball="3" id="ball3">🎾</div>
+      <div class="ball" style="background:#C77DFF;" draggable="true" data-ball="4" id="ball4">🔮</div>
+      <div class="ball" style="background:#6BCB77;" draggable="true" data-ball="5" id="ball5">🎱</div>
+      <div class="ball" style="background:#FFB347;" draggable="true" data-ball="6" id="ball6">🏐</div>`;
+    document.getElementById('dropBox').innerHTML = '<span class="drop-box-label" id="boxLabel">📦 الصندوق — اسحب الكور هنا</span>';
+    bindDrag();
+  }
+
+  bindDrag();
+</script>
+</body>
+</html>

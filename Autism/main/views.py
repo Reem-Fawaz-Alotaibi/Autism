@@ -1,9 +1,15 @@
 from django.shortcuts import render
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest
+from chatbot.models import Conversation
 
 
 def home_page_view(request: HttpRequest):
-    return render(request, 'main/home.html')
+    conv_id = None
+    if request.user.is_authenticated:
+        conv, _ = Conversation.objects.get_or_create(user=request.user)
+        conv_id = conv.id
+    
+    return render(request, 'main/home.html', {"conv_id": conv_id})
 
 
 def about_us_view(request: HttpRequest):
