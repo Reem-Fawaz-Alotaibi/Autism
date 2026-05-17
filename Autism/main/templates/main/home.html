@@ -108,80 +108,209 @@
         </div>
     </section>
 
-    <a href="#" onclick="openChat()" class="floating-profile" aria-label="chat">
-    <i class="bi bi-chat-dots"></i>
-</a> 
-<!-- https://res.cloudinary.com/ddkq9ideu/image/upload/v1778740017/da9x2mx1yubpeelqjva5.png -->
- <div id="chatModal" class="chat-modal">
 
-    <div class="chat-box">
 
-        <div class="chat-header">
-            💬 Chat Bot
-            <span onclick="closeChat()" class="close">✖</span>
+    <section class="sub-section">
+        <div class="sub-container">
+
+            <div class="sub-heading">
+                <h2>اختر خطتك <span>المناسبة</span></h2>
+                <p>ابدأ مجاناً وطوّر تجربة طفلك خطوة بخطوة</p>
+            </div>
+
+            <div class="sub-cards">
+
+                <div class="sub-card sub-card-free">
+                    <div class="sub-badge">
+                        البداية
+                    </div>
+                    <h3 class="sub-card-name">الخطة المجانية</h3>
+                    <p class="sub-card-sub">
+                        جرّب المنصة واستكشف الأساسيات بدون أي تكلفة
+                    </p>
+                    <div class="sub-price-wrapper">
+                        <div class="sub-price">
+                            <span class="sub-price-num">0</span>
+                            <div class="sub-price-meta">
+                                <span class="sub-price-cur">ر.س</span>
+                                <span class="sub-price-per">مجاناً دائماً</span>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="{% url 'accounts:signup' %}" class="sub-btn sub-btn-free">
+                        ابدأ مجاناً
+                    </a>
+                    <ul class="sub-features">
+                        <li class="f-yes">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="m20 6-11 11-5-5" />
+                            </svg>
+                            طفل واحد
+                        </li>
+                        <li class="f-yes">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="m20 6-11 11-5-5" />
+                            </svg>
+                            5 جلسات شهرياً
+                        </li>
+                        <li class="f-yes">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="m20 6-11 11-5-5" />
+                            </svg>
+                            تتبع 3 مهارات
+                        </li>
+                        <li class="f-no">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 6 6 18M6 6l12 12" />
+                            </svg>
+                            تقارير ذكاء اصطناعي
+                        </li>
+                        <li class="f-no">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 6 6 18M6 6l12 12" />
+                            </svg>
+                            دعم أولوية
+                        </li>
+                    </ul>
+                </div>
+
+
+                <div class="sub-card sub-card-pro">
+                    <div class="sub-badge">
+                        الأكثر اختياراً
+                    </div>
+                    <h3 class="sub-card-name">إحتواء برو</h3>
+                    <p class="sub-card-sub">
+                        جميع الأدوات الذكية لمتابعة تطور طفلك بشكل أعمق
+                    </p>
+                    <div class="sub-price-wrapper">
+                        <div class="sub-price">
+                            <span class="sub-price-num" id="proPrice">49</span>
+                            <div class="sub-price-meta">
+                                <span class="sub-price-cur">ر.س</span>
+                                <span class="sub-price-per" id="proPeriod">/ شهر</span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <a href="{% url 'accounts:signup' %}" class="sub-btn sub-btn-free">
+                        اشترك الآن
+                    </a>
+                    <ul class="sub-features">
+                        <li class="f-yes">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="m20 6-11 11-5-5" />
+                            </svg>
+                            حتى 3 أطفال
+                        </li>
+                        <li class="f-yes">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="m20 6-11 11-5-5" />
+                            </svg>
+                            جلسات غير محدودة
+                        </li>
+                        <li class="f-yes">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="m20 6-11 11-5-5" />
+                            </svg>
+                            تحليلات ذكية متقدمة
+                        </li>
+                        <li class="f-yes">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="m20 6-11 11-5-5" />
+                            </svg>
+                            تقارير أسبوعية بالذكاء الاصطناعي
+                        </li>
+                        <li class="f-yes">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="m20 6-11 11-5-5" />
+                            </svg>
+                            دعم أولوية
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <div class="messages" id="messages"></div>
 
-        <div class="input-area">
-            <input type="text" id="input" placeholder="Type message...">
-            <button onclick="sendMessage()">Send</button>
+
+
+
+    <a href="#" onclick="openChat()" class="floating-profile" aria-label="chat">
+        <i class="bi bi-chat-dots"></i>
+    </a>
+    <!-- https://res.cloudinary.com/ddkq9ideu/image/upload/v1778740017/da9x2mx1yubpeelqjva5.png -->
+    <div id="chatModal" class="chat-modal">
+
+        <div class="chat-box">
+
+            <div class="chat-header">
+                💬 Chat Bot
+                <span onclick="closeChat()" class="close">✖</span>
+            </div>
+
+            <div class="messages" id="messages"></div>
+
+            <div class="input-area">
+                <input type="text" id="input" placeholder="Type message...">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+
         </div>
 
     </div>
 
 </div>
-
-</div>
 <script>
 
-const convId = 1;
+    const convId = 1;
 
-// فتح النافذة
-function openChat() {
-    document.getElementById("chatModal").classList.add("active");
-    loadMessages();
-}
+    // فتح النافذة
+    function openChat() {
+        document.getElementById("chatModal").classList.add("active");
+        loadMessages();
+    }
 
-// إغلاق النافذة
-function closeChat() {
-    document.getElementById("chatModal").classList.remove("active");
-}
+    // إغلاق النافذة
+    function closeChat() {
+        document.getElementById("chatModal").classList.remove("active");
+    }
 
-// جلب الرسائل
-async function loadMessages() {
-    let res = await fetch(`/chatbot/conversation/${convId}/messages/`);
-    let data = await res.json();
+    // جلب الرسائل
+    async function loadMessages() {
+        let res = await fetch(`/chatbot/conversation/${convId}/messages/`);
+        let data = await res.json();
 
-    let box = document.getElementById("messages");
-    box.innerHTML = "";
+        let box = document.getElementById("messages");
+        box.innerHTML = "";
 
-    data.forEach(msg => {
-        let div = document.createElement("div");
-        div.classList.add("msg");
-        div.classList.add(msg.type);
-        div.innerText = msg.content;
-        box.appendChild(div);
-    });
-}
+        data.forEach(msg => {
+            let div = document.createElement("div");
+            div.classList.add("msg");
+            div.classList.add(msg.type);
+            div.innerText = msg.content;
+            box.appendChild(div);
+        });
+    }
 
-// إرسال رسالة
-async function sendMessage() {
-    let input = document.getElementById("input");
+    // إرسال رسالة
+    async function sendMessage() {
+        let input = document.getElementById("input");
 
-    await fetch(`/chatbot/conversation/${convId}/send/`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            content: input.value
-        })
-    });
+        await fetch(`/chatbot/conversation/${convId}/send/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                content: input.value
+            })
+        });
 
-    input.value = "";
-    loadMessages();
-}
+        input.value = "";
+        loadMessages();
+    }
 
 </script>
 

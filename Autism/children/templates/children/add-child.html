@@ -2,8 +2,9 @@
 {% load static %}
 
 {% block title %}إضافة طفل — Ehtiwa{% endblock %}
- {% block style %} <link rel="stylesheet" href="{% static 'accounts/css/style.css' %}">
- {% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'accounts/css/style.css' %}">
+{% endblock %}
 
 
 {% block content %}
@@ -95,9 +96,9 @@
                     <label for="c-sensory">الحساسية الحسية</label>
                     <div class="select-wrap">
                         <select class="form-input no-icon" id="c-sensory" name="sensory_sensitivities">
-                            <option value="sound">🔊 الصوت</option>
-                            <option value="touch">✋ اللمس</option>
-                            <option value="light">💡 الضوء</option>
+                            <option value="sound">الصوت</option>
+                            <option value="touch"> اللمس</option>
+                            <option value="light"> الضوء</option>
                             <option value="none">لا توجد</option>
                         </select>
                     </div>

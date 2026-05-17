@@ -86,7 +86,8 @@ body {
     width: 66px;
     height: 66px;
     border-radius: 50%;
-    background-color: #EDE7DC !important; /*var(--green-mid)*/
+    background-color: #EDE7DC !important;
+    /*var(--green-mid)*/
     display: flex;
     align-items: center;
     justify-content: center;
@@ -226,23 +227,6 @@ body {
 .sidebar-profile {
     flex-shrink: 0;
     padding: 14px;
-}
-
-.profile-card {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background-color: var(--bg-card);
-    border-radius: var(--radius);
-    padding: 11px 13px;
-    text-decoration: none;
-    color: var(--text-dark);
-    transition: background 0.18s;
-}
-
-.profile-card:hover {
-    background-color: #E4DDD2;
-    color: var(--text-dark);
 }
 
 /* avatar → rightmost in RTL */
@@ -2601,7 +2585,8 @@ body {
 }
 
 .faq-item:hover {
-    border-color: #b9d4a7; /* لون الثيم الأخضر */
+    border-color: #b9d4a7;
+    /* لون الثيم الأخضر */
     transform: translateY(-3px);
 }
 
@@ -2631,7 +2616,8 @@ body {
 
 /* الحالة النشطة عند الفتح */
 .faq-item.active {
-    background-color: #f4f8f2; /* اللون الفاتح من الثيم */
+    background-color: #f4f8f2;
+    /* اللون الفاتح من الثيم */
 }
 
 .faq-item.active .faq-answer {
@@ -2651,15 +2637,15 @@ body {
 /************************************************/
 /*logo*/
 .logo-circle {
-    width: 60px; 
+    width: 60px;
     height: 60px;
     border-radius: 50%;
-    overflow: hidden; 
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
     /* الحفاظ على لونك المفضل كما طلبتِ */
-    background-color: #EDE7DC !important; 
+    background-color: #EDE7DC !important;
     border: none !important;
 }
 
@@ -2667,12 +2653,12 @@ body {
     width: 100%;
     height: 100%;
     /* تغيير contain إلى cover يضمن أن اللوجو سيمتد ليغطي الدائرة تماماً */
-    object-fit: cover; 
+    object-fit: cover;
     padding: 0 !important;
     margin-top: -8px;
     /* margin: 0 !important; */
     /* التحكم في الزوم: إذا شعرتِ أنه كبير جداً يمكنك تقليل الرقم إلى 1.15 */
-    transform: scale(1.20); 
+    transform: scale(1.20);
     transition: transform 0.3s ease;
 }
 
@@ -2707,27 +2693,30 @@ body {
 
 .team-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* هنا جعلناهم 2 بجانب بعض */
+    grid-template-columns: repeat(2, 1fr);
+    /* هنا جعلناهم 2 بجانب بعض */
     gap: 40px;
     max-width: 1100px;
     margin: 0 auto;
 }
 
 .member-card {
-    display: flex; /* جعل المحتوى بالعرض */
+    display: flex;
+    /* جعل المحتوى بالعرض */
     align-items: center;
     background: #ffffff;
     padding: 30px;
     border-radius: 24px;
     border: 1px solid rgba(107, 123, 95, 0.1);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.03);
     transition: all 0.5s ease;
     position: relative;
     overflow: hidden;
 }
 
 .member-card:hover {
-    transform: translateX(-10px); /* حركة لليمين بسيطة عند التمرير */
+    transform: translateX(-10px);
+    /* حركة لليمين بسيطة عند التمرير */
     border-color: #6B7B5F;
     box-shadow: 0 25px 50px rgba(107, 123, 95, 0.1);
 }
@@ -2738,7 +2727,8 @@ body {
     min-width: 130px;
     border-radius: 20px;
     overflow: hidden;
-    margin-left: 25px; /* مسافة بين الصورة والنص */
+    margin-left: 25px;
+    /* مسافة بين الصورة والنص */
     transform: rotate(-3deg);
     transition: all 0.5s ease;
 }
@@ -2785,14 +2775,17 @@ body {
     .team-grid {
         grid-template-columns: 1fr;
     }
+
     .member-card {
         flex-direction: column;
         text-align: center;
     }
+
     .member-details {
         text-align: center;
         margin-top: 20px;
     }
+
     .member-img {
         margin-left: 0;
     }
@@ -2804,7 +2797,7 @@ body {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0, 0, 0, 0.6);
     justify-content: center;
     align-items: center;
     z-index: 9999;
@@ -2835,6 +2828,7 @@ body {
 .close {
     cursor: pointer;
 }
+
 .sub-container {
     max-width: 900px;
     margin: 0 auto;
@@ -3093,40 +3087,89 @@ body {
     }
 }
 
-/*  Logout Button  */
-.logout-form {
-    margin-top: 12px;
+
+
+
+
+
+
+/*profile and logout */
+.profile-card {
+    background: #f5f1eb;
+    border-radius: 16px;
+    padding: 10px;
+    max-width: 220px;
 }
 
-.logout-btn {
+.profile-top {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    gap: 8px;
+}
+
+.profile-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #7d8b5b;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.profile-text {
+    flex: 1;
+}
+
+.profile-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #222;
+}
+
+.profile-role {
+    font-size: 10px;
+    color: #b89d83;
+    margin-top: 2px;
+}
+
+.profile-arrow {
+    color: #9b8d7d;
+    font-size: 13px;
+}
+
+.profile-divider {
+    height: 1px;
+    background: #ddd3c8;
+    margin: 8px 0 5px;
+}
+
+.logout-inside-btn {
     width: 100%;
     border: none;
-    outline: none;
-    background: #fff;
-    color: #b54747;
-    border: 1px solid #e7c9c9;
-    border-radius: var(--radius);
-    padding: 11px 14px;
+    background: transparent;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    font-family: 'Tajawal', sans-serif;
-    font-size: 14px;
+    color: #c64545;
+    font-size: 12px;
     font-weight: 600;
 
     cursor: pointer;
-    transition: all 0.2s ease;
+    padding: 2px;
+
+    transition: 0.3s;
 }
 
-.logout-btn i {
-    font-size: 16px;
-}
-
-.logout-btn:hover {
-    background: #b54747;
-    color: #fff;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(181, 71, 71, 0.18);
+.logout-inside-btn:hover {
+    opacity: 0.7;
 }
