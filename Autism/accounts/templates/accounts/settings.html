@@ -10,7 +10,7 @@
 <div class="settings-page">
 
     <div class="page-heading">
-        <h1>⚙️ <span>الإعدادات</span></h1>
+        <h1> <span>الإعدادات</span></h1>
         <p>تحكّم في حسابك وتفضيلاتك الشخصية.</p>
     </div>
 
@@ -36,13 +36,7 @@
             </svg>
             المظهر
         </button>
-        <button class="settings-tab" onclick="switchTab('privacy', this)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="11" width="18" height="11" rx="2" />
-                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-            </svg>
-            الخصوصية
-        </button>
+
         <button class="settings-tab" onclick="switchTab('danger', this)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
@@ -64,7 +58,7 @@
                 </svg>
                 البريد الإلكتروني
             </div>
-            <form method="POST" action="#">
+            <form method="POST" action="{% url 'accounts:update_email' %}">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="s-email">البريد الحالي</label>
@@ -96,7 +90,7 @@
                 </svg>
                 كلمة المرور
             </div>
-            <form method="POST" action="#">
+            <form method="POST" action="{% url 'accounts:update_password' %}">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="s-pw-old">كلمة المرور الحالية</label>
@@ -145,30 +139,7 @@
             </form>
         </div>
 
-        <div class="edit-section">
-            <div class="edit-section-title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                </svg>
-                اللغة
-            </div>
-            <div class="form-group">
-                <label for="s-lang">لغة التطبيق</label>
-                <div class="select-wrap">
-                    <select class="form-input no-icon" id="s-lang" name="language">
-                        <option value="ar" selected>العربية 🇸🇦</option>
-                        <option value="en">English 🇬🇧</option>
-                    </select>
-                </div>
-            </div>
-            <button class="btn-primary btn-sm" onclick="showToast('تم حفظ اللغة')">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="m20 6-11 11-5-5" />
-                </svg>
-                حفظ
-            </button>
-        </div>
+
 
     </div>
 
@@ -217,27 +188,6 @@
                 </label>
             </div>
 
-            <div class="pref-row">
-                <div class="pref-text">
-                    <h4>توصيات الأخصائيين</h4>
-                    <p>إشعار عند توفر موارد تناسب ملف طفلك</p>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" checked onchange="showToast('تم حفظ الإعداد')" />
-                    <span class="toggle-track"></span>
-                </label>
-            </div>
-
-            <div class="pref-row">
-                <div class="pref-text">
-                    <h4>رسائل البريد الإلكتروني</h4>
-                    <p>استلام الإشعارات عبر البريد أيضاً</p>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" checked onchange="showToast('تم حفظ الإعداد')" />
-                    <span class="toggle-track"></span>
-                </label>
-            </div>
 
         </div>
     </div>
@@ -307,73 +257,6 @@
 
     </div>
 
-    <div class="settings-section" id="tab-privacy">
-
-        <div class="edit-section">
-            <div class="edit-section-title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="11" width="18" height="11" rx="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg>
-                إعدادات الخصوصية
-            </div>
-
-            <div class="pref-row">
-                <div class="pref-text">
-                    <h4>إظهار الملف في المجتمع</h4>
-                    <p>يمكن لأعضاء المجتمع رؤية ملفك الشخصي</p>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" checked onchange="showToast('تم حفظ الإعداد')" />
-                    <span class="toggle-track"></span>
-                </label>
-            </div>
-
-            <div class="pref-row">
-                <div class="pref-text">
-                    <h4>مشاركة بيانات التحسين</h4>
-                    <p>المساعدة في تحسين التطبيق بمشاركة بيانات الاستخدام</p>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" onchange="showToast('تم حفظ الإعداد')" />
-                    <span class="toggle-track"></span>
-                </label>
-            </div>
-
-            <div class="pref-row">
-                <div class="pref-text">
-                    <h4>تسجيل الدخول بخطوتين</h4>
-                    <p>حماية إضافية لحسابك</p>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" onchange="showToast('تم حفظ الإعداد')" />
-                    <span class="toggle-track"></span>
-                </label>
-            </div>
-
-        </div>
-
-        <div class="edit-section">
-            <div class="edit-section-title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="7 10 12 15 17 10" />
-                    <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                تصدير البيانات
-            </div>
-            <p class="field-hint" style="margin-bottom: 14px;">تحميل نسخة كاملة من بيانات حسابك وبيانات أطفالك.</p>
-            <button class="btn-outline" onclick="showToast('جاري تجهيز ملف البيانات...')">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="7 10 12 15 17 10" />
-                    <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                تصدير بياناتي
-            </button>
-        </div>
-
-    </div>
 
 
     <div class="settings-section" id="tab-danger">
@@ -393,24 +276,54 @@
                     <h4>تسجيل الخروج من جميع الأجهزة</h4>
                     <p>إنهاء جميع جلسات الدخول النشطة على أجهزتك الأخرى.</p>
                 </div>
-                <button class="btn-outline" onclick="showToast('تم تسجيل الخروج من جميع الأجهزة')">
-                    تسجيل الخروج
+                <form method="POST" action="{% url 'accounts:logout_all_devices' %}">
+                    {% csrf_token %}
+
+                    <button type="submit" class="btn-outline">
+                        تسجيل الخروج
+                    </button>
+                </form>
+            </div>
+
+
+            <div class="danger-item" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #f0bfb0;">
+                <div class="danger-item-text">
+                    <h4>إلغاء الاشتراك الشهري</h4>
+                    <p>سيتم إيقاف التجديد التلقائي للاشتراك، ويمكنك الاستمرار حتى نهاية الفترة الحالية.</p>
+                </div>
+
+                <button class="btn-outline" onclick="cancelSubscription()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12a9 9 0 1 1-3-6.7" />
+                        <polyline points="21 3 21 9 15 9" />
+                    </svg>
+                    إلغاء الاشتراك
                 </button>
             </div>
+
 
             <div class="danger-item" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #f0bfb0;">
                 <div class="danger-item-text">
                     <h4>حذف الحساب نهائياً</h4>
                     <p>سيتم حذف جميع بياناتك وبيانات أطفالك بشكل دائم ولا يمكن التراجع عن هذا الإجراء.</p>
                 </div>
-                <button class="btn-danger" onclick="confirmDeleteAccount()">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="3 6 5 6 21 6" />
-                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-                    </svg>
-                    حذف حسابي
-                </button>
+                <form method="POST" action="{% url 'accounts:delete_account' %}" onsubmit="return confirm('هل أنت متأكد من حذف الحساب نهائيًا؟');">
+
+                    {% csrf_token %}
+
+                    <button type="submit" class="btn-danger">
+
+                        حذف حسابي
+                    </button>
+                </form>
+
             </div>
+
+
+
+
+
+
 
         </div>
     </div>

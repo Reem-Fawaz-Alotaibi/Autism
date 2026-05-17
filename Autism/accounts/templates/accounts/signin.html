@@ -1,4 +1,5 @@
 {% load static %}
+{% load socialaccount %}
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -67,7 +68,7 @@
           </div>
 
           <!-- Google -->
-          <a href="/accounts/google/login/" class="btn-google">
+          <a href="{% provider_login_url 'google' %}" class="btn-google">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path fill="#4285F4"
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -85,10 +86,10 @@
             <span>أو تسجيل الدخول بالبريد الإلكتروني</span>
           </div>
 
-          <!-- Email -->
+          <!-- Username -->
           <div class="form-group">
 
-            <label for="si-email">البريد الإلكتروني</label>
+            <label for="si-username">اسم المستخدم</label>
 
             <div class="input-wrap">
 
@@ -100,16 +101,12 @@
                   stroke-linecap="round"
                   stroke-linejoin="round">
 
-                  <rect x="2" y="4" width="20" height="16" rx="2" />
-                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
                 </svg>
               </span>
 
-              <input
-                class="form-input"
-                type="email"
-                id="si-email"
-                placeholder="example@email.com" name="email" />
+              <input class="form-input" type="text" id="si-username" placeholder="اسم المستخدم" name="username" />
             </div>
           </div>
 

@@ -1,9 +1,15 @@
 from django.shortcuts import render
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest
+from chatbot.models import Conversation
 
 
 def home_page_view(request: HttpRequest):
-    return render(request, 'main/home.html')
+    conv_id = None
+    if request.user.is_authenticated:
+        conv, _ = Conversation.objects.get_or_create(user=request.user)
+        conv_id = conv.id
+    
+    return render(request, 'main/home.html', {"conv_id": conv_id})
 
 
 def about_us_view(request: HttpRequest):
@@ -27,6 +33,7 @@ def terms_of_service_view(request: HttpRequest):
 
 
 def questions_view(request: HttpRequest):
+<<<<<<< HEAD
     return render(request, 'main/questions.html')
 
 def dashboard_view(request: HttpRequest):
@@ -34,3 +41,6 @@ def dashboard_view(request: HttpRequest):
 
 def test_view(request: HttpRequest):
     return render(request, 'main/404.html')
+=======
+    return render(request, 'main/questions.html')
+>>>>>>> b8c24c78354b26dcafa1e603c5e11536d499c5c2

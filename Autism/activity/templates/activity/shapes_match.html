@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>طابق الأشكال — إحتواء</title>
+<style>
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+:root {
+  --green-dark:  #4a6e38;
+  --green-mid:   #7aad60;
+  --green-light: #d4edbc;
+  --green-pale:  #eef7e6;
+  --cream:       #faf8f3;
+  --text-dark:   #2c3e20;
+  --text-mid:    #5a6b50;
+  --text-light:  #8fa880;
+  --radius-lg:   20px;
+  --radius-md:   14px;
+}
+
+body {
+  font-family: 'Tajawal', sans-serif;
+  background: var(--cream);
+  color: var(--text-dark);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0 60px;
+  direction: rtl;
+}
+
+.page-header {
+  width: 100%;
+  background: var(--green-dark);
+  padding: 20px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+.header-logo { font-size: 22px; font-weight: 800; color: #fff; }
+.header-logo span { color: var(--green-light); }
+.header-badge {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.game-card {
+  width: 100%;
+  max-width: 680px;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--green-light);
+  padding: 36px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-dark);
+  margin-bottom: 6px;
+}
+.game-sub {
+  font-size: 14px;
+  color: var(--text-light);
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.progress-wrap {
+  width: 100%;
+  max-width: 360px;
+  background: var(--green-pale);
+  border-radius: 20px;
+  height: 8px;
+  margin-bottom: 28px;
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  background: var(--green-mid);
+  border-radius: 20px;
+  transition: width .4s ease;
+}
+
+.shapes-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+}
+
+.shapes-row {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  min-height: 86px;
+}
+
+.shape-item {
+  width: 76px;
+  height: 76px;
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  transition: transform .15s;
+  touch-action: none;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,.12));
+}
+.shape-item:hover  { transform: scale(1.12) rotate(-5deg); }
+.shape-item:active { cursor: grabbing; }
+.shape-item.dragging { opacity: .5; }
+
+.divider-label {
+  font-size: 13px;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 420px;
+}
+.divider-label::before,
+.divider-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--green-light);
+}
+
+.shape-slots-row {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.shape-slot {
+  width: 76px;
+  height: 76px;
+  border-radius: var(--radius-md);
+  border: 3px dashed #ccc;
+  background: rgba(255,255,255,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  opacity: .4;
+  transition: all .2s;
+}
+.shape-slot.drag-over {
+  opacity: .85;
+  border-color: var(--green-mid);
+  transform: scale(1.1);
+  background: var(--green-pale);
+}
+.shape-slot.matched {
+  opacity: 1;
+  border-style: solid;
+  border-color: var(--green-mid);
+  background: var(--green-pale);
+}
+.shape-slot.wrong { animation: shake .3s ease; }
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25%      { transform: translateX(-8px); }
+  75%      { transform: translateX(8px); }
+}
+
+.success-banner {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: var(--green-pale);
+  border: 2px solid var(--green-light);
+  border-radius: var(--radius-md);
+  padding: 22px 40px;
+  margin-top: 28px;
+  animation: popIn .4s cubic-bezier(.34,1.4,.64,1);
+}
+.success-banner.show { display: flex; }
+.success-banner .star { font-size: 38px; }
+.success-banner p     { font-size: 18px; font-weight: 700; color: var(--green-dark); }
+.success-banner small { font-size: 13px; color: var(--text-light); }
+
+@keyframes popIn {
+  from { transform: scale(.7); opacity: 0; }
+  to   { transform: scale(1);  opacity: 1; }
+}
+
+.reset-btn {
+  margin-top: 20px;
+  padding: 11px 32px;
+  border-radius: 30px;
+  border: none;
+  background: var(--green-dark);
+  color: #fff;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s, transform .15s;
+}
+.reset-btn:hover  { background: var(--green-mid); transform: scale(1.03); }
+.reset-btn:active { transform: scale(.97); }
+
+@media (max-width: 520px) {
+  .page-header { padding: 16px 18px; }
+  .game-card   { padding: 22px 14px; }
+  .shape-item, .shape-slot { width: 62px; height: 62px; font-size: 30px; }
+}
+
+.back-bar {
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 16px;
+}
+.back-btn-game {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--cream);
+  border: 1.5px solid var(--green-light);
+  border-radius: 30px;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-mid);
+  text-decoration: none;
+  transition: all .2s;
+}
+.back-btn-game:hover {
+  border-color: var(--green-mid);
+  color: var(--green-dark);
+}
+
+</style>
+</head>
+<body>
+<br>
+<br>
+<br>
+<div class="back-bar">
+    <button class="back-btn-game" onclick="history.back()">
+         رجوع
+    </button>
+</div>
+<div class="game-card">
+  <div class="game-title">⭐ طابق الأشكال</div>
+  <div class="game-sub">اسحب كل شكل إلى ظله الصحيح في الأسفل</div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar" id="shapeProgress" style="width:0%"></div>
+  </div>
+
+  <div class="shapes-section">
+    <div class="shapes-row" id="shapesRow">
+      <div class="shape-item" draggable="true" data-shape="sun"     id="sh-sun">☀️</div>
+      <div class="shape-item" draggable="true" data-shape="heart"   id="sh-heart">❤️</div>
+      <div class="shape-item" draggable="true" data-shape="moon"    id="sh-moon">🌙</div>
+      <div class="shape-item" draggable="true" data-shape="diamond" id="sh-diamond">💎</div>
+      <div class="shape-item" draggable="true" data-shape="star"    id="sh-star">⭐</div>
+
+    </div>
+
+    <div class="divider-label">أفلت الشكل هنا</div>
+
+    <div class="shape-slots-row">
+      <div class="shape-slot" data-target="star"    ondragover="dov(event)" ondrop="dropShape(event)" ondragleave="dlv(event)">⭐</div>
+      <div class="shape-slot" data-target="moon"    ondragover="dov(event)" ondrop="dropShape(event)" ondragleave="dlv(event)">🌙</div>
+      <div class="shape-slot" data-target="sun"     ondragover="dov(event)" ondrop="dropShape(event)" ondragleave="dlv(event)">☀️</div>
+      <div class="shape-slot" data-target="heart"   ondragover="dov(event)" ondrop="dropShape(event)" ondragleave="dlv(event)">❤️</div>
+      <div class="shape-slot" data-target="diamond" ondragover="dov(event)" ondrop="dropShape(event)" ondragleave="dlv(event)">💎</div>
+    </div>
+  </div>
+
+  <div class="success-banner" id="shapeWin">
+    <div class="star">🌟</div>
+    <p>ممتاز يا نجم!</p>
+    <small>طابقت كل الأشكال بدقة</small>
+  </div>
+  <button class="reset-btn" onclick="resetShapes()">🔄 إعادة اللعب</button>
+</div>
+
+<script>
+  let dragId = null;
+  let matched = 0;
+  const total = 5;
+  const shapeEmojis = { star:'⭐', moon:'🌙', sun:'☀️', heart:'❤️', diamond:'💎' };
+
+  function dov(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+  function dlv(e) { e.currentTarget.classList.remove('drag-over'); }
+
+  function bindDrag() {
+    document.querySelectorAll('.shape-item').forEach(el => {
+      el.addEventListener('dragstart', () => { dragId = el.id; el.classList.add('dragging'); });
+      el.addEventListener('dragend',   () => el.classList.remove('dragging'));
+      el.addEventListener('touchstart', () => { dragId = el.id; el.style.opacity = '.55'; }, { passive: true });
+      el.addEventListener('touchend', e => {
+        el.style.opacity = '1';
+        const t = e.changedTouches[0];
+        el.style.display = 'none';
+        const under = document.elementFromPoint(t.clientX, t.clientY);
+        el.style.display = '';
+        if (!under) return;
+        const slot = under.closest('.shape-slot');
+        if (slot) handleShape(slot);
+      });
+    });
+  }
+
+  function dropShape(e) { e.preventDefault(); dlv(e); handleShape(e.currentTarget); }
+
+  function handleShape(slot) {
+    if (!dragId) return;
+    const el = document.getElementById(dragId);
+    if (!el || slot.classList.contains('matched')) return;
+
+    if (el.dataset.shape === slot.dataset.target) {
+      slot.textContent = el.textContent;
+      slot.classList.add('matched');
+      el.remove();
+      matched++;
+      document.getElementById('shapeProgress').style.width = (matched / total * 100) + '%';
+      if (matched === total) document.getElementById('shapeWin').classList.add('show');
+    } else {
+      slot.classList.add('wrong');
+      setTimeout(() => slot.classList.remove('wrong'), 400);
+    }
+    dragId = null;
+  }
+
+  function resetShapes() {
+    matched = 0;
+    document.getElementById('shapeProgress').style.width = '0%';
+    document.getElementById('shapeWin').classList.remove('show');
+    document.getElementById('shapesRow').innerHTML = `
+      <div class="shape-item" draggable="true" data-shape="star"    id="sh-star">⭐</div>
+      <div class="shape-item" draggable="true" data-shape="moon"    id="sh-moon">🌙</div>
+      <div class="shape-item" draggable="true" data-shape="sun"     id="sh-sun">☀️</div>
+      <div class="shape-item" draggable="true" data-shape="heart"   id="sh-heart">❤️</div>
+      <div class="shape-item" draggable="true" data-shape="diamond" id="sh-diamond">💎</div>`;
+    document.querySelectorAll('.shape-slot').forEach(s => {
+      s.textContent = shapeEmojis[s.dataset.target];
+      s.classList.remove('matched', 'wrong');
+    });
+    bindDrag();
+  }
+
+  bindDrag();
+</script>
+</body>
+</html>

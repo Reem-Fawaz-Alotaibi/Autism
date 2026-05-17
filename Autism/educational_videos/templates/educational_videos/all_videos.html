@@ -1,125 +1,209 @@
-{%extends 'main/base.html'%}
-{%load static%}
-{% block title %}الفيديوهات التعليمية {% endblock %}
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}الفيديوهات التعليمية{% endblock %}
 
-{% block style %} <link rel="stylesheet" href="{% static 'educational_videos/css/style.css' %}"> {% endblock %}
-
+{% block style %}
+<link rel="stylesheet" href="{% static 'educational_videos/css/style.css' %}">
+{% endblock %}
 
 {% block content %}
-
+<main class="vid-main">
 
   <!-- HERO -->
-
-  <section class="hero">
-
-    <div class="hero-text">
-      <h1>الفيديوهات التعليمية</h1>
-      <p>تعلم بطريقة ممتعة وسهلة مع فيديوهات تعليمية للأطفال</p>
+  <section class="vid-hero">
+    <div class="vid-hero-text">
+      <div class="vid-badge">▶ فيديوهات تعليمية</div>
+      <h1>تعلّم بطريقة<br><span>ممتعة وسهلة</span></h1>
+      <p>فيديوهات مختارة بعناية لدعم تطور طفلك في التواصل واللغة والمهارات الحياتية</p>
     </div>
-
-    <img src="https://cdn-icons-png.flaticon.com/512/1864/1864514.png">
-
+    <div class="vid-hero-img">
+      <div class="vid-hero-circle">
+        <span class="vid-play-big">▶</span>
+      </div>
+    </div>
   </section>
 
-  <!-- SEARCH -->
-
-  <div class="top-bar">
-
-
-    <div class="search-box">
-      <input type="text" placeholder="ابحث عن فيديو...">
+  <!-- FILTERS + SEARCH -->
+  <div class="vid-topbar">
+    <div class="vid-filters" id="filterBtns">
+      <button class="vid-btn active" data-cat="all">الكل</button>
+      <button class="vid-btn" data-cat="communication">تواصل</button>
+      <button class="vid-btn" data-cat="sensory">نشاط حسي</button>
+      <button class="vid-btn" data-cat="social">تفاعل اجتماعي</button>
+      <button class="vid-btn" data-cat="language">نطق ولغة</button>
+      <button class="vid-btn" data-cat="behavior">سلوكيات</button>
     </div>
-
+    <div class="vid-search">
+      <span class="vid-search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="ابحث عن فيديو...">
+    </div>
   </div>
 
-  <!-- VIDEOS -->
+  <!-- VIDEOS GRID -->
+  <section class="vid-grid" id="videosGrid">
 
-  <section class="videos">
-
-    <!-- CARD 1 -->
-
-    <div class="card">
-
-      <div class="thumbnail">
-
-        <img src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?q=80&w=1200&auto=format&fit=crop">
-
-        <div class="play">▶</div>
-
-        <div class="time">05:20</div>
-
+    <div class="vid-card" data-cat="communication">
+      <div class="vid-thumb">
+        <img src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?q=80&w=800&auto=format&fit=crop" alt="تعلم الحروف">
+        <div class="vid-overlay">
+          <div class="vid-play">▶</div>
+        </div>
+        <div class="vid-time">05:20</div>
+        <div class="vid-cat-tag">تواصل</div>
       </div>
-
-      <div class="card-content">
-
+      <div class="vid-body">
         <h3>تعلم الحروف العربية</h3>
-
-        <p>
-          فيديو ممتع يساعد الأطفال على تعلم الحروف العربية بطريقة سهلة ومرحة.
-        </p>
-
-        <button class="watch-btn">مشاهدة</button>
-
+        <p>فيديو ممتع يساعد الأطفال على تعلم الحروف العربية بطريقة سهلة ومرحة</p>
+        <div class="vid-footer">
+          <span class="vid-level">⭐ مناسب للجميع</span>
+          <button class="vid-watch-btn">مشاهدة ←</button>
+        </div>
       </div>
-
     </div>
 
-    <!-- CARD 2 -->
-
-    <div class="card">
-
-      <div class="thumbnail">
-
-        <img src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=1200&auto=format&fit=crop">
-
-        <div class="play">▶</div>
-
-        <div class="time">04:45</div>
-
+    <div class="vid-card" data-cat="language">
+      <div class="vid-thumb">
+        <img src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=800&auto=format&fit=crop" alt="تعلم الأرقام">
+        <div class="vid-overlay">
+          <div class="vid-play">▶</div>
+        </div>
+        <div class="vid-time">04:45</div>
+        <div class="vid-cat-tag">نطق ولغة</div>
       </div>
-
-      <div class="card-content">
-
+      <div class="vid-body">
         <h3>تعلم الأرقام</h3>
-
-        <p>
-          تعلم الأرقام من 1 إلى 10 مع ألوان ورسومات ممتعة للأطفال.
-        </p>
-
-        <button class="watch-btn">مشاهدة</button>
-
+        <p>تعلم الأرقام من 1 إلى 10 مع ألوان ورسومات ممتعة للأطفال</p>
+        <div class="vid-footer">
+          <span class="vid-level">⭐ مناسب للجميع</span>
+          <button class="vid-watch-btn">مشاهدة ←</button>
+        </div>
       </div>
-
     </div>
 
-    <!-- CARD 3 -->
-
-    <div class="card">
-
-      <div class="thumbnail">
-
-        <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=1200&auto=format&fit=crop">
-
-        <div class="play">▶</div>
-
-        <div class="time">06:10</div>
-
+    <div class="vid-card" data-cat="sensory">
+      <div class="vid-thumb">
+        <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=800&auto=format&fit=crop" alt="البيئة">
+        <div class="vid-overlay">
+          <div class="vid-play">▶</div>
+        </div>
+        <div class="vid-time">06:10</div>
+        <div class="vid-cat-tag">نشاط حسي</div>
       </div>
-
-      <div class="card-content">
-
+      <div class="vid-body">
         <h3>البيئة من حولنا</h3>
-
-        <p>
-          فيديو بسيط يعلم الأطفال أهمية المحافظة على البيئة بطريقة لطيفة.
-        </p>
-
-        <button class="watch-btn">مشاهدة</button>
-
+        <p>فيديو بسيط يعلم الأطفال أهمية المحافظة على البيئة بطريقة لطيفة</p>
+        <div class="vid-footer">
+          <span class="vid-level">⭐ مناسب للجميع</span>
+          <button class="vid-watch-btn">مشاهدة ←</button>
+        </div>
       </div>
+    </div>
 
+    <div class="vid-card" data-cat="social">
+      <div class="vid-thumb">
+        <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=800&auto=format&fit=crop" alt="التفاعل">
+        <div class="vid-overlay">
+          <div class="vid-play">▶</div>
+        </div>
+        <div class="vid-time">07:30</div>
+        <div class="vid-cat-tag">تفاعل اجتماعي</div>
+      </div>
+      <div class="vid-body">
+        <h3>كيف أتعامل مع أصدقائي</h3>
+        <p>فيديو يساعد الطفل على فهم مهارات التفاعل الاجتماعي البسيطة</p>
+        <div class="vid-footer">
+          <span class="vid-level">⭐⭐ متوسط</span>
+          <button class="vid-watch-btn">مشاهدة ←</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="vid-card" data-cat="behavior">
+      <div class="vid-thumb">
+        <img src="https://images.unsplash.com/photo-1476703993599-0035a21b17a9?q=80&w=800&auto=format&fit=crop" alt="سلوكيات">
+        <div class="vid-overlay">
+          <div class="vid-play">▶</div>
+        </div>
+        <div class="vid-time">05:55</div>
+        <div class="vid-cat-tag">سلوكيات</div>
+      </div>
+      <div class="vid-body">
+        <h3>تعلم الانتظار بصبر</h3>
+        <p>يعلم الطفل كيف ينتظر دوره بشكل هادئ وإيجابي</p>
+        <div class="vid-footer">
+          <span class="vid-level">⭐ سهل</span>
+          <button class="vid-watch-btn">مشاهدة ←</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="vid-card" data-cat="communication">
+      <div class="vid-thumb">
+        <img src="https://images.unsplash.com/photo-1471286174890-9c112ffca5b4?q=80&w=800&auto=format&fit=crop" alt="تعبير">
+        <div class="vid-overlay">
+          <div class="vid-play">▶</div>
+        </div>
+        <div class="vid-time">04:20</div>
+        <div class="vid-cat-tag">تواصل</div>
+      </div>
+      <div class="vid-body">
+        <h3>كيف أعبر عن مشاعري</h3>
+        <p>فيديو يساعد الطفل على التعبير عن مشاعره بطريقة صحيحة وواضحة</p>
+        <div class="vid-footer">
+          <span class="vid-level">⭐ سهل</span>
+          <button class="vid-watch-btn">مشاهدة ←</button>
+        </div>
+      </div>
     </div>
 
   </section>
 
+  <!-- EMPTY STATE -->
+  <div class="vid-empty" id="emptyState" style="display:none;">
+    <div class="vid-empty-icon">🎬</div>
+    <p>ما في فيديوهات في هذا التصنيف حالياً</p>
+  </div>
+
+</main>
+
+<script>
+  const filterBtns = document.querySelectorAll('.vid-btn');
+  const cards = document.querySelectorAll('.vid-card');
+  const searchInput = document.getElementById('searchInput');
+  const emptyState = document.getElementById('emptyState');
+
+  function filterCards() {
+    const activeCat = document.querySelector('.vid-btn.active').dataset.cat;
+    const search = searchInput.value.toLowerCase();
+    let visible = 0;
+
+    cards.forEach(card => {
+      const cat = card.dataset.cat;
+      const title = card.querySelector('h3').textContent.toLowerCase();
+      const desc  = card.querySelector('p').textContent.toLowerCase();
+      const matchCat = activeCat === 'all' || cat === activeCat;
+      const matchSearch = title.includes(search) || desc.includes(search);
+
+      if (matchCat && matchSearch) {
+        card.style.display = 'flex';
+        card.style.animation = 'fadeUp .3s ease';
+        visible++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    emptyState.style.display = visible === 0 ? 'flex' : 'none';
+  }
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      filterCards();
+    });
+  });
+
+  searchInput.addEventListener('input', filterCards);
+</script>
 {% endblock %}

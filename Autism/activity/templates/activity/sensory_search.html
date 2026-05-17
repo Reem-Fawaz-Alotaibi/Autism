@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ابحث عن الشكل — إحتواء</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+:root {
+  --green-dark:  #4a6e38;
+  --green-mid:   #7aad60;
+  --green-light: #d4edbc;
+  --green-pale:  #eef7e6;
+  --cream:       #faf8f3;
+  --text-dark:   #2c3e20;
+  --text-mid:    #5a6b50;
+  --text-light:  #8fa880;
+  --radius-lg:   20px;
+  --radius-md:   14px;
+}
+
+body {
+  font-family: 'Tajawal', sans-serif;
+  background: var(--cream);
+  color: var(--text-dark);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0 60px;
+  direction: rtl;
+}
+
+.page-header {
+  width: 100%;
+  background: var(--green-dark);
+  padding: 20px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+.header-logo { font-size: 22px; font-weight: 800; color: #fff; }
+.header-logo span { color: var(--green-light); }
+.header-badge {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.game-card {
+  width: 100%;
+  max-width: 700px;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--green-light);
+  padding: 36px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-title { font-size: 22px; font-weight: 800; color: var(--text-dark); margin-bottom: 6px; }
+.game-sub   { font-size: 14px; color: var(--text-light); margin-bottom: 24px; text-align: center; }
+
+.progress-wrap {
+  width: 100%; max-width: 360px;
+  background: var(--green-pale);
+  border-radius: 20px; height: 8px;
+  margin-bottom: 28px; overflow: hidden;
+}
+.progress-bar {
+  height: 100%; background: var(--green-mid);
+  border-radius: 20px; transition: width .4s ease;
+}
+
+/* FIND HIDDEN SHAPE */
+.search-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+.search-cell {
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--green-light);
+  background: var(--green-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  cursor: pointer;
+  transition: transform .15s, background .15s;
+}
+.search-cell:hover   { transform: scale(1.08); background: var(--green-light); }
+.search-cell.found   { background: #c8f5a0; border-color: var(--green-dark); animation: popIn .3s ease; }
+.search-cell.wrong   { background: #ffe0e0; border-color: #f44336; animation: shake .3s ease; }
+.search-cell.revealed { cursor: default; }
+
+.target-box {
+  background: var(--green-pale);
+  border-radius: var(--radius-md);
+  padding: 14px 24px;
+  text-align: center;
+  margin-bottom: 20px;
+  border: 1.5px solid var(--green-light);
+}
+.target-box .target-label { font-size: 13px; color: var(--text-light); margin-bottom: 4px; }
+.target-box .target-emoji { font-size: 40px; }
+
+.score-row {
+  font-size: 14px;
+  color: var(--text-mid);
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25%      { transform: translateX(-6px); }
+  75%      { transform: translateX(6px); }
+}
+@keyframes popIn {
+  from { transform: scale(.5); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.success-banner {
+  display: none; flex-direction: column; align-items: center; gap: 10px;
+  background: var(--green-pale); border: 2px solid var(--green-light);
+  border-radius: var(--radius-md); padding: 22px 40px; margin-top: 20px;
+}
+.success-banner.show { display: flex; animation: popIn .4s cubic-bezier(.34,1.4,.64,1); }
+.success-banner .star { font-size: 38px; }
+.success-banner p     { font-size: 18px; font-weight: 700; color: var(--green-dark); }
+.success-banner small { font-size: 13px; color: var(--text-light); }
+
+.reset-btn {
+  margin-top: 20px; padding: 11px 32px; border-radius: 30px;
+  border: none; background: var(--green-dark); color: #fff;
+  font-family: 'Tajawal', sans-serif; font-size: 15px; font-weight: 600;
+  cursor: pointer; transition: background .2s, transform .15s;
+}
+.reset-btn:hover  { background: var(--green-mid); transform: scale(1.03); }
+.reset-btn:active { transform: scale(.97); }
+
+@media (max-width: 520px) {
+  .search-grid { grid-template-columns: repeat(4, 1fr); }
+  .search-cell { font-size: 22px; }
+  .game-card   { padding: 22px 14px; }
+}
+
+.back-bar {
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 16px;
+}
+.back-btn-game {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--cream);
+  border: 1.5px solid var(--green-light);
+  border-radius: 30px;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-mid);
+  text-decoration: none;
+  transition: all .2s;
+}
+.back-btn-game:hover {
+  border-color: var(--green-mid);
+  color: var(--green-dark);
+}
+</style>
+</head>
+<body>
+
+<br>
+<br>
+<br>
+<div class="back-bar">
+    <button class="back-btn-game" onclick="history.back()">
+         رجوع
+    </button>
+</div>
+<div class="game-card">
+  <div class="game-title">🔍 ابحث عن الشكل</div>
+  <div class="game-sub">ابحث عن الشكل المطلوب بين الأشكال الأخرى واضغط عليه</div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar" id="searchProgress" style="width:0%"></div>
+  </div>
+
+  <div class="target-box">
+    <div class="target-label">ابحث عن هذا الشكل ⬇</div>
+    <div class="target-emoji" id="targetEmoji">⭐</div>
+  </div>
+
+  <div class="score-row" id="scoreRow">وجدت: 0 / 3</div>
+
+  <div class="search-grid" id="searchGrid"></div>
+
+  <div class="success-banner" id="searchWin">
+    <div class="star">🎉</div>
+    <p>أحسنت! وجدت كل الأشكال!</p>
+    <small>عيناك حادتان جداً</small>
+  </div>
+  <button class="reset-btn" onclick="initGame()">🔄 جولة جديدة</button>
+</div>
+
+<script>
+  const ROUNDS = [
+    { target: '⭐', others: ['🔴','💙','🟢','🟡','🔷','🟣','🔸','🟤','⬛'] },
+    { target: '🌙', others: ['⭐','🔴','💙','🟢','🟡','🔷','🟣','🔸','🟤'] },
+    { target: '❤️', others: ['⭐','🌙','💙','🟢','🟡','🔷','🟣','🔸','🟤'] },
+  ];
+
+  let round = 0;
+  let found = 0;
+  const neededPerRound = 3;
+  let foundThisRound = 0;
+
+  function initGame() {
+    round = 0;
+    found = 0;
+    document.getElementById('searchProgress').style.width = '0%';
+    document.getElementById('searchWin').classList.remove('show');
+    loadRound();
+  }
+
+  function loadRound() {
+    if (round >= ROUNDS.length) {
+      document.getElementById('searchWin').classList.add('show');
+      return;
+    }
+    foundThisRound = 0;
+    const r = ROUNDS[round];
+    document.getElementById('targetEmoji').textContent = r.target;
+    document.getElementById('scoreRow').textContent = `وجدت: 0 / ${neededPerRound}`;
+
+    const pool = [];
+    for (let i = 0; i < neededPerRound; i++) pool.push({ emoji: r.target, isTarget: true });
+    for (let i = 0; i < 22; i++) pool.push({ emoji: r.others[i % r.others.length], isTarget: false });
+    pool.sort(() => Math.random() - .5);
+
+    const grid = document.getElementById('searchGrid');
+    grid.innerHTML = '';
+    pool.forEach((item, idx) => {
+      const cell = document.createElement('div');
+      cell.className = 'search-cell';
+      cell.textContent = item.emoji;
+      cell.dataset.target = item.isTarget ? '1' : '0';
+      cell.onclick = () => handleClick(cell, item.isTarget);
+      grid.appendChild(cell);
+    });
+  }
+
+  function handleClick(cell, isTarget) {
+    if (cell.classList.contains('found') || cell.classList.contains('wrong')) return;
+    if (isTarget) {
+      cell.classList.add('found', 'revealed');
+      cell.onclick = null;
+      foundThisRound++;
+      found++;
+      const pct = (round * neededPerRound + foundThisRound) / (ROUNDS.length * neededPerRound) * 100;
+      document.getElementById('searchProgress').style.width = pct + '%';
+      document.getElementById('scoreRow').textContent = `وجدت: ${foundThisRound} / ${neededPerRound}`;
+      if (foundThisRound >= neededPerRound) {
+        setTimeout(() => { round++; loadRound(); }, 900);
+      }
+    } else {
+      cell.classList.add('wrong');
+      setTimeout(() => cell.classList.remove('wrong'), 400);
+    }
+  }
+
+  initGame();
+</script>
+</body>
+</html>

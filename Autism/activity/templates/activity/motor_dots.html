@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>وصّل النقاط — إحتواء</title>
+  <style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+:root {
+  --green-dark:  #4a6e38;
+  --green-mid:   #7aad60;
+  --green-light: #d4edbc;
+  --green-pale:  #eef7e6;
+  --cream:       #faf8f3;
+  --text-dark:   #2c3e20;
+  --text-mid:    #5a6b50;
+  --text-light:  #8fa880;
+  --radius-lg:   20px;
+  --radius-md:   14px;
+  --radius-sm:   10px;
+}
+
+body {
+  font-family: 'Tajawal', sans-serif;
+  background: var(--cream);
+  color: var(--text-dark);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0 60px;
+  direction: rtl;
+}
+
+.page-header {
+  width: 100%; background: var(--green-dark);
+  padding: 20px 32px; display: flex;
+  align-items: center; justify-content: space-between;
+  margin-bottom: 40px;
+}
+.header-logo { font-size: 22px; font-weight: 800; color: #fff; }
+.header-logo span { color: var(--green-light); }
+.header-badge {
+  background: rgba(255,255,255,0.15); color: #fff;
+  border-radius: 20px; padding: 6px 16px;
+  font-size: 13px; font-weight: 500;
+}
+
+.game-card {
+  width: 100%; max-width: 700px; background: #fff;
+  border-radius: var(--radius-lg); border: 1.5px solid var(--green-light);
+  padding: 36px 28px; display: flex;
+  flex-direction: column; align-items: center;
+}
+
+.game-title { font-size: 22px; font-weight: 800; color: var(--text-dark); margin-bottom: 6px; }
+.game-sub   { font-size: 14px; color: var(--text-light); margin-bottom: 24px; text-align: center; }
+
+.progress-wrap {
+  width: 100%; max-width: 360px; background: var(--green-pale);
+  border-radius: 20px; height: 8px; margin-bottom: 28px; overflow: hidden;
+}
+.progress-bar {
+  height: 100%; background: var(--green-mid);
+  border-radius: 20px; transition: width .4s ease;
+}
+
+.success-banner {
+  display: none; flex-direction: column; align-items: center; gap: 10px;
+  background: var(--green-pale); border: 2px solid var(--green-light);
+  border-radius: var(--radius-md); padding: 22px 40px; margin-top: 24px;
+}
+.success-banner.show { display: flex; animation: popIn .4s cubic-bezier(.34,1.4,.64,1); }
+.success-banner .star { font-size: 38px; }
+.success-banner p     { font-size: 18px; font-weight: 700; color: var(--green-dark); }
+.success-banner small { font-size: 13px; color: var(--text-light); }
+
+@keyframes popIn {
+  from { transform: scale(.7); opacity: 0; }
+  to   { transform: scale(1);  opacity: 1; }
+}
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25%      { transform: translateX(-8px); }
+  75%      { transform: translateX(8px); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reset-btn {
+  margin-top: 20px; padding: 11px 32px; border-radius: 30px;
+  border: none; background: var(--green-dark); color: #fff;
+  font-family: 'Tajawal', sans-serif; font-size: 15px; font-weight: 600;
+  cursor: pointer; transition: background .2s, transform .15s;
+}
+.reset-btn:hover  { background: var(--green-mid); transform: scale(1.03); }
+.reset-btn:active { transform: scale(.97); }
+
+/* CONNECT DOTS */
+.dots-canvas-wrap {
+  width: 100%; max-width: 500px; background: var(--green-pale);
+  border-radius: var(--radius-lg); border: 2px solid var(--green-light);
+  position: relative; margin-bottom: 16px; overflow: hidden;
+}
+canvas#dotsCanvas { display: block; width: 100%; touch-action: none; }
+
+/* MAZE */
+.maze-wrap {
+  width: 100%; max-width: 400px; background: var(--green-pale);
+  border-radius: var(--radius-lg); border: 2px solid var(--green-light);
+  overflow: hidden; margin-bottom: 16px; position: relative;
+}
+canvas#mazeCanvas { display: block; width: 100%; touch-action: none; }
+.maze-controls { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; }
+.maze-btn {
+  width: 52px; height: 52px; border-radius: 50%; border: none;
+  background: var(--green-dark); color: #fff; font-size: 22px;
+  cursor: pointer; transition: background .15s, transform .15s;
+}
+.maze-btn:hover  { background: var(--green-mid); transform: scale(1.08); }
+.maze-btn:active { transform: scale(.95); }
+
+/* RHYTHM */
+.rhythm-display { font-size: 48px; margin-bottom: 20px; min-height: 60px; text-align: center; }
+.rhythm-btn {
+  width: 130px; height: 130px; border-radius: 50%;
+  background: var(--green-dark); border: none; color: #fff;
+  font-size: 48px; cursor: pointer; transition: transform .1s, background .1s;
+  display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;
+}
+.rhythm-btn:active { transform: scale(.9); background: var(--green-mid); }
+.rhythm-btn.flash  { background: #ff9800; transform: scale(1.05); }
+.rhythm-pattern { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+.pat-dot { width: 18px; height: 18px; border-radius: 50%; background: #ddd; transition: background .2s; }
+.pat-dot.hit  { background: var(--green-dark); }
+.pat-dot.miss { background: #f44336; }
+.rhythm-status { font-size: 15px; color: var(--text-mid); text-align: center; font-weight: 600; min-height: 24px; margin-bottom: 8px; }
+
+/* WORD-IMAGE */
+.word-image-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 14px; width: 100%; margin-bottom: 20px;
+}
+.word-img-card {
+  background: var(--green-pale); border: 2.5px solid var(--green-light);
+  border-radius: var(--radius-md); padding: 18px 8px 12px;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  cursor: pointer; transition: transform .15s, border-color .15s;
+}
+.word-img-card:hover   { transform: translateY(-3px); border-color: var(--green-mid); }
+.word-img-card.correct { border-color: var(--green-dark); background: var(--green-pale); }
+.word-img-card.wrong   { border-color: #f44336; background: #fff0f0; animation: shake .3s ease; }
+.word-img-card .wi-emoji { font-size: 40px; }
+.word-img-card .wi-word  { font-size: 14px; font-weight: 700; color: var(--text-dark); }
+.question-label { font-size: 17px; font-weight: 700; color: var(--text-dark); margin-bottom: 18px; text-align: center; }
+.round-indicator { font-size: 13px; color: var(--text-light); margin-bottom: 16px; }
+
+/* MISSING LETTER */
+.word-display {
+  font-size: 48px; font-weight: 800; letter-spacing: 8px;
+  color: var(--text-dark); margin-bottom: 28px; text-align: center; direction: ltr;
+}
+.blank { color: var(--green-dark); border-bottom: 4px solid var(--green-dark); min-width: 40px; display: inline-block; text-align: center; }
+.letters-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px; }
+.letter-btn {
+  width: 54px; height: 54px; border-radius: var(--radius-md);
+  border: 2px solid var(--green-light); background: var(--green-pale);
+  font-family: 'Tajawal', sans-serif; font-size: 20px; font-weight: 700;
+  color: var(--text-dark); cursor: pointer; transition: all .15s;
+}
+.letter-btn:hover   { background: var(--green-light); border-color: var(--green-mid); transform: scale(1.06); }
+.letter-btn.correct { background: var(--green-dark); color: #fff; border-color: var(--green-dark); }
+.letter-btn.wrong   { background: #ffebee; border-color: #f44336; animation: shake .3s ease; }
+.word-hint { font-size: 32px; margin-bottom: 10px; }
+
+/* SENTENCE ORDER */
+.sentence-pool {
+  display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+  min-height: 60px; padding: 12px; background: var(--green-pale);
+  border-radius: var(--radius-md); border: 2px dashed var(--green-light);
+  margin-bottom: 20px; width: 100%;
+}
+.word-chip {
+  background: var(--green-dark); color: #fff;
+  padding: 10px 18px; border-radius: 30px;
+  font-size: 16px; font-weight: 600; cursor: pointer; transition: transform .15s;
+}
+.word-chip:hover { transform: scale(1.06) translateY(-2px); }
+.answer-slots {
+  display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+  min-height: 60px; padding: 12px; border: 2px solid var(--green-light);
+  border-radius: var(--radius-md); background: #f5faf0; margin-bottom: 16px; width: 100%;
+}
+.ans-slot {
+  min-width: 70px; height: 48px; border: 2px dashed #ccc; border-radius: 24px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: #ccc; padding: 0 8px;
+}
+.ans-slot.filled { border-style: solid; border-color: var(--green-mid); }
+.check-btn {
+  padding: 11px 32px; border-radius: 30px; border: none;
+  background: var(--green-mid); color: #fff;
+  font-family: 'Tajawal', sans-serif; font-size: 15px; font-weight: 600;
+  cursor: pointer; transition: background .2s, transform .15s; margin-bottom: 12px;
+}
+.check-btn:hover  { background: var(--green-dark); transform: scale(1.03); }
+.feedback { font-size: 15px; font-weight: 600; min-height: 24px; text-align: center; margin-bottom: 8px; }
+.feedback.ok  { color: var(--green-dark); }
+.feedback.err { color: #f44336; }
+
+@media (max-width: 520px) {
+  .word-image-grid { grid-template-columns: repeat(2,1fr); }
+  .game-card { padding: 22px 14px; }
+  .page-header { padding: 16px 18px; }
+}
+
+.back-bar {
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 16px;
+}
+.back-btn-game {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--cream);
+  border: 1.5px solid var(--green-light);
+  border-radius: 30px;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-mid);
+  text-decoration: none;
+  transition: all .2s;
+}
+.back-btn-game:hover {
+  border-color: var(--green-mid);
+  color: var(--green-dark);
+}
+  </style>
+</head>
+<body>
+
+<br>
+<br>
+<br>
+<div class="back-bar">
+    <button class="back-btn-game" onclick="history.back()">
+         رجوع
+    </button>
+</div>
+
+<div class="game-card">
+  <div class="game-title">🔗 وصّل النقاط بالترتيب</div>
+  <div class="game-sub">اضغط على النقاط من 1 إلى الأخير بالترتيب الصحيح</div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar" id="dotsProgress" style="width:0%"></div>
+  </div>
+
+  <div class="dots-canvas-wrap" id="dotsWrap">
+    <canvas id="dotsCanvas"></canvas>
+  </div>
+
+  <div class="success-banner" id="dotsWin">
+    <div class="star">🌟</div>
+    <p>رسمت الشكل بشكل رائع!</p>
+    <small>أصابعك دقيقة جداً</small>
+  </div>
+  <button class="reset-btn" onclick="initDots()">🔄 شكل جديد</button>
+</div>
+
+<script>
+  const SHAPES = [
+    { name: 'نجمة', points: [[50,15],[61,35],[82,35],[67,50],[73,70],[50,57],[27,70],[33,50],[18,35],[39,35]] },
+    { name: 'بيت',  points: [[50,10],[80,35],[80,80],[20,80],[20,35]] },
+    { name: 'قلب',  points: [[50,30],[65,15],[80,25],[80,40],[50,70],[20,40],[20,25],[35,15]] },
+  ];
+
+  let currentShape = 0;
+  let nextDot = 0;
+  let lines = [];
+  let canvas, ctx, wrap;
+
+  function initDots() {
+    nextDot = 0; lines = [];
+    document.getElementById('dotsWin').classList.remove('show');
+    document.getElementById('dotsProgress').style.width = '0%';
+    canvas = document.getElementById('dotsCanvas');
+    wrap   = document.getElementById('dotsWrap');
+    const W = wrap.offsetWidth;
+    canvas.width  = W;
+    canvas.height = W * .7;
+    ctx = canvas.getContext('2d');
+    renderDots();
+    currentShape = (currentShape + 1) % SHAPES.length;
+  }
+
+  function getPoints() {
+    const shape = SHAPES[currentShape === 0 ? SHAPES.length-1 : currentShape-1];
+    const W = canvas.width, H = canvas.height;
+    return shape.points.map(p => [p[0]/100*W, p[1]/100*H]);
+  }
+
+  function renderDots() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const pts = getPoints();
+
+    ctx.strokeStyle = '#7aad60';
+    ctx.lineWidth   = 3;
+    ctx.lineCap     = 'round';
+    lines.forEach(([a,b]) => {
+      ctx.beginPath();
+      ctx.moveTo(pts[a][0], pts[a][1]);
+      ctx.lineTo(pts[b][0], pts[b][1]);
+      ctx.stroke();
+    });
+
+    pts.forEach((p, i) => {
+      ctx.beginPath();
+      ctx.arc(p[0], p[1], 18, 0, Math.PI*2);
+      ctx.fillStyle = i < nextDot ? '#7aad60' : i === nextDot ? '#ff9800' : '#4a6e38';
+      ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 13px Tajawal, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(i+1, p[0], p[1]);
+    });
+  }
+
+  document.getElementById('dotsCanvas').addEventListener('click', e => {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const mx = (e.clientX - rect.left) * scaleX;
+    const my = (e.clientY - rect.top)  * scaleY;
+    handleTap(mx, my);
+  });
+  document.getElementById('dotsCanvas').addEventListener('touchstart', e => {
+    e.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    const t = e.touches[0];
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    handleTap((t.clientX-rect.left)*scaleX, (t.clientY-rect.top)*scaleY);
+  }, { passive: false });
+
+  function handleTap(mx, my) {
+    const pts = getPoints();
+    const target = pts[nextDot];
+    const dist = Math.hypot(mx - target[0], my - target[1]);
+    if (dist < 30) {
+      if (nextDot > 0) lines.push([nextDot-1, nextDot]);
+      nextDot++;
+      const pct = nextDot / pts.length * 100;
+      document.getElementById('dotsProgress').style.width = pct + '%';
+      renderDots();
+      if (nextDot === pts.length) {
+        lines.push([nextDot-1, 0]);
+        renderDots();
+        setTimeout(() => document.getElementById('dotsWin').classList.add('show'), 400);
+      }
+    }
+  }
+
+  window.addEventListener('resize', initDots);
+  initDots();
+</script>
+</body>
+</html>

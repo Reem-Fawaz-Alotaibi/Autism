@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة الأصوات — إحتواء</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green-dark:  #4a6e38;
+  --green-mid:   #7aad60;
+  --green-light: #d4edbc;
+  --green-pale:  #eef7e6;
+  --cream:       #faf8f3;
+  --text-dark:   #2c3e20;
+  --text-mid:    #5a6b50;
+  --text-light:  #8fa880;
+  --radius-lg:   20px;
+  --radius-md:   14px;
+}
+
+body {
+  font-family: 'Tajawal', sans-serif;
+  background: var(--cream);
+  color: var(--text-dark);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0 60px;
+  direction: rtl;
+}
+
+.page-header {
+  width: 100%;
+  background: var(--green-dark);
+  padding: 20px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+.header-logo { font-size: 22px; font-weight: 800; color: #fff; }
+.header-logo span { color: var(--green-light); }
+.header-badge {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.game-card {
+  width: 100%;
+  max-width: 700px;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--green-light);
+  padding: 36px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-title { font-size: 22px; font-weight: 800; color: var(--text-dark); margin-bottom: 6px; }
+.game-sub   { font-size: 14px; color: var(--text-light); margin-bottom: 28px; text-align: center; }
+
+.animals-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  width: 100%;
+  margin-bottom: 28px;
+}
+
+.animal-btn {
+  background: var(--green-pale);
+  border: 2.5px solid var(--green-light);
+  border-radius: var(--radius-lg);
+  padding: 24px 12px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: transform .18s, box-shadow .18s, border-color .18s, background .18s;
+  font-family: 'Tajawal', sans-serif;
+}
+.animal-btn:hover  { transform: translateY(-4px); box-shadow: 0 8px 22px rgba(74,110,56,0.15); border-color: var(--green-mid); }
+.animal-btn:active { transform: scale(.96); }
+.animal-btn.playing {
+  background: var(--green-light);
+  border-color: var(--green-dark);
+  animation: pulse .6s ease infinite alternate;
+}
+@keyframes pulse {
+  from { box-shadow: 0 0 0 0 rgba(74,110,56,0.3); }
+  to   { box-shadow: 0 0 0 10px rgba(74,110,56,0); }
+}
+
+.animal-emoji { font-size: 52px; line-height: 1; }
+.animal-name  { font-size: 15px; font-weight: 700; color: var(--text-dark); }
+.animal-sound { font-size: 12px; color: var(--text-light); font-weight: 500; }
+
+.sound-bar {
+  display: none;
+  align-items: center;
+  gap: 4px;
+  height: 20px;
+}
+.animal-btn.playing .sound-bar { display: flex; }
+.sound-bar span {
+  width: 4px;
+  border-radius: 4px;
+  background: var(--green-dark);
+  animation: bar .5s ease infinite alternate;
+}
+.sound-bar span:nth-child(1) { height: 8px;  animation-delay: 0s; }
+.sound-bar span:nth-child(2) { height: 14px; animation-delay: .1s; }
+.sound-bar span:nth-child(3) { height: 20px; animation-delay: .2s; }
+.sound-bar span:nth-child(4) { height: 14px; animation-delay: .3s; }
+.sound-bar span:nth-child(5) { height: 8px;  animation-delay: .4s; }
+@keyframes bar {
+  from { transform: scaleY(.5); }
+  to   { transform: scaleY(1); }
+}
+
+.info-box {
+  background: var(--green-pale);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-mid);
+  width: 100%;
+  max-width: 420px;
+  line-height: 1.6;
+}
+
+@media (max-width: 520px) {
+  .animals-grid { grid-template-columns: repeat(2, 1fr); }
+  .animal-emoji { font-size: 40px; }
+  .game-card { padding: 22px 14px; }
+}
+.back-bar {
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 16px;
+}
+.back-btn-game {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--cream);
+  border: 1.5px solid var(--green-light);
+  border-radius: 30px;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-mid);
+  text-decoration: none;
+  transition: all .2s;
+}
+.back-btn-game:hover {
+  border-color: var(--green-mid);
+  color: var(--green-dark);
+}
+
+.back-bar {
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 16px;
+}
+.back-btn-game {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--cream);
+  border: 1.5px solid var(--green-light);
+  border-radius: 30px;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-mid);
+  text-decoration: none;
+  transition: all .2s;
+}
+.back-btn-game:hover {
+  border-color: var(--green-mid);
+  color: var(--green-dark);
+}
+  </style>
+</head>
+<body>
+<br>
+<br>
+<br>
+<div class="back-bar">
+    <button class="back-btn-game" onclick="history.back()">
+         رجوع
+    </button>
+</div>
+<div class="game-card">
+  <div class="game-title">🔊 لوحة الأصوات</div>
+  <div class="game-sub">اضغط على الحيوان واسمع صوته — حاول تقلده!</div>
+
+  <div class="animals-grid">
+
+    <button class="animal-btn" onclick="playSound('cat')" id="btn-cat">
+      <div class="animal-emoji">🐱</div>
+      <div class="animal-name">القطة</div>
+      <div class="animal-sound">مياو!</div>
+      <div class="sound-bar"><span></span><span></span><span></span><span></span><span></span></div>
+    </button>
+
+    <button class="animal-btn" onclick="playSound('dog')" id="btn-dog">
+      <div class="animal-emoji">🐶</div>
+      <div class="animal-name">الكلب</div>
+      <div class="animal-sound">هاو هاو!</div>
+      <div class="sound-bar"><span></span><span></span><span></span><span></span><span></span></div>
+    </button>
+
+    <button class="animal-btn" onclick="playSound('cow')" id="btn-cow">
+      <div class="animal-emoji">🐮</div>
+      <div class="animal-name">البقرة</div>
+      <div class="animal-sound">مووو!</div>
+      <div class="sound-bar"><span></span><span></span><span></span><span></span><span></span></div>
+    </button>
+
+    <button class="animal-btn" onclick="playSound('duck')" id="btn-duck">
+      <div class="animal-emoji">🦆</div>
+      <div class="animal-name">البطة</div>
+      <div class="animal-sound">كواك!</div>
+      <div class="sound-bar"><span></span><span></span><span></span><span></span><span></span></div>
+    </button>
+
+    <button class="animal-btn" onclick="playSound('lion')" id="btn-lion">
+      <div class="animal-emoji">🦁</div>
+      <div class="animal-name">الأسد</div>
+      <div class="animal-sound">زئير!</div>
+      <div class="sound-bar"><span></span><span></span><span></span><span></span><span></span></div>
+    </button>
+
+    <button class="animal-btn" onclick="playSound('bird')" id="btn-bird">
+      <div class="animal-emoji">🐦</div>
+      <div class="animal-name">العصفور</div>
+      <div class="animal-sound">تغريد!</div>
+      <div class="sound-bar"><span></span><span></span><span></span><span></span><span></span></div>
+    </button>
+
+  </div>
+
+  <div class="info-box">
+    💡 اضغط على أي حيوان لسماع صوته — حاول تقلد الصوت مع طفلك لتعزيز التواصل
+  </div>
+</div>
+
+<script>
+  const sounds = {
+    cat:  { freq: [600,500,400],   dur: [.15,.1,.2],  text: 'مياو! 🐱' },
+    dog:  { freq: [300,280,320],   dur: [.1,.05,.15], text: 'هاو هاو! 🐶' },
+    cow:  { freq: [180,160,170],   dur: [.3,.2,.4],   text: 'مووو! 🐮' },
+    duck: { freq: [400,350,380],   dur: [.1,.05,.12], text: 'كواك! 🦆' },
+    lion: { freq: [120,100,90],    dur: [.4,.3,.5],   text: 'زئير! 🦁' },
+    bird: { freq: [800,900,1000],  dur: [.08,.06,.1], text: 'تغريد! 🐦' },
+  };
+
+  let ctx = null;
+  function getCtx() {
+    if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+    return ctx;
+  }
+
+  function playSound(animal) {
+    const ac = getCtx();
+    const s = sounds[animal];
+    const btn = document.getElementById('btn-' + animal);
+
+    document.querySelectorAll('.animal-btn').forEach(b => b.classList.remove('playing'));
+    btn.classList.add('playing');
+
+    let time = ac.currentTime;
+    s.freq.forEach((f, i) => {
+      const osc  = ac.createOscillator();
+      const gain = ac.createGain();
+      osc.connect(gain);
+      gain.connect(ac.destination);
+      osc.frequency.setValueAtTime(f, time);
+      osc.type = animal === 'bird' ? 'sine' : animal === 'lion' ? 'sawtooth' : 'triangle';
+      gain.gain.setValueAtTime(.3, time);
+      gain.gain.exponentialRampToValueAtTime(.001, time + s.dur[i]);
+      osc.start(time);
+      osc.stop(time + s.dur[i]);
+      time += s.dur[i] + .05;
+    });
+
+    setTimeout(() => btn.classList.remove('playing'), (time - ac.currentTime) * 1000 + 200);
+  }
+</script>
+</body>
+</html>

@@ -44,6 +44,17 @@ class Like(models.Model):
         unique_together = ['post', 'user']
 
 
+class CommentLike(models.Model):
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='comment_likes')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ['comment', 'user']
+
+    def __str__(self):
+        return f"{self.user.username} liked {self.comment.id}"
+    
+    
 class Report(models.Model):
 
     REASONS = [

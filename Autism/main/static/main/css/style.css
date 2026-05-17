@@ -1,4 +1,5 @@
 :root {
+    
     --green-dark: #5C6B48;
     /* #5C6B48 */
     --green-mid: #6B7A55;
@@ -86,7 +87,8 @@ body {
     width: 66px;
     height: 66px;
     border-radius: 50%;
-    background-color: #EDE7DC !important; /*var(--green-mid)*/
+    background-color: #EDE7DC !important;
+    /*var(--green-mid)*/
     display: flex;
     align-items: center;
     justify-content: center;
@@ -101,7 +103,7 @@ body {
 .logo-title {
     font-size: 22px;
     font-weight: 700;
-    color: var(--text-dark);
+    color: var(--green-mid);
     line-height: 1.2;
     text-align: center;
 }
@@ -228,23 +230,6 @@ body {
     padding: 14px;
 }
 
-.profile-card {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background-color: var(--bg-card);
-    border-radius: var(--radius);
-    padding: 11px 13px;
-    text-decoration: none;
-    color: var(--text-dark);
-    transition: background 0.18s;
-}
-
-.profile-card:hover {
-    background-color: #E4DDD2;
-    color: var(--text-dark);
-}
-
 /* avatar → rightmost in RTL */
 .profile-avatar {
     width: 38px;
@@ -327,16 +312,31 @@ body {
 .footer-logo-circle {
     width: 30px;
     height: 30px;
+     overflow: hidden;
     border-radius: 50%;
-    background-color: var(--green-mid);
+    background-color: #EDE7DC !important;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.footer-logo-circle i {
-    font-size: 14px;
-    color: #fff;
+.footer-logo-circle img {
+    width: 100%;
+    height: 100%;
+    /* تغيير contain إلى cover يضمن أن اللوجو سيمتد ليغطي الدائرة تماماً */
+    object-fit: cover; 
+    padding: 0 !important;
+    margin-top: -4px;
+    /* margin: 0 !important; */
+    /* التحكم في الزوم: إذا شعرتِ أنه كبير جداً يمكنك تقليل الرقم إلى 1.15 */
+    transform: scale(1.20); 
+    transition: transform 0.3s ease;
+}
+
+/* إضافة هذه الجزئية لضمان نعومة الحواف في المتصفحات المختلفة */
+.footer-logo-circle img {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
 .footer-logo-name {
@@ -911,7 +911,7 @@ body {
     border-radius: 50%;
     display: grid;
     place-items: center;
-    background: var(--home-green);
+    background:  #b9d4a7 !important;
     color: #1f2a1c;
     border: 7px solid #fff;
     box-shadow: 0 14px 30px rgba(35, 42, 32, 0.12);
@@ -2601,7 +2601,8 @@ body {
 }
 
 .faq-item:hover {
-    border-color: #b9d4a7; /* لون الثيم الأخضر */
+    border-color: #b9d4a7;
+    /* لون الثيم الأخضر */
     transform: translateY(-3px);
 }
 
@@ -2631,7 +2632,8 @@ body {
 
 /* الحالة النشطة عند الفتح */
 .faq-item.active {
-    background-color: #f4f8f2; /* اللون الفاتح من الثيم */
+    background-color: #f4f8f2;
+    /* اللون الفاتح من الثيم */
 }
 
 .faq-item.active .faq-answer {
@@ -2651,28 +2653,28 @@ body {
 /************************************************/
 /*logo*/
 .logo-circle {
-    width: 60px; 
+    width: 60px;
     height: 60px;
     border-radius: 50%;
-    overflow: hidden; 
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
     /* الحفاظ على لونك المفضل كما طلبتِ */
-    background-color: #EDE7DC !important; 
+    background-color: #EDE7DC !important;
     border: none !important;
 }
 
-.logo-circle img {
+.logo-circle img { /*حقت السايد بار */
     width: 100%;
     height: 100%;
     /* تغيير contain إلى cover يضمن أن اللوجو سيمتد ليغطي الدائرة تماماً */
-    object-fit: cover; 
+    object-fit: cover;
     padding: 0 !important;
     margin-top: -8px;
     /* margin: 0 !important; */
     /* التحكم في الزوم: إذا شعرتِ أنه كبير جداً يمكنك تقليل الرقم إلى 1.15 */
-    transform: scale(1.20); 
+    transform: scale(1.20);
     transition: transform 0.3s ease;
 }
 
@@ -2707,27 +2709,30 @@ body {
 
 .team-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* هنا جعلناهم 2 بجانب بعض */
+    grid-template-columns: repeat(2, 1fr);
+    /* هنا جعلناهم 2 بجانب بعض */
     gap: 40px;
     max-width: 1100px;
     margin: 0 auto;
 }
 
 .member-card {
-    display: flex; /* جعل المحتوى بالعرض */
+    display: flex;
+    /* جعل المحتوى بالعرض */
     align-items: center;
     background: #ffffff;
     padding: 30px;
     border-radius: 24px;
     border: 1px solid rgba(107, 123, 95, 0.1);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.03);
     transition: all 0.5s ease;
     position: relative;
     overflow: hidden;
 }
 
 .member-card:hover {
-    transform: translateX(-10px); /* حركة لليمين بسيطة عند التمرير */
+    transform: translateX(-10px);
+    /* حركة لليمين بسيطة عند التمرير */
     border-color: #6B7B5F;
     box-shadow: 0 25px 50px rgba(107, 123, 95, 0.1);
 }
@@ -2738,7 +2743,8 @@ body {
     min-width: 130px;
     border-radius: 20px;
     overflow: hidden;
-    margin-left: 25px; /* مسافة بين الصورة والنص */
+    margin-left: 25px;
+    /* مسافة بين الصورة والنص */
     transform: rotate(-3deg);
     transition: all 0.5s ease;
 }
@@ -2785,14 +2791,17 @@ body {
     .team-grid {
         grid-template-columns: 1fr;
     }
+
     .member-card {
         flex-direction: column;
         text-align: center;
     }
+
     .member-details {
         text-align: center;
         margin-top: 20px;
     }
+
     .member-img {
         margin-left: 0;
     }
@@ -2800,41 +2809,232 @@ body {
 
 /*******************************************/
 /*chatbot css*/
+/* ===== Chatbot - إحتواء Theme ===== */
+.floating-profile {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #5a7a48;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(90,122,72,0.4);
+    text-decoration: none;
+    color: #fff;
+    font-size: 22px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    z-index: 999;
+}
+.floating-profile:hover {
+    transform: scale(1.08);
+    box-shadow: 0 6px 20px rgba(90,122,72,0.5);
+}
+
+/* Overlay */
 .chat-modal {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.6);
+    background: rgba(44,62,32,0.2);
+    backdrop-filter: blur(2px);
     justify-content: center;
     align-items: center;
     z-index: 9999;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 0 840px 80px 0px;
 }
-
 .chat-modal.active {
     display: flex;
+    animation: overlayIn 0.22s ease;
+}
+@keyframes overlayIn {
+    from { opacity: 0; } to { opacity: 1; }
 }
 
+/* Chat Box */
 .chat-box {
-    width: 400px;
-    height: 500px;
-    background: #1e1e2f;
-    border-radius: 15px;
+    width: 340px;
+    height: 420px;
+    background: #f8f5f0;
+    border-radius: 20px 20px 20px 6px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    border: 1px solid rgba(90,122,72,0.2);
+    box-shadow: 0 8px 32px rgba(44,62,32,0.18);
+    animation: chatSlideIn 0.3s cubic-bezier(.34,1.4,.64,1);
+}
+@keyframes chatSlideIn {
+    from { opacity: 0; transform: translateY(28px) scale(0.95); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* Header */
 .chat-header {
-    background: #4f46e5;
-    color: white;
-    padding: 10px;
+    background: #5a7a48;
+    color: #fff;
+    padding: 12px 14px;
     display: flex;
+    align-items: center;
     justify-content: space-between;
+    flex-direction: row-reverse;
+    gap: 8px;
+    flex-shrink: 0;
+}
+.chat-header-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.chat-avatar-circle {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+.chat-header-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+}
+.chat-header-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.75);
+}
+.chat-online-dot {
+    width: 7px;
+    height: 7px;
+    background: #7ed878;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 4px;
+    animation: dotPulse 2s infinite;
+}
+@keyframes dotPulse {
+    0%,100% { opacity: 1; } 50% { opacity: 0.4; }
+}
+.close {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 15px;
+    transition: background 0.15s;
+    flex-shrink: 0;
+}
+.close:hover { background: rgba(255,255,255,0.28); }
+
+/* Messages */
+.messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #f8f5f0;
+    direction: rtl;
+    display: flex;
+    flex-direction: column;
+}
+.messages::-webkit-scrollbar { width: 4px; }
+.messages::-webkit-scrollbar-thumb {
+    background: #8aad78;
+    border-radius: 4px;
+}
+.msg {
+    max-width: 82%;
+    padding: 9px 13px;
+    border-radius: 14px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    word-break: break-word;
+    animation: msgPop 0.22s ease;
+}
+@keyframes msgPop {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.msg.bot {
+    background: #fff;
+    color: #2c3e20;
+    border: 1px solid rgba(90,122,72,0.15);
+    align-self: flex-start;
+    border-bottom-right-radius: 4px;
+}
+.msg.user {
+    background: #5a7a48;
+    color: #fff;
+    align-self: flex-end;
+    border-bottom-left-radius: 4px;
 }
 
-.close {
-    cursor: pointer;
+/* Input Area */
+.input-area {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: #fff;
+    border-top: 1px solid rgba(90,122,72,0.12);
+    flex-shrink: 0;
+    direction: rtl;
 }
+<<<<<<< HEAD
+.input-area input {
+    flex: 1;
+    border: 1px solid rgba(90,122,72,0.25);
+    border-radius: 20px;
+    padding: 8px 14px;
+    font-size: 13px;
+    background: #f8f5f0;
+    color: #2c3e20;
+    outline: none;
+    transition: border-color 0.15s;
+    direction: rtl;
+}
+.input-area input::placeholder { color: #aab89a; }
+.input-area input:focus { border-color: #5a7a48; }
+.input-area button {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #5a7a48;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, transform 0.15s;
+}
+.input-area button:hover {
+    background: #8aad78;
+    transform: scale(1.05);
+}
+/***********************************************/
+/*logout*/
+=======
+
+>>>>>>> 8c30457da63157e38470119c96c11373eba70916
 .sub-container {
     max-width: 900px;
     margin: 0 auto;
@@ -3093,40 +3293,89 @@ body {
     }
 }
 
-/*  Logout Button  */
-.logout-form {
-    margin-top: 12px;
+
+
+
+
+
+
+/*profile and logout */
+.profile-card {
+    background: #f5f1eb;
+    border-radius: 16px;
+    padding: 10px;
+    max-width: 220px;
 }
 
-.logout-btn {
+.profile-top {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    gap: 8px;
+}
+
+.profile-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #7d8b5b;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.profile-text {
+    flex: 1;
+}
+
+.profile-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #222;
+}
+
+.profile-role {
+    font-size: 10px;
+    color: #b89d83;
+    margin-top: 2px;
+}
+
+.profile-arrow {
+    color: #9b8d7d;
+    font-size: 13px;
+}
+
+.profile-divider {
+    height: 1px;
+    background: #ddd3c8;
+    margin: 8px 0 5px;
+}
+
+.logout-inside-btn {
     width: 100%;
     border: none;
-    outline: none;
-    background: #fff;
-    color: #b54747;
-    border: 1px solid #e7c9c9;
-    border-radius: var(--radius);
-    padding: 11px 14px;
+    background: transparent;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    font-family: 'Tajawal', sans-serif;
-    font-size: 14px;
+    color: #c64545;
+    font-size: 12px;
     font-weight: 600;
 
     cursor: pointer;
-    transition: all 0.2s ease;
+    padding: 2px;
+
+    transition: 0.3s;
 }
 
-.logout-btn i {
-    font-size: 16px;
-}
-
-.logout-btn:hover {
-    background: #b54747;
-    color: #fff;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(181, 71, 71, 0.18);
+.logout-inside-btn:hover {
+    opacity: 0.7;
 }
