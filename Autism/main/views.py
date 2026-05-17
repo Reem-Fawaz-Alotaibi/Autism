@@ -28,3 +28,9 @@ def terms_of_service_view(request: HttpRequest):
 
 def questions_view(request: HttpRequest):
     return render(request, 'main/questions.html')
+
+def dashboard_view(request: HttpRequest):
+    return render(request, 'main/dashbord_admin.html')
+
+def test_view(request: HttpRequest):
+    return render(request, 'main/404.html')

@@ -14,7 +14,7 @@
 
 .hero-text h1{
     font-size:42px;
-    color:#7fc75b;
+    color:#c1d0b5;
     margin-bottom:8px;
     font-weight:800;
 }
@@ -159,7 +159,7 @@
 }
 
 .watch-btn{
-    background:#7fc75b;
+    background:#c1d0b5;
     color:white;
     border:none;
     padding:10px 20px;
@@ -171,7 +171,7 @@
 }
 
 .watch-btn:hover{
-    background:#24913a;
+    background:#5C6B48;
 }
 
 /* TABLET */

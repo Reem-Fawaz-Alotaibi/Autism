@@ -233,8 +233,8 @@ const markers = document.querySelectorAll(".map-marker");
 markers.forEach(marker => {
     const x = marker.dataset.x.replace(",", ".");
     const y = marker.dataset.y.replace(",", ".");
-    marker.style.left = x + "%";
-    marker.style.top = y + "%";
+    marker.style.left = 44 + "%";
+    marker.style.top =  80+ "%";
 });
 if(hasSearch){
     markers.forEach(marker => {

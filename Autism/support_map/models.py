@@ -31,45 +31,45 @@ class AutismSupportPlace(models.Model):
     REGION_POSITIONS = {
 
         'riyadh': {
-            'x_min': 20,
-            'x_max': 60,
-            'y_min': 65,
-            'y_max': 75,
+            'x_min': 47,
+            'x_max': 62,
+            'y_min': 42,
+            'y_max': 71,
         },
 
         'eastern': {
-            'x_min': 68,
-            'x_max': 82,
-            'y_min': 45,
-            'y_max': 62,
+            'x_min': 63,
+            'x_max': 75,
+            'y_min': 39,
+            'y_max': 75,
         },
 
         'makkah': {
-            'x_min': 28,
-            'x_max': 42,
-            'y_min': 58,
-            'y_max': 78,
+            'x_min': 22,
+            'x_max': 40,
+            'y_min': 57,
+            'y_max': 65,
         },
 
         'madinah': {
-            'x_min': 30,
-            'x_max': 42,
-            'y_min': 42,
-            'y_max': 58,
+            'x_min': 21,
+            'x_max': 33,
+            'y_min': 43,
+            'y_max': 56,
         },
 
         'asir': {
             'x_min': 35,
-            'x_max': 48,
-            'y_min': 78,
-            'y_max': 92,
+            'x_max': 43,
+            'y_min': 70,
+            'y_max': 78,
         },
 
         'jazan': {
-            'x_min': 28,
-            'x_max': 38,
-            'y_min': 88,
-            'y_max': 98,
+            'x_min': 37,
+            'x_max': 41,
+            'y_min': 80,
+            'y_max': 86,
         },
 
         'najran': {
