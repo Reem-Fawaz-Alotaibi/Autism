@@ -15,17 +15,10 @@ class Post(models.Model):
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-
     title = models.CharField(max_length=200)
-
-    category = models.CharField(
-        max_length=20,
-        choices=CATEGORY_CHOICES)
-
+    category = models.CharField(max_length=20,choices=CATEGORY_CHOICES)
     content = models.TextField()
-
     tags = models.CharField(max_length=200,blank=True)
-
     created_at = models.DateTimeField(auto_now_add=True )
 
     def __str__(self):
@@ -46,9 +39,7 @@ class Comment(models.Model):
 class Like(models.Model):
 
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
-
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-
     class Meta:
         unique_together = ['post', 'user']
 
@@ -64,3 +55,16 @@ class CommentLike(models.Model):
         return f"{self.user.username} liked {self.comment.id}"
     
     
+class Report(models.Model):
+
+    REASONS = [
+        ('spam', 'محتوى مزعج'),
+        ('bullying', 'تنمر'),
+        ('false', 'معلومات خاطئة'),
+        ('other', 'سبب آخر'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    reason = models.CharField(max_length=50, choices=REASONS)
+    created_at = models.DateTimeField(auto_now_add=True)

@@ -29,6 +29,7 @@ urlpatterns = [
     path('', include('educational_videos.urls')),
     path('assessment/', include ('assessment.urls')),
     path('activity/', include('activity.urls')), 
+    path('',include('support_map.urls')),
     path('reset-password/',auth_views.PasswordResetView.as_view(template_name='accounts/reset-password.html'),name='password_reset'),
     path('reset-password/done/',auth_views.PasswordResetDoneView.as_view(template_name='accounts/reset-password-done.html'),name='password_reset_done'),
     path('reset/<uidb64>/<token>/',auth_views.PasswordResetConfirmView.as_view(template_name='accounts/reset-password-confirm.html'),name='password_reset_confirm'),

@@ -1,0 +1,98 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}
+إضافة مكان دعم
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'support_map/css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="create-page">
+    <h1 class="page-title">
+       تعديل بيانات المكان
+    </h1>
+    <p class="page-subtitle">
+       قم بتحديث معلومات مركز الدعم
+    </p>
+    <div class="create-card">
+        <form method="POST">
+            {% csrf_token %}
+            <!-- NAME -->
+            <div class="form-group">
+                <label class="form-label">
+                    اسم المكان
+                </label>
+                <input type="text" name="name" class="form-input" placeholder="مثال: مركز احتواء" required value="{{ place.name }}"> 
+            </div>
+            <!-- CITY -->
+            <div class="form-group">
+                <label class="form-label">
+                    المنطقة
+                </label>
+                <select name="region" class="form-select" required>
+                    {% for value, label in regions %}
+                    <option value="{{ value }}" {% if place.region == value %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- ADDRESS -->
+            <div class="form-group">
+                <label class="form-label">
+                    العنوان
+                </label>
+                <textarea name="address" class="form-textarea" placeholder="اكتب العنوان بالتفصيل..." required>{{ place.description }}</textarea>
+            </div>
+            <!-- DESCRIPTION -->
+            <div class="form-group">
+                <label class="form-label">
+                    وصف المكان
+                </label>
+                <textarea name="description" class="form-textarea" placeholder="نبذة عن الخدمات المقدمة..." required >{{ place.address }}</textarea>
+            </div>
+            <!-- PHONE -->
+            <div class="form-group">
+                <label class="form-label">
+                    رقم التواصل
+                </label>
+                <input type="text" name="phone_number" class="form-input" placeholder="05xxxxxxxx" required maxlength="10" value=" {{place.phone_number }}">
+            </div>
+            <!-- WEBSITE -->
+            <div class="form-group">
+                <label class="form-label">
+                    الموقع الإلكتروني
+                </label>
+                <input type="url" name="website" class="form-input" placeholder="https://example.com" required value="{{ place.website }}">
+            </div>
+            <!-- PLACE TYPE -->
+            <div class="form-group">
+            <label class="form-label">
+                نوع المكان
+            </label>
+           <select name="place_type" class="form-select" required>
+                {% for value, label in place_types %}
+                <option value="{{ value }}" {% if place.place_type == value %}selected{% endif %}>
+                    {{ label }}
+                </option>
+                {% endfor %}
+            </select>
+
+        </div>
+           <!-- ACTIONS -->
+            <div class="actions">
+                <a href="javascript:history.back()" class="cancel-btn">
+                    إلغاء
+                </a>
+                <button type="submit" class="publish-btn">
+                    حفظ التعديلات
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

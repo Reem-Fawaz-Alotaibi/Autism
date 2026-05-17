@@ -34,8 +34,10 @@
                     عنوان النقاش
                 </label>
 
-                <input type="text" class="form-input" placeholder="اكتب عنوانًا واضحًا..." name="title" required>
-
+                <input type="text" class="form-input" placeholder="اكتب عنوانًا واضحًا..." name="title" required minlength="5" maxlength="100">
+                <small class="tags-note">
+                 اجعل العنوان واضحًا ومختصرًا
+                </small>
             </div>
 
             <!-- CATEGORY -->
@@ -71,33 +73,24 @@
                     محتوى النقاش
                 </label>
 
-                <textarea class="form-textarea" placeholder="اكتب تفاصيل النقاش هنا..." name="content" required></textarea>
+                <textarea class="form-textarea" placeholder="اكتب تفاصيل النقاش هنا..." name="content" required minlength="10" maxlength="2000"></textarea>
+                <small class="tags-note">
+                  تجنب مشاركة المعلومات الشخصية
+                </small>
+            </div>
+            <div class="form-group">
+
+                <label class="form-label">
+                    الوسوم
+                </label>
+
+                <input type="text" class="form-input" name="tags" placeholder="مثال: #النطق #التوحد #التواصل" required maxlength="50">
+
+                <small class="tags-note">
+                   افصل الوسوم ب(,)
+                </small>
 
             </div>
-
-            <!-- TAGS -->
-
-           <!-- TAGS -->
-
-<div class="form-group">
-
-    <label class="form-label">
-        الوسوم
-    </label>
-
-    <input
-        type="text"
-        class="form-input"
-        name="tags"
-        placeholder="مثال: #النطق #التوحد #التواصل"
-        required
-    >
-
-    <small class="tags-note">
-        اكتب الوسوم باستخدام #
-    </small>
-
-</div>
 
 
 
