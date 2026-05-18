@@ -47,5 +47,9 @@ class Child(models.Model):
 
     updated_at = models.DateTimeField(auto_now=True)
 
+    goals = models.TextField(blank=True)
+    
+    notes = models.TextField(blank=True)
+
     def __str__(self):
         return self.name

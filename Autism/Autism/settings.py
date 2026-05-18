@@ -13,6 +13,11 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 from decouple import config
 import cloudinary
+import os
+from pathlib import Path
+
+
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -215,4 +220,7 @@ SOCIALACCOUNT_LOGIN_REDIRECT_URL = 'main:home_page_view'
 SESSION_COOKIE_AGE = 1209600
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-GEMINI_API_KEY = "AIzaSyB1CviMAzNhzRCe3zg3xgtKZ6s8oC_lOlU"
+GEMINI_API_KEY = config('GEMINI_API_KEY')
+
+OPENAI_API_KEY = config('OPENAI_API_KEY')
+

@@ -67,7 +67,7 @@
                                 <path d="M16 2v4M8 2v4M3 10h18" />
                             </svg>
                         </span>
-                        <input class="form-input" type="number" id="c-age" name="age" value="{{ child.age }}" min="1" max="18" required />
+                        <input class="form-input" type="date" id="c-age" name="age" value="{{  child.age|date:'Y-m-d' }}" min="1" max="18" required />
                     </div>
                 </div>
             </div>

@@ -1,8 +1,13 @@
 import time
 from google import genai
+import os
+from dotenv import load_dotenv
+from google import genai
+
+load_dotenv()
 
 client = genai.Client(
-    api_key="AIzaSyB1CviMAzNhzRCe3zg3xgtKZ6s8oC_lOlU"
+    api_key=os.environ["GEMINI_API_KEY"]
 )
 
 def analyze_video(video_file_path):

@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 import os
-
+from ai_analysis.openai_service import get_recommendations
 # استيراد الموديلات (تأكدي من مطابقة أسماء التطبيقات والموديلات لديكِ)
 from children.models import Child
 from ai_analysis.models import VideoAnalysis
