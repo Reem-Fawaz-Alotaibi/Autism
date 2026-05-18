@@ -1,0 +1,630 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}لوحة التحكم{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+.dashboard-container{
+    padding: 30px;
+}
+
+/* العنوان */
+
+.dashboard-header{
+    background: white;
+    border-radius: 25px;
+    padding: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.dashboard-header h1{
+    color: #1c1c1c;
+    margin-bottom: 10px;
+    font-size: 32px;
+}
+
+.dashboard-header p{
+    color: #777;
+}
+
+.dashboard-icon{
+    width: 80px;
+    height: 80px;
+    background: #f0ebff;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    color: #7b5cff;
+}
+
+/* الإحصائيات */
+
+.stats-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card{
+    background: white;
+    border-radius: 22px;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: 0.3s;
+}
+
+.stat-card:hover{
+    transform: translateY(-5px);
+}
+
+.stat-icon{
+    width: 65px;
+    height: 65px;
+    border-radius: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    color: white;
+}
+
+.blue .stat-icon{
+    background: #5b7cff;
+}
+
+.green .stat-icon{
+    background: #23c58f;
+}
+
+.orange .stat-icon{
+    background: #ffb547;
+}
+
+.red .stat-icon{
+    background: #ff5b61;
+}
+
+.purple .stat-icon{
+    background: #8f5cff;
+}
+
+.cyan .stat-icon{
+    background: #4dbfff;
+}
+
+.stat-card h3{
+    font-size: 34px;
+    color: #222;
+    margin-bottom: 5px;
+}
+
+.stat-card p{
+    color: #777;
+}
+
+/* الأقسام */
+
+.top-section,
+.bottom-section{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.chart-card,
+.reports-card,
+.users-card,
+.activity-card{
+    background: white;
+    border-radius: 25px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+/* العناوين */
+
+.card-title{
+    margin-bottom: 20px;
+}
+
+.card-title h2{
+    color: #222;
+    font-size: 24px;
+}
+
+/* الجداول */
+
+table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th{
+    text-align: right;
+    padding-bottom: 15px;
+    color: #666;
+    font-size: 15px;
+}
+
+table td{
+    padding: 18px 0;
+    border-top: 1px solid #eee;
+    color: #555;
+    font-size: 15px;
+}
+
+/* الحالات */
+
+.status{
+    padding: 8px 14px;
+    border-radius: 30px;
+    font-size: 14px;
+}
+
+.pending{
+    background: #fff3df;
+    color: #e49a17;
+}
+
+.danger{
+    background: #ffe5e7;
+    color: #ff4d5b;
+}
+
+.solved{
+    background: #e6fff2;
+    color: #20b97a;
+}
+
+/* المستخدم */
+
+.active-user{
+    background: #e6fff2;
+    color: #20b97a;
+    padding: 7px 14px;
+    border-radius: 30px;
+}
+
+.blocked-user{
+    background: #ffe5e7;
+    color: #ff4d5b;
+    padding: 7px 14px;
+    border-radius: 30px;
+}
+
+/* الإجراءات */
+
+.actions{
+    display: flex;
+    gap: 15px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* النشاط */
+
+.activity-item{
+    display: flex;
+    gap: 18px;
+    margin-bottom: 25px;
+    align-items: center;
+}
+
+.activity-icon{
+    width: 55px;
+    height: 55px;
+    border-radius: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.blue-bg{
+    background: #5b7cff;
+}
+
+.purple-bg{
+    background: #8f5cff;
+}
+
+.red-bg{
+    background: #ff5b61;
+}
+
+.activity-item h4{
+    margin-bottom: 5px;
+    color: #222;
+}
+
+.activity-item p{
+    color: #777;
+}
+
+/* responsive */
+
+@media(max-width:1000px){
+
+    .top-section,
+    .bottom-section{
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media(max-width:700px){
+
+    .dashboard-header{
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+
+}
+
+</style>
+
+<div class="dashboard-container">
+
+    <!-- العنوان -->
+
+    <div class="dashboard-header">
+
+        <div>
+            <h1>أهلًا بك في لوحة تحكم الإدارة</h1>
+            <p>
+                هنا يمكنك متابعة إحصائيات ومؤشرات الموقع وإدارة المحتوى والمستخدمين
+            </p>
+        </div>
+
+        <div class="dashboard-icon">
+            <i class="fa-solid fa-chart-simple"></i>
+        </div>
+
+    </div>
+
+    <!-- الإحصائيات -->
+
+    <div class="stats-grid">
+
+        <div class="stat-card blue">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-users"></i>
+            </div>
+
+            <div>
+                <h3>245</h3>
+                <p>عدد المستخدمين</p>
+            </div>
+
+        </div>
+
+        <div class="stat-card green">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-child-reaching"></i>
+            </div>
+
+            <div>
+                <h3>89</h3>
+                <p>عدد الأطفال</p>
+            </div>
+
+        </div>
+
+        <div class="stat-card orange">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-comments"></i>
+            </div>
+
+            <div>
+                <h3>34</h3>
+                <p>النقاشات</p>
+            </div>
+
+        </div>
+
+        <div class="stat-card red">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+
+            <div>
+                <h3>12</h3>
+                <p>البلاغات</p>
+            </div>
+
+        </div>
+
+        <div class="stat-card purple">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-circle-play"></i>
+            </div>
+
+            <div>
+                <h3>56</h3>
+                <p>الفيديوهات</p>
+            </div>
+
+        </div>
+
+        <div class="stat-card cyan">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-chart-line"></i>
+            </div>
+
+            <div>
+                <h3>128</h3>
+                <p>المستخدمين النشطين</p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- التشارت + البلاغات -->
+
+    <div class="top-section">
+
+        <!-- التشارت -->
+
+        <div class="chart-card">
+
+            <div class="card-title">
+                <h2>نشاط المستخدمين</h2>
+            </div>
+
+            <canvas id="activityChart"></canvas>
+
+        </div>
+
+        <!-- البلاغات -->
+
+        <div class="reports-card">
+
+            <div class="card-title">
+                <h2>آخر البلاغات</h2>
+            </div>
+
+            <table>
+
+                <tr>
+                    <th>المستخدم</th>
+                    <th>نوع البلاغ</th>
+                    <th>الحالة</th>
+                    <th>الإجراء</th>
+                </tr>
+
+                <tr>
+                    <td>أحمد</td>
+                    <td>محتوى غير مناسب</td>
+
+                    <td>
+                        <span class="status pending">
+                            قيد المراجعة
+                        </span>
+                    </td>
+
+                    <td class="actions">
+                        <i class="fa-regular fa-eye"></i>
+                        <i class="fa-regular fa-trash-can"></i>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>سارة</td>
+                    <td>مضايقة</td>
+
+                    <td>
+                        <span class="status danger">
+                            عاجل
+                        </span>
+                    </td>
+
+                    <td class="actions">
+                        <i class="fa-regular fa-eye"></i>
+                        <i class="fa-regular fa-trash-can"></i>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>محمد</td>
+                    <td>محتوى مسيء</td>
+
+                    <td>
+                        <span class="status solved">
+                            تم الحل
+                        </span>
+                    </td>
+
+                    <td class="actions">
+                        <i class="fa-regular fa-eye"></i>
+                        <i class="fa-regular fa-trash-can"></i>
+                    </td>
+                </tr>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- آخر المستخدمين + النشاط -->
+
+    <div class="bottom-section">
+
+        <!-- المستخدمين -->
+
+        <div class="users-card">
+
+            <div class="card-title">
+                <h2>آخر المستخدمين</h2>
+            </div>
+
+            <table>
+
+                <tr>
+                    <th>المستخدم</th>
+                    <th>البريد الإلكتروني</th>
+                    <th>الحالة</th>
+                </tr>
+
+                <tr>
+                    <td>ليان أحمد</td>
+                    <td>layan@example.com</td>
+
+                    <td>
+                        <span class="active-user">
+                            نشط
+                        </span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>ريم الحربي</td>
+                    <td>reem@example.com</td>
+
+                    <td>
+                        <span class="active-user">
+                            نشط
+                        </span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>سلطان</td>
+                    <td>sultan@example.com</td>
+
+                    <td>
+                        <span class="blocked-user">
+                            محظور
+                        </span>
+                    </td>
+                </tr>
+
+            </table>
+
+        </div>
+
+        <!-- النشاط -->
+
+        <div class="activity-card">
+
+            <div class="card-title">
+                <h2>النشاط الأخير</h2>
+            </div>
+
+            <div class="activity-item">
+
+                <div class="activity-icon blue-bg">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+
+                <div>
+                    <h4>تسجيل مستخدم جديد</h4>
+                    <p>ليان أحمد انضمت إلى المنصة</p>
+                </div>
+
+            </div>
+
+            <div class="activity-item">
+
+                <div class="activity-icon purple-bg">
+                    <i class="fa-solid fa-video"></i>
+                </div>
+
+                <div>
+                    <h4>تم إضافة فيديو جديد</h4>
+                    <p>استراتيجيات تعليمية</p>
+                </div>
+
+            </div>
+
+            <div class="activity-item">
+
+                <div class="activity-icon red-bg">
+                    <i class="fa-solid fa-shield"></i>
+                </div>
+
+                <div>
+                    <h4>بلاغ جديد</h4>
+                    <p>تم إرسال بلاغ جديد</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const ctx = document.getElementById('activityChart');
+
+new Chart(ctx, {
+
+    type: 'line',
+
+    data: {
+
+        labels: [
+            '10 مايو',
+            '11 مايو',
+            '12 مايو',
+            '13 مايو',
+            '14 مايو',
+            '15 مايو'
+        ],
+
+        datasets: [
+
+        {
+            label: 'التسجيلات',
+            data: [100,140,110,150,135,170],
+            borderColor: '#5b7cff',
+            tension: 0.4
+        },
+
+        {
+            label: 'التفاعلات',
+            data: [70,100,75,90,85,120],
+            borderColor: '#23c58f',
+            tension: 0.4
+        }
+
+        ]
+    },
+
+    options: {
+        responsive: true
+    }
+
+});
+
+</script>
+
+{% endblock %}

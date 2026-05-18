@@ -40,7 +40,10 @@
       </div>
 
       <div class="topic">
+<<<<<<< HEAD
 
+=======
+>>>>>>> 44e4f9949ed06081a3bcc609920331320b9b557c
 
         <div class="topic-left">
 
@@ -192,27 +195,9 @@
           <span> {{ post.likes.count }} إعجاب</span>
           <span> {{ post.comments.count }} تعليق</span>
         </div>
-        <div style="display: flex; gap: 10px; align-items: center;">
-          {% if request.user.is_authenticated %}
-          <form method="POST" action="{% url 'community:like_post_view' post.id %}">
-            {% csrf_token %}
-
-            <button type="submit" class="like-btn liked">
-
-              <svg class="like-icon" viewBox="0 0 24 24" fill="none">
-
-                <path
-                  d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-                  stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-
-              </svg>
-
-              <span>إعجاب</span>
-
-            </button>
-
-          </form>
-          {% endif %}
+        <div class="post-footer">
+          
+           <div style="display: flex; gap: 10px; align-items: center;">
           <a href="{%url 'community:details_post_view' post.id%}" class="join-btn">
             دخول النقاش
           </a>
@@ -234,17 +219,14 @@
 
 
   </div>
-</div>
-  
   <script>
+function openReportModal(){
+    document.getElementById("reportModal").style.display = "flex";
+}
 
-    function openReportModal() {
-      document.getElementById("reportModal").style.display = "flex";
-    }
+function closeReportModal(){
+    document.getElementById("reportModal").style.display = "none";
+}
 
-    function closeReportModal() {
-      document.getElementById("reportModal").style.display = "none";
-    }
-
-  </script>
+</script>
 {% endblock %}

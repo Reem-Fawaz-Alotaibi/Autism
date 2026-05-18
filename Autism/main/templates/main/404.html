@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Tajawal', sans-serif;
+    background:#f4f8f3;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    padding:40px;
+}
+
+.container{
+    width:100%;
+    max-width:1300px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:60px;
+    flex-wrap:wrap;
+}
+
+.left-side{
+    flex:1;
+    display:flex;
+    justify-content:center;
+    position:relative;
+}
+
+.blob{
+    position:absolute;
+    width:500px;
+    height:500px;
+    background:#dfeadf;
+    border-radius:50%;
+    filter:blur(5px);
+    z-index:0;
+}
+
+.bear-wrapper{
+    position:relative;
+    z-index:2;
+    animation:float 3s ease-in-out infinite;
+}
+
+@keyframes float{
+    0%{
+        transform:translateY(0px);
+    }
+    50%{
+        transform:translateY(-15px);
+    }
+    100%{
+        transform:translateY(0px);
+    }
+}
+
+.bear{
+    width:220px;
+    height:400px;
+    background:#d8a676;
+    border-radius:130px;
+    position:relative;
+    margin:auto;
+    box-shadow:0 20px 40px rgba(0,0,0,0.08);
+    margin-top: 40px;
+}
+
+.ear{
+    width:80px;
+    height:80px;
+    background:#d8a676;
+    border-radius:50%;
+    position:absolute;
+    top:-20px;
+}
+
+.ear::before{
+    content:'';
+    width:45px;
+    height:45px;
+    background:#b37c4b;
+    border-radius:50%;
+    position:absolute;
+    top:17px;
+    left:17px;
+}
+
+.ear.left{
+    left:10px;
+}
+
+.ear.right{
+    right:10px;
+}
+
+.eye{
+    width:22px;
+    height:30px;
+    background:#222;
+    border-radius:50%;
+    position:absolute;
+    top:105px;
+}
+
+.eye.left{
+    left:70px;
+}
+
+.eye.right{
+    right:70px;
+}
+
+.eye::after{
+    content:'';
+    width:7px;
+    height:7px;
+    background:white;
+    border-radius:50%;
+    position:absolute;
+    top:5px;
+    left:5px;
+}
+
+.nose{
+    width:55px;
+    height:40px;
+    background:#f7e5d3;
+    border-radius:50px;
+    position:absolute;
+    top:125px;
+    left:50%;
+    transform:translateX(-50%);
+}
+
+.nose::after{
+    content:'';
+    width:20px;
+    height:15px;
+    background:#3c2b22;
+    border-radius:50%;
+    position:absolute;
+    top:8px;
+    left:50%;
+    transform:translateX(-50%);
+}
+
+.mouth{
+    width:35px;
+    height:18px;
+    border-bottom:4px solid #3c2b22;
+    border-radius:0 0 40px 40px;
+    position:absolute;
+    top:140px;
+    left:50%;
+    transform:translateX(-50%);
+}
+
+.hand{
+    width:70px;
+    height:120px;
+    background:#d8a676;
+    border-radius:50px;
+    position:absolute;
+    top:145px;
+}
+
+.hand.left{
+    left:-15px;
+    transform:rotate(15deg);
+}
+
+.hand.right{
+    right:-10px;
+    transform:rotate(-30deg);
+    animation:thinking 2s ease-in-out infinite;
+    transform-origin:top;
+}
+
+@keyframes thinking{
+    0%{
+        transform:rotate(-30deg);
+    }
+    50%{
+        transform:rotate(-20deg);
+    }
+    100%{
+        transform:rotate(-30deg);
+    }
+}
+
+.leg{
+    width:80px;
+    height:90px;
+    background:#d8a676;
+    border-radius:50px;
+    position:absolute;
+    bottom:-20px;
+}
+
+.leg.left{
+    left:35px;
+}
+
+.leg.right{
+    right:35px;
+}
+
+.sign{
+    position:absolute;
+    left:-110px;
+    bottom:120px;
+    transform:rotate(-20deg);
+}
+
+.board{
+    width:130px;
+    height:90px;
+    background:#fff;
+    border-radius:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:55px;
+    font-weight:800;
+    color:#7fb285;
+    box-shadow:0 10px 20px rgba(0,0,0,0.08);
+}
+
+.stick{
+    width:16px;
+    height:100px;
+    background:#9db39d;
+    margin:auto;
+    border-radius:10px;
+}
+
+.right-side{
+    flex:1;
+    text-align:right;
+}
+
+.error-code{
+    font-size:180px;
+    font-weight:800;
+    line-height:1;
+    color:#7fb285;
+}
+
+.title{
+    font-size:60px;
+    font-weight:800;
+    color:#27302b;
+    margin-top:10px;
+}
+
+.desc{
+    margin-top:20px;
+    color:#6d7670;
+    font-size:28px;
+    line-height:1.8;
+}
+
+.home-btn{
+    margin-top:40px;
+    display:inline-flex;
+    align-items:center;
+    gap:12px;
+    background:#7fb285;
+    color:white;
+    text-decoration:none;
+    padding:18px 45px;
+    border-radius:20px;
+    font-size:24px;
+    transition:.3s;
+    box-shadow:0 10px 20px rgba(127,178,133,0.3);
+}
+
+.home-btn:hover{
+    transform:translateY(-5px);
+    background:#6aa271;
+}
+
+.question{
+    position:absolute;
+    top:-90px;
+    right:40px;
+    font-size:70px;
+    color:#7fb285;
+    animation:bounce 2s infinite;
+}
+
+@keyframes bounce{
+    0%,100%{
+        transform:translateY(0);
+    }
+    50%{
+        transform:translateY(-10px);
+    }
+}
+
+@media(max-width:1000px){
+
+    .container{
+        flex-direction:column;
+        text-align:center;
+    }
+
+    .right-side{
+        text-align:center;
+    }
+
+    .error-code{
+        font-size:120px;
+    }
+
+    .title{
+        font-size:40px;
+    }
+
+    .desc{
+        font-size:20px;
+    }
+
+    .home-btn{
+        font-size:18px;
+    }
+
+    .sign{
+        left:-70px;
+        bottom:10px;
+    }
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="left-side">
+
+        <div class="blob"></div>
+
+        <div class="bear-wrapper">
+
+            <div class="question">؟</div>
+
+            
+
+            <div class="bear">
+
+                <div class="ear left"></div>
+                <div class="ear right"></div>
+
+                <div class="eye left"></div>
+                <div class="eye right"></div>
+
+                <div class="nose"></div>
+                <div class="mouth"></div>
+
+                <div class="hand left"></div>
+                <div class="hand right"></div>
+                <div class="sign">
+                <div class="board">404</div>
+                <div class="stick"></div>
+                </div>
+
+                <div class="leg left"></div>
+                <div class="leg right"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="right-side">
+
+        <div class="error-code">404</div>
+
+        <h1 class="title">الصفحة غير موجودة</h1>
+
+        <p class="desc">
+            عذرًا، لا يمكننا العثور على الصفحة التي تبحث عنها.<br>
+            قد تكون تم نقلها أو حذفها.
+        </p>
+
+        <a href="/" class="home-btn">
+            العودة إلى الصفحة الرئيسية
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

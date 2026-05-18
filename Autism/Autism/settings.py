@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'chatbot',
     'accounts.apps.AccountsConfig',
     'ai_analysis',
+    'admin_panel'
 
 ]
 SITE_ID = 1
