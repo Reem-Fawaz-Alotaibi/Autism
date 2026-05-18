@@ -1,0 +1,435 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}لوحة التحكم{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'admin_panel/css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="dashboard-container">
+
+    <!-- العنوان -->
+
+    <div class="dashboard-header">
+
+        <div>
+            <h1>أهلًا بك في لوحة تحكم الإدارة</h1>
+            <p>
+                هنا يمكنك متابعة إحصائيات ومؤشرات الموقع وإدارة المحتوى والمستخدمين
+            </p>
+        </div>
+
+        <div class="dashboard-icon">
+            <i class="fa-solid fa-chart-simple"></i>
+        </div>
+
+    </div>
+
+    <!-- الإحصائيات -->
+
+    <div class="stats-grid">
+
+        <div class="stat-card blue">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-users"></i>
+            </div>
+
+            <div class="state-text">
+                <h3>{{ users_count }}</h3>
+                <p>عدد المستخدمين</p>
+            </div>
+
+        </div>
+
+        <div class="stat-card green">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-child-reaching"></i>
+            </div>
+
+            <div class="state-text">
+                <h3>{{ children_count }}</h3>
+                <p>عدد الأطفال</p>
+            </div>
+
+        </div>
+
+        <div class="stat-card orange">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-comments"></i>
+            </div>
+
+            <div class="state-text">
+                <h3>{{post_count}}</h3>
+                <p>النقاشات</p>
+            </div>
+
+        </div>
+
+        <div class="stat-card red">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+
+            <div class="state-text">
+                <h3>{{ reports_count }}</h3>
+                <p>البلاغات</p>
+            </div>
+
+        </div>
+
+        <div class="stat-card purple">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-hospital"></i>
+            </div>
+
+            <div class="state-text">
+                <h3>{{ support_centers_count }}</h3>
+                <p>الأماكن الداعمة</p>
+            </div>
+
+        </div>
+
+        <div class="stat-card cyan">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-chart-line"></i>
+            </div>
+
+            <div class="state-text">
+                <h3>{{ active_users_count }}</h3>
+                <p>المستخدمين النشطين</p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- التشارت + البلاغات -->
+
+    <div class="top-section">
+
+        <!-- التشارت -->
+
+        <div class="chart-card">
+
+            <div class="card-title">
+                <h2>نشاط المستخدمين</h2>
+            </div>
+
+            <canvas id="activityChart"></canvas>
+
+        </div>
+
+        <!-- البلاغات -->
+
+        <div class="reports-card">
+
+            <div class="card-title">
+                <h2>آخر البلاغات</h2>
+            </div>
+
+            {% if latest_reports %}
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <tr>
+                        <th>المستخدم</th>
+                        <th>نوع البلاغ</th>
+                        <th>الحالة</th>
+                        <th>الإجراء</th>
+                    </tr>
+
+                    {% for report in latest_reports %}
+
+                    <tr>
+
+                        <td>{{ report.user.username }}</td>
+
+                        <td>{{ report.get_reason_display }}</td>
+
+                        <td>
+                            <span class="status {{ report.status }}">
+                                {{ report.get_status_display }}
+                            </span>
+                        </td>
+
+                        <td class="actions-btn">
+
+                            <a href="{% url 'admin_panel:report_detail' report.id %}">
+                                <i class="fa-regular fa-eye"></i>
+                            </a>
+
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#deleteReportModal{{ report.id }}">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </a>
+                            {% if report.status != 'solved' %}
+
+                            <a href="{% url 'admin_panel:solve_report' report.id %}" class="solve-btn">
+                                تم الحل
+                            </a>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+                    <div class="modal fade" id="deleteReportModal{{ report.id }}" tabindex="-1">
+
+                        <div class="modal-dialog modal-dialog-centered">
+
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h5 class="modal-title">حذف المنشور</h5>
+
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    هل أنت متأكد من حذف المنشور؟
+                                </div>
+
+                                <div class="modal-footer">
+
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+
+                                        إلغاء
+                                    </button>
+
+                                    <a href="{% url 'admin_panel:delete_report' report.id %}" class="btn btn-danger">
+
+                                        حذف
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </table>
+            </div>
+
+            {% else %}
+
+            <div class="empty-state">
+                <p>لا توجد بلاغات حالياً</p>
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <!-- آخر المستخدمين + النشاط -->
+
+    <div class="bottom-section">
+
+        <!-- المستخدمين -->
+        <div class="bottom-section">
+
+            <div class="users-card">
+
+                <div class="card-title">
+                    <h2>آخر المستخدمين</h2>
+                </div>
+
+                {% if latest_users %}
+
+                <table>
+
+                    <tr class="row-desgin">
+                        <th>المستخدم</th>
+                        <th>البريد الإلكتروني</th>
+                        <th>الحالة</th>
+                        <th>الإجراءات</th>
+                    </tr>
+
+                    {% for user_item in latest_users %}
+
+                    <tr>
+
+                        <td>
+                            {{ user_item.username }}
+                        </td>
+
+                        <td>
+                            {{ user_item.email }}
+                        </td>
+
+                        <td>
+
+                            {% if user_item.is_active %}
+
+                            <span class="active-user">
+                                نشط
+                            </span>
+
+                            {% else %}
+
+                            <span class="blocked-user">
+                                محظور
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+                        <td class="actions-user">
+
+                            {% if user_item.is_active %}
+
+                            <a href="{% url 'admin_panel:block_user' user_item.id %}" class="block-btn">
+
+                                حظر
+
+                            </a>
+
+                            {% else %}
+
+                            <a href="{% url 'admin_panel:unblock_user' user_item.id %}" class="unblock-btn">
+
+                                فك الحظر
+
+                            </a>
+
+                            {% endif %}
+
+                            <a href="#" class="delete-btn" data-bs-toggle="modal"
+                                data-bs-target="#deleteUserModal{{ user_item.id }}">
+
+                                حذف
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+                    <div class="modal fade" id="deleteUserModal{{ user_item.id }}" tabindex="-1">
+
+                        <div class="modal-dialog modal-dialog-centered">
+
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+
+                                    <h5 class="modal-title">
+                                        حذف المستخدم
+                                    </h5>
+
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal">
+                                    </button>
+
+                                </div>
+
+                                <div class="modal-body">
+
+                                    هل أنت متأكد من حذف المستخدم
+                                    <strong>{{ user_item.username }}</strong> ؟
+
+                                </div>
+
+                                <div class="modal-footer">
+
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+
+                                        إلغاء
+
+                                    </button>
+
+                                    <a href="{% url 'admin_panel:delete_user' user_item.id %}" class="btn btn-danger">
+
+                                        حذف
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </table>
+
+                {% else %}
+
+                <div class="empty-state">
+                    <p>لا يوجد مستخدمين حالياً</p>
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    const ctx = document.getElementById('activityChart');
+
+    new Chart(ctx, {
+
+        type: 'line',
+
+        data: {
+
+            labels: [
+                '10 مايو',
+                '11 مايو',
+                '12 مايو',
+                '13 مايو',
+                '14 مايو',
+                '15 مايو'
+            ],
+
+            datasets: [
+
+                {
+                    label: 'التسجيلات',
+                    data: [100, 140, 110, 150, 135, 170],
+                    borderColor: '#5b7cff',
+                    tension: 0.4
+                },
+
+                {
+                    label: 'التفاعلات',
+                    data: [70, 100, 75, 90, 85, 120],
+                    borderColor: '#23c58f',
+                    tension: 0.4
+                }
+
+            ]
+        },
+
+        options: {
+            responsive: true
+        }
+
+    });
+
+</script>
+
+{% endblock %}

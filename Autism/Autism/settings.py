@@ -16,6 +16,11 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
+import cloudinary
+
+
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -60,6 +65,8 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'payments',
 
+    'ai_analysis',
+    'admin_panel'
 
 ]
 SITE_ID = 1
@@ -143,12 +150,19 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': config('CLOUD_NAME'),
     'API_KEY': config('API_KEY'),
     'API_SECRET': config('API_SECRET'),
 }
+
+
+cloudinary.config(
+    cloud_name=config("CLOUD_NAME"),
+    api_key=config("API_KEY"),
+    api_secret=config("API_SECRET"),
+    secure=True
+)
 
 STORAGES = {
     "default": {
@@ -214,3 +228,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 MOYASAR_PUBLIC_KEY = os.getenv("MOYASAR_PUBLIC_KEY")
 MOYASAR_SECRET_KEY = os.getenv("MOYASAR_SECRET_KEY")
+GEMINI_API_KEY = config('GEMINI_API_KEY')
+
+OPENAI_API_KEY = config('OPENAI_API_KEY')
+

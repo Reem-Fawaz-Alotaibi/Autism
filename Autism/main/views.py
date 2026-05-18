@@ -40,3 +40,13 @@ def questions_view(request: HttpRequest):
 def set_theme(request, theme):
     request.session['theme'] = theme
     return redirect(request.GET.get('next', '/'))
+    return render(request, 'main/questions.html')
+
+def dashboard_view(request: HttpRequest):
+    return render(request, 'main/dashbord_admin.html')
+
+def test_view(request: HttpRequest):
+    return render(request, 'main/404.html')
+
+    
+

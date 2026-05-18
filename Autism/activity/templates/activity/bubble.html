@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>فرقعة الفقاعات</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:sans-serif;
+    }
+
+    body{
+      background:linear-gradient(to bottom,#dff6ff,#ffffff);
+      overflow:hidden;
+      height:100vh;
+    }
+
+    .title{
+      position:absolute;
+      top:30px;
+      width:100%;
+      text-align:center;
+      font-size:40px;
+      color:#2b6cb0;
+      font-weight:bold;
+      z-index:10;
+    }
+
+    .subtitle{
+      position:absolute;
+      top:85px;
+      width:100%;
+      text-align:center;
+      color:#555;
+      font-size:18px;
+      z-index:10;
+    }
+
+    .bubble{
+      position:absolute;
+      bottom:-120px;
+      border-radius:50%;
+      cursor:pointer;
+      animation:floatUp linear forwards;
+      transition:0.15s;
+    }
+
+    .bubble:hover{
+      transform:scale(1.08);
+    }
+
+    @keyframes floatUp{
+
+      from{
+        transform:translateY(0);
+      }
+
+      to{
+        transform:translateY(-120vh);
+      }
+
+    }
+
+    .score-box{
+      position:absolute;
+      top:25px;
+      left:25px;
+      background:white;
+      padding:15px 25px;
+      border-radius:20px;
+      box-shadow:0 5px 15px rgba(0,0,0,0.08);
+      font-size:22px;
+      color:#2d3748;
+      z-index:10;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <h1 class="title">فرقعة الفقاعات 🫧</h1>
+
+  <p class="subtitle">
+    اضغط على الفقاعات لتفجيرها والاسترخاء
+  </p>
+
+  <div class="score-box">
+    النقاط: <span id="score">0</span>
+  </div>
+
+  <audio id="popSound">
+    <source src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+
+    let score = 0;
+
+    const scoreElement = document.getElementById("score");
+    const popSound = document.getElementById("popSound");
+
+    function createBubble(){
+
+      const bubble = document.createElement("div");
+
+      const size = Math.random() * 80 + 40;
+
+      bubble.classList.add("bubble");
+
+      bubble.style.width = size + "px";
+      bubble.style.height = size + "px";
+
+      bubble.style.left = Math.random() * window.innerWidth + "px";
+
+      bubble.style.background = `
+        rgba(
+          ${Math.random()*255},
+          ${Math.random()*255},
+          ${Math.random()*255},
+          0.5
+        )
+      `;
+
+      bubble.style.animationDuration =
+        (Math.random() * 5 + 4) + "s";
+
+      bubble.onclick = () => {
+
+        popSound.currentTime = 0;
+        popSound.play();
+
+        bubble.style.transform = "scale(1.5)";
+        bubble.style.opacity = "0";
+
+        score++;
+        scoreElement.innerHTML = score;
+
+        setTimeout(() => {
+          bubble.remove();
+        },150);
+
+      };
+
+      document.body.appendChild(bubble);
+
+      setTimeout(() => {
+
+        bubble.remove();
+
+      },10000);
+
+    }
+
+    setInterval(createBubble,700);
+
+  </script>
+
+</body>
+</html>

@@ -241,6 +241,79 @@
   transition: 0.3s;
 }
 
+.dropdown-menu a:hover {
+  background: #f7f7f7;
+}
+
+.report-btn{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    padding: 10px 12px;
+    border-radius: 8px;
+    transition: 0.3s;
+    font-size: 10px;
+    color: #333;
+    background: none !important;
+    border: none !important;
+}
+
+.report-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  transition: 0.3s;
+  font-size: 10px;
+  color: #333;
+  background: none !important;
+  border: none !important;
+}
+
+.report-btn i {
+  color: #d9534f;
+}
+
+.report-btn:hover {
+  background: #fff1f1;
+}
+
+.report-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.report-box {
+  background: white;
+  padding: 25px;
+  border-radius: 18px;
+  width: 320px;
+}
+
+.report-box h3 {
+  margin-bottom: 20px;
+}
+
+.report-box form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.report-box label {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
 .report-actions {
   display: flex;
   gap: 12px;
@@ -355,8 +428,6 @@
 
 
 /*create post*/
-
-
 .create-page {
   max-width: 760px;
   margin: auto;
@@ -394,7 +465,7 @@
   color: #333;
 }
 
-.form-input,
+.form-input-community,
 .form-select,
 .form-textarea {
   width: 100%;
@@ -408,7 +479,7 @@
   transition: 0.2s;
 }
 
-.form-input:focus,
+.form-input-community:focus,
 .form-select:focus,
 .form-textarea:focus {
   border-color: #8A9B72;
@@ -641,11 +712,11 @@
   text-decoration: none;
   border: none;
   background: #f5f5f5;
-  padding: 10px 16px;
+  padding: 10px;
   border-radius: 24px;
   cursor: pointer;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .like-btn i {
@@ -869,5 +940,27 @@
     gap: 16px;
     align-items: flex-start;
   }
+
+}
+
+@media (max-width: 768px){
+
+    .comment-footer{
+        gap: 8px !important;
+        flex-wrap: wrap;
+    }
+
+    .like-btn{
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .like-btn i{
+        font-size: 16px;
+    }
 
 }

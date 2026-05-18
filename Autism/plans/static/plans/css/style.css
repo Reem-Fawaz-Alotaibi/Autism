@@ -971,3 +971,31 @@
   }
 
 }
+
+@media(max-width:768px){
+
+    p,
+    span,
+    a,
+    button,
+    .time,
+    .tag,
+    .card-title,
+    .section-header p,
+    .title-section p{
+        font-size:15px !important;
+    }
+
+    h1{
+        font-size:28px !important;
+    }
+
+    h2{
+        font-size:22px !important;
+    }
+
+    h3{
+        font-size:18px !important;
+    }
+
+}
