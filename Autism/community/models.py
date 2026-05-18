@@ -64,7 +64,13 @@ class Report(models.Model):
         ('other', 'سبب آخر'),
     ]
 
+    STATUS_CHOICES = [
+    ('pending', 'قيد المراجعة'),
+    ('solved', 'تم الحل'),
+]
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     reason = models.CharField(max_length=50, choices=REASONS)
+    status = models.CharField(max_length=20,choices=STATUS_CHOICES,default='pending')
     created_at = models.DateTimeField(auto_now_add=True)

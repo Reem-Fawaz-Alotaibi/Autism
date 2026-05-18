@@ -10,6 +10,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.sessions.models import Session
 from django.utils import timezone
+from support_map.models import PlaceLike
 
 def signup_view(request):
     form = SignUpForm(request.POST or None)
@@ -144,7 +145,11 @@ def settings_view(request):
 
 
 def saved_centers_view(request):
-    return render(request, 'accounts/saved_centers.html')
+    saved_centers = PlaceLike.objects.filter(user=request.user).select_related('place')
+
+    return render(request, 'accounts/saved_centers.html',{
+        'saved_centers': saved_centers
+    })
 
 
 @login_required

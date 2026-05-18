@@ -56,7 +56,8 @@
                 <div class="nav-group">
                     <div class="nav-group-label">إدارة الأطفال</div>
                     {% if user.is_authenticated %}
-                    <a href="{% url 'children:add_child' %}" class="nav-link-item {% block nav_add_child %}{% endblock %}">
+                    <a href="{% url 'children:add_child' %}"
+                        class="nav-link-item {% block nav_add_child %}{% endblock %}">
                         <span class="nav-label">إضافة طفل</span>
                         <i class="bi bi-person-plus nav-icon"></i>
                     </a>
@@ -113,7 +114,7 @@
                     <a href="{% url 'map:support_map_view'%}" class="nav-link-item">
                         <span class="nav-label">خريطة الدعم</span>
                         <i class="bi bi-map nav-icon"></i>
-                        
+
                     </a>
                 </div>
 
@@ -149,6 +150,30 @@
 
                 <div class="profile-card">
 
+                    {% if user.is_staff %}
+
+                    <a href="{%url 'admin_panel:dashboard_view'%}" class="profile-top">
+
+                        <div class="profile-avatar">
+                            <i class="bi bi-speedometer2"></i>
+                        </div>
+
+                        <div class="profile-text">
+                            <div class="profile-name">
+                                لوحة التحكم
+                            </div>
+
+                            <div class="profile-role">
+                                دخول الإدارة
+                            </div>
+                        </div>
+
+                        <i class="bi bi-chevron-left profile-arrow"></i>
+
+                    </a>
+
+                    {% else %}
+
                     <a href="{% url 'accounts:profile' %}" class="profile-top">
 
                         <div class="profile-avatar">
@@ -169,6 +194,8 @@
 
                     </a>
 
+                    {% endif %}
+
                     <div class="profile-divider"></div>
 
                     <form method="POST" action="{% url 'accounts:logout' %}">
@@ -182,6 +209,7 @@
                 </div>
 
                 {% else %}
+
                 <div class="profile-card">
 
                     <a href="{% url 'accounts:signin' %}" class="profile-top">
@@ -203,7 +231,9 @@
                         <i class="bi bi-chevron-left profile-arrow"></i>
 
                     </a>
+
                 </div>
+
                 {% endif %}
 
             </div>
@@ -355,79 +385,79 @@
 
         const convId = 1;
 
-    function openChat() {
-        document.getElementById("chatModal").classList.add("active");
-        loadMessages();
-    }
-
-    function closeChat() {
-        document.getElementById("chatModal").classList.remove("active");
-    }
-
-    async function loadMessages() {
-        if (!convId) return;
-
-        let res = await fetch(`/chatbot/conversation/${convId}/messages/`);
-        let data = await res.json();
-
-        let box = document.getElementById("messages");
-        box.innerHTML = "";
-
-        data.forEach(msg => {
-            let div = document.createElement("div");
-            div.classList.add("msg");
-            div.classList.add(msg.message_type === "user" ? "user" : "bot");
-            div.innerText = msg.content;
-            box.appendChild(div);
-        });
-
-        box.scrollTop = box.scrollHeight;
-    }
-
-    async function sendMessage() {
-        let input = document.getElementById("input");
-        if (!input.value.trim() || !convId) return;
-
-        await fetch(`/chatbot/conversation/${convId}/send/`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": getCookie("csrftoken")
-            },
-            body: JSON.stringify({ content: input.value })
-        });
-
-        input.value = "";
-        loadMessages();
-    }
-
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== "") {
-            document.cookie.split(";").forEach(cookie => {
-                let c = cookie.trim();
-                if (c.startsWith(name + "=")) {
-                    cookieValue = decodeURIComponent(c.substring(name.length + 1));
-                }
-            });
+        function openChat() {
+            document.getElementById("chatModal").classList.add("active");
+            loadMessages();
         }
-        return cookieValue;
-    }
 
-    document.getElementById("input").addEventListener("keydown", function(e) {
-        if (e.key === "Enter") sendMessage();
-    });
-            // تحسين حركة التنقل السلس (Smooth Scroll) للروابط الجانبية
-            document.querySelectorAll('.toc-link').forEach(link => {
-                link.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    document.querySelector(targetId).scrollIntoView({
-                        behavior: 'smooth'
-                    });
+        function closeChat() {
+            document.getElementById("chatModal").classList.remove("active");
+        }
+
+        async function loadMessages() {
+            if (!convId) return;
+
+            let res = await fetch(`/chatbot/conversation/${convId}/messages/`);
+            let data = await res.json();
+
+            let box = document.getElementById("messages");
+            box.innerHTML = "";
+
+            data.forEach(msg => {
+                let div = document.createElement("div");
+                div.classList.add("msg");
+                div.classList.add(msg.message_type === "user" ? "user" : "bot");
+                div.innerText = msg.content;
+                box.appendChild(div);
+            });
+
+            box.scrollTop = box.scrollHeight;
+        }
+
+        async function sendMessage() {
+            let input = document.getElementById("input");
+            if (!input.value.trim() || !convId) return;
+
+            await fetch(`/chatbot/conversation/${convId}/send/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCookie("csrftoken")
+                },
+                body: JSON.stringify({ content: input.value })
+            });
+
+            input.value = "";
+            loadMessages();
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== "") {
+                document.cookie.split(";").forEach(cookie => {
+                    let c = cookie.trim();
+                    if (c.startsWith(name + "=")) {
+                        cookieValue = decodeURIComponent(c.substring(name.length + 1));
+                    }
+                });
+            }
+            return cookieValue;
+        }
+
+        document.getElementById("input").addEventListener("keydown", function (e) {
+            if (e.key === "Enter") sendMessage();
+        });
+        // تحسين حركة التنقل السلس (Smooth Scroll) للروابط الجانبية
+        document.querySelectorAll('.toc-link').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                document.querySelector(targetId).scrollIntoView({
+                    behavior: 'smooth'
                 });
             });
-        
+        });
+
 
     </script>
     {% block extra_js %}{% endblock %}

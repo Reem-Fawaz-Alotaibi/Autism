@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'chatbot',
     'accounts.apps.AccountsConfig',
+    'admin_panel'
 
 ]
 SITE_ID = 1
