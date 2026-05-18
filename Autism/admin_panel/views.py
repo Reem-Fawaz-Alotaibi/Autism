@@ -48,15 +48,24 @@ def delete_report(request: HttpRequest, id):
 
     report = get_object_or_404(Report, id=id)
 
-    
     if report.post:
         report.post.delete()
 
-    
-    report.status = 'resolved'
+        report.post = None
+
+    report.status = 'solved'
     report.save()
 
     return redirect('admin_panel:dashboard_view')
+
+def solve_report(request: HttpRequest, id):
+
+    report = get_object_or_404(Report, id=id)
+
+    report.status = 'solved'
+    report.save()
+
+    return redirect('admin_panel:report_detail', id=report.id)
 
 
 def block_user(request, id):

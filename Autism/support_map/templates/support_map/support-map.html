@@ -26,20 +26,24 @@
 </div>
 <div class="map-legend">
 
-    <div class="legend-item">
+    <button class="legend-item filter-btn active" data-filter="all">
+        الكل
+    </button>
+
+    <button class="legend-item filter-btn" data-filter="government">
         <span class="legend-color government"></span>
         حكومي
-    </div>
+    </button>
 
-    <div class="legend-item">
+    <button class="legend-item filter-btn" data-filter="private">
         <span class="legend-color private"></span>
         خاص
-    </div>
+    </button>
 
-    <div class="legend-item">
+    <button class="legend-item filter-btn" data-filter="community">
         <span class="legend-color community"></span>
         مجتمعي
-    </div>
+    </button>
 
 </div>
 
@@ -423,6 +427,48 @@
             badge.classList.add(typeClass);
 
         }
+
+
+
+
+const filterButtons = document.querySelectorAll(".filter-btn");
+const filterMarkers = document.querySelectorAll(".map-marker");
+
+filterButtons.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        document.querySelector(".filter-btn.active")
+            ?.classList.remove("active");
+
+        button.classList.add("active");
+
+        const filter = button.dataset.filter;
+
+        filterMarkers.forEach(marker => {
+
+            if (
+                filter === "all" ||
+                marker.classList.contains(filter)
+            ) {
+
+                marker.style.display = "";
+
+            } else {
+
+                marker.style.display = "none";
+
+            }
+
+        });
+
+    });
+
+});
+
+
+
+
 
     </script>
     {% endblock %}

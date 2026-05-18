@@ -52,7 +52,7 @@
                 <i class="fa-solid fa-child-reaching"></i>
             </div>
 
-            <div class="state-text"> 
+            <div class="state-text">
                 <h3>{{ children_count }}</h3>
                 <p>عدد الأطفال</p>
             </div>
@@ -87,16 +87,16 @@
 
         <div class="stat-card purple">
 
-    <div class="stat-icon">
-        <i class="fa-solid fa-hospital"></i>
-    </div>
+            <div class="stat-icon">
+                <i class="fa-solid fa-hospital"></i>
+            </div>
 
-    <div class="state-text">
-        <h3>{{ support_centers_count }}</h3>
-        <p>الأماكن الداعمة</p>
-    </div>
+            <div class="state-text">
+                <h3>{{ support_centers_count }}</h3>
+                <p>الأماكن الداعمة</p>
+            </div>
 
-</div>
+        </div>
 
         <div class="stat-card cyan">
 
@@ -170,13 +170,55 @@
                                 <i class="fa-regular fa-eye"></i>
                             </a>
 
-                            <a href="{% url 'admin_panel:delete_report' report.id %}">
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#deleteReportModal{{ report.id }}">
                                 <i class="fa-regular fa-trash-can"></i>
                             </a>
+                            {% if report.status != 'solved' %}
+
+                            <a href="{% url 'admin_panel:solve_report' report.id %}" class="solve-btn">
+                                تم الحل
+                            </a>
+
+                            {% endif %}
 
                         </td>
 
                     </tr>
+                    <div class="modal fade" id="deleteReportModal{{ report.id }}" tabindex="-1">
+
+                        <div class="modal-dialog modal-dialog-centered">
+
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h5 class="modal-title">حذف المنشور</h5>
+
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    هل أنت متأكد من حذف المنشور؟
+                                </div>
+
+                                <div class="modal-footer">
+
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+
+                                        إلغاء
+                                    </button>
+
+                                    <a href="{% url 'admin_panel:delete_report' report.id %}" class="btn btn-danger">
+
+                                        حذف
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
 
                     {% endfor %}
 
@@ -268,7 +310,8 @@
 
                             {% endif %}
 
-                            <a href="{% url 'admin_panel:delete_user' user_item.id %}" class="delete-btn">
+                            <a href="#" class="delete-btn" data-bs-toggle="modal"
+                                data-bs-target="#deleteUserModal{{ user_item.id }}">
 
                                 حذف
 
@@ -277,6 +320,51 @@
                         </td>
 
                     </tr>
+                    <div class="modal fade" id="deleteUserModal{{ user_item.id }}" tabindex="-1">
+
+                        <div class="modal-dialog modal-dialog-centered">
+
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+
+                                    <h5 class="modal-title">
+                                        حذف المستخدم
+                                    </h5>
+
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal">
+                                    </button>
+
+                                </div>
+
+                                <div class="modal-body">
+
+                                    هل أنت متأكد من حذف المستخدم
+                                    <strong>{{ user_item.username }}</strong> ؟
+
+                                </div>
+
+                                <div class="modal-footer">
+
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+
+                                        إلغاء
+
+                                    </button>
+
+                                    <a href="{% url 'admin_panel:delete_user' user_item.id %}" class="btn btn-danger">
+
+                                        حذف
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
 
                     {% endfor %}
 
