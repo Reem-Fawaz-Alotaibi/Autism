@@ -241,62 +241,6 @@
   transition: 0.3s;
 }
 
-.dropdown-menu a:hover {
-  background: #f7f7f7;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  padding: 10px 12px;
-  border-radius: 8px;
-  transition: 0.3s;
-  font-size: 10px;
-  color: #333;
-  background: none !important;
-  border: none !important;
-}
-
-.report-btn i {
-  color: #d9534f;
-}
-
-.report-btn:hover {
-  background: #fff1f1;
-}
-
-.report-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-}
-
-.report-box {
-  background: white;
-  padding: 25px;
-  border-radius: 18px;
-  width: 320px;
-}
-
-.report-box h3 {
-  margin-bottom: 20px;
-}
-
-.report-box form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.report-box label {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
 .report-actions {
   display: flex;
   gap: 12px;
