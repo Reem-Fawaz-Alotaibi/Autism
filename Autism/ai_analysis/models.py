@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings
 from children.models import Child
+from cloudinary.models import CloudinaryField
+
 
 class SkillCategory(models.TextChoices):
     FOCUS         = 'focus',         'التركيز والانتباه'
@@ -51,9 +53,9 @@ class Activity(models.Model):
 
 class ResourceVideo(models.Model):
 
-    title       = models.CharField(max_length=200, verbose_name="عنوان الفيديو")
+    title       = models.CharField(max_length=200, verbose_name="عنوا الفيديو")
     description = models.TextField(blank=True, verbose_name="وصف الفيديو")
-    video_file  = models.FileField(upload_to='resource_videos/', verbose_name="ملف الفيديو")
+    video_file  = CloudinaryField(resource_type='video', verbose_name="ملف الفيديو")
     thumbnail   = models.ImageField(upload_to='video_thumbnails/', blank=True, null=True, verbose_name="صورة مصغرة")
     category    = models.CharField(max_length=50, choices=SkillCategory.choices, verbose_name="التصنيف")
     age_min     = models.PositiveIntegerField(default=2, verbose_name="العمر الأدنى")
