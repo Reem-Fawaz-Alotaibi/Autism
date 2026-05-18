@@ -70,7 +70,7 @@ class Report(models.Model):
 ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.SET_NULL, null=True, blank=True)
     reason = models.CharField(max_length=50, choices=REASONS)
     status = models.CharField(max_length=20,choices=STATUS_CHOICES,default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
