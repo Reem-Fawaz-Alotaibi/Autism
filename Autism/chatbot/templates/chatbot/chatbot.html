@@ -25,10 +25,29 @@
 
 <script>
 
-const convId = 1;
+let convId = null;
+
+// تهيئة الشات وجلب رقم المحادثة الخاص بالمستخدم
+async function initChat() {
+    try {
+        let res = await fetch('/api/get-conversation/');
+        let data = await res.json();
+        if (data.conv_id) {
+            convId = data.conv_id;
+            loadMessages();
+        } else {
+            console.error("Error loading conversation:", data);
+            alert("حدث خطأ، يرجى تسجيل الدخول أولاً.");
+        }
+    } catch (err) {
+        console.error("Fetch error:", err);
+    }
+}
 
 // تحميل الرسائل
 async function loadMessages() {
+    if (!convId) return;
+
     let res = await fetch(`/api/conversation/${convId}/messages/`);
     let data = await res.json();
 
@@ -38,34 +57,58 @@ async function loadMessages() {
     data.forEach(msg => {
         let div = document.createElement("div");
         div.classList.add("msg");
-        div.classList.add(msg.type);
+        div.classList.add(msg.message_type); // Note: message_type instead of type based on model
         div.innerText = msg.content;
         box.appendChild(div);
-
-        box.scrollTop = box.scrollHeight;
     });
+    box.scrollTop = box.scrollHeight;
 }
 
 // إرسال رسالة
 async function sendMessage() {
-    let input = document.getElementById("input");
+    if (!convId) return;
 
-    await fetch(`/api/conversation/${convId}/send/`, {
+    let input = document.getElementById("input");
+    let content = input.value.trim();
+    if (!content) return;
+    
+    // إفراغ الحقل فوراً وعرض الرسالة مؤقتاً (اختياري)
+    input.value = "";
+
+    let res = await fetch(`/api/conversation/${convId}/send/`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie('csrftoken') // Important if CSRF is required, but API is DRF so it might be okay. Just in case.
         },
-        body: JSON.stringify({
-            content: input.value
-        })
+        body: JSON.stringify({ content: content })
     });
 
-    input.value = "";
-    loadMessages();
+    if (res.ok) {
+        loadMessages();
+    } else {
+        console.error("Failed to send message");
+    }
+}
+
+// Function to get CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }
 
 // تحديث أولي
-loadMessages();
+initChat();
 
 </script>
 
