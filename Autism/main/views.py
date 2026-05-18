@@ -33,7 +33,8 @@ def terms_of_service_view(request: HttpRequest):
 
 
 def questions_view(request: HttpRequest):
-<<<<<<< HEAD
+    return render(request, 'main/questions.html')
+
     return render(request, 'main/questions.html')
 
 def dashboard_view(request: HttpRequest):
@@ -41,6 +42,6 @@ def dashboard_view(request: HttpRequest):
 
 def test_view(request: HttpRequest):
     return render(request, 'main/404.html')
-=======
-    return render(request, 'main/questions.html')
->>>>>>> b8c24c78354b26dcafa1e603c5e11536d499c5c2
+
+    
+

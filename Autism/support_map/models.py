@@ -73,52 +73,52 @@ class AutismSupportPlace(models.Model):
         },
 
         'najran': {
-            'x_min': 50,
-            'x_max': 62,
-            'y_min': 82,
-            'y_max': 95,
+            'x_min': 44,
+            'x_max': 60,
+            'y_min': 73,
+            'y_max': 82,
         },
 
         'qassim': {
-            'x_min': 42,
-            'x_max': 54,
-            'y_min': 40,
-            'y_max': 52,
+            'x_min': 34,
+            'x_max': 44,
+            'y_min': 39,
+            'y_max': 43,
         },
 
         'hail': {
-            'x_min': 38,
-            'x_max': 50,
+            'x_min': 27,
+            'x_max': 43,
             'y_min': 28,
-            'y_max': 42,
+            'y_max': 38,
         },
 
         'tabuk': {
-            'x_min': 20,
-            'x_max': 35,
-            'y_min': 15,
-            'y_max': 32,
+            'x_min': 8,
+            'x_max': 12,
+            'y_min': 30,
+            'y_max': 35,
         },
 
         'jouf': {
-            'x_min': 10,
-            'x_max': 26,
+            'x_min': 15,
+            'x_max': 30,
             'y_min': 17,
             'y_max': 26,
         },
 
         'northern_borders': {
-            'x_min': 50,
-            'x_max': 68,
-            'y_min': 10,
+            'x_min': 40,
+            'x_max': 50,
+            'y_min': 25,
             'y_max': 28,
         },
 
         'bahah': {
-            'x_min': 34,
-            'x_max': 44,
-            'y_min': 72,
-            'y_max': 82,
+            'x_min': 30,
+            'x_max': 34,
+            'y_min': 69,
+            'y_max': 72,
         },
     }
 

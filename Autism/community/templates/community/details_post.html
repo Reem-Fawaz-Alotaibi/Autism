@@ -214,25 +214,6 @@
 
         </form>
 
-        {% if request.user == comment.user %}
-
-        <div class="comment-buttons">
-
-            <button data-comment="{{ comment.id }}" class="edit-btn">
-                تعديل
-            </button>
-
-            <button
-                type="button"
-                class="delete-btn"
-                data-bs-toggle="modal"
-                data-bs-target="#deleteCommentModal{{ comment.id }}">
-                حذف
-            </button>
-
-        </div>
-
-        {% endif %}
 
 
         <!-- LIKE COMMENT -->
@@ -273,8 +254,6 @@
                             stroke-linejoin="round" />
 
                     </svg>
-
-                    <span>إعجاب</span>
 
                 </button>
 

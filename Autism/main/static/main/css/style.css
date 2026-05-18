@@ -2996,7 +2996,6 @@ body {
     flex-shrink: 0;
     direction: rtl;
 }
-<<<<<<< HEAD
 .input-area input {
     flex: 1;
     border: 1px solid rgba(90,122,72,0.25);
@@ -3032,9 +3031,7 @@ body {
 }
 /***********************************************/
 /*logout*/
-=======
 
->>>>>>> 8c30457da63157e38470119c96c11373eba70916
 .sub-container {
     max-width: 900px;
     margin: 0 auto;
