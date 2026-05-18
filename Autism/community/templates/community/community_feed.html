@@ -24,13 +24,8 @@
 
       <div class="topic">
 
-          <div class="topic-left">
+        <div class="topic-left">
 
-            <div class="icon green">
-              <i class="fa-regular fa-moon"></i>
-            </div>
-
-            <span>النوم</span>
 
           <div class="icon green">
             🌙
@@ -45,9 +40,7 @@
       </div>
 
       <div class="topic">
-            <div class="icon orange">
-              <i class="fa-solid fa-utensils"></i>
-            </div>
+
 
         <div class="topic-left">
 
@@ -64,9 +57,6 @@
       </div>
 
       <div class="topic">
-            <div class="icon blue">
-              <i class="fa-solid fa-children"></i>
-            </div>
 
         <div class="topic-left">
 
@@ -83,9 +73,6 @@
       </div>
 
       <div class="topic">
-            <div class="icon mint">
-              <i class="fa-solid fa-book"></i>
-            </div>
 
         <div class="topic-left">
 
@@ -109,9 +96,6 @@
     </div>
 
     <div class="card policy">
-        <div class="shield">
-          <i class="bi bi-shield-fill-check"></i>
-        </div>
 
       <div class="shield">
         🛡️
@@ -132,7 +116,8 @@
 
   <div class="main">
     <form method="get">
-      <input type="text" class="search" placeholder="ابحث عن نقاشات أو تجارب..." value="{{ request.GET.search }}" name="search">
+      <input type="text" class="search" placeholder="ابحث عن نقاشات أو تجارب..." value="{{ request.GET.search }}"
+        name="search">
     </form>
     {% if posts %}
     {% for post in posts %}
@@ -151,90 +136,74 @@
             {{ post.user.first_name }}
             <span>منذ {{ post.created_at|timesince }}</span>
           </div>
+        </div>
           <div class="menu-wrapper">
-                <button class="menu-btn">
-                    ⋯
-                </button>
-              <div class="dropdown-menu">
-                  <button class="report-btn" onclick="openReportModal()">
-                      <i class="fa-solid fa-flag"></i>
-                      إبلاغ عن المحتوى
-                  </button>
-              </div>
-
+            <button class="menu-btn">
+              ⋯
+            </button>
+            <div class="dropdown-menu">
+              <button class="report-btn" onclick="openReportModal()">
+                <i class="fa-solid fa-flag"></i>
+                إبلاغ عن المحتوى
+              </button>
+            </div>
+          </div>
+        
               <div class="report-modal" id="reportModal">
-                  <div class="report-box">
+              <div class="report-box">
 
-                      <h3>سبب الإبلاغ</h3>
+                <h3>سبب الإبلاغ</h3>
 
-                      <form method="POST" action="{% url 'community:report_post' post.id %}">
-                          {% csrf_token %}
+                <form method="POST" action="{% url 'community:report_post' post.id %}">
+                  {% csrf_token %}
 
-                          {% for value, label in reasons %}
-                              <label>
-                                  <input type="radio" name="reason" value="{{ value }}">
-                                  {{ label }}
-                              </label>
-                          {% endfor %}
-                          <div class="report-actions">
-                            <button type="submit" class="send-report">
-                                إرسال البلاغ
-                            </button>
-                            <button type="button" class="cancel-report" onclick="closeReportModal()">
-                                إلغاء
-                            </button>
-                        </div>
-                      </form>
-
+                  {% for value, label in reasons %}
+                  <label>
+                    <input type="radio" name="reason" value="{{ value }}">
+                    {{ label }}
+                  </label>
+                  {% endfor %}
+                  <div class="report-actions">
+                    <button type="submit" class="send-report">
+                      إرسال البلاغ
+                    </button>
+                    <button type="button" class="cancel-report" onclick="closeReportModal()">
+                      إلغاء
+                    </button>
                   </div>
+                </form>
+
               </div>
             </div>
-        </div>
-        <div class="menu-wrapper">
-          <button class="menu-btn">
-            ⋯
-          </button>
-          <div class="dropdown-menu">
-            <a href="#">
-              🚩 إبلاغ
-            </a>
-          </div>
-        </div>
       </div>
       <div class="post-text">
         {{ post.title }}
       </div>
 
-        <div class="tags">
-          {% for tag in post.tags_list %}
-              <a href="{% url 'community:posts_by_tag' tag %}" class="tag">
-                  #{{ tag }}
-              </a>
-          {% endfor %}
+      <div class="tags">
+        {% for tag in post.tags_list %}
+        <a href="{% url 'community:posts_by_tag' tag %}" class="tag">
+          #{{ tag }}
+        </a>
+        {% endfor %}
+      </div>
+      <div class="post-footer">
+        <div class="stats">
+          <span> {{ post.likes.count }} إعجاب</span>
+          <span> {{ post.comments.count }} تعليق</span>
         </div>
-        <div class="post-footer">
-          <div class="stats">
-            <span> {{ post.likes.count }} إعجاب</span>
-            <span> {{ post.comments.count }} تعليق</span>
-          </div>
-           <div style="display: flex; gap: 10px; align-items: center;">
+        <div style="display: flex; gap: 10px; align-items: center;">
           {% if request.user.is_authenticated %}
           <form method="POST" action="{% url 'community:like_post_view' post.id %}">
             {% csrf_token %}
 
-            <button type="submit"
-              class="like-btn liked">
+            <button type="submit" class="like-btn liked">
 
-              <svg class="like-icon"
-                viewBox="0 0 24 24"
-                fill="none">
+              <svg class="like-icon" viewBox="0 0 24 24" fill="none">
 
                 <path
                   d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                  stroke-linejoin="round" />
+                  stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
 
               </svg>
 
@@ -265,18 +234,17 @@
 
 
   </div>
-  <script>
-function openReportModal(){
-    document.getElementById("reportModal").style.display = "flex";
-}
-
-function closeReportModal(){
-    document.getElementById("reportModal").style.display = "none";
-}
-
-
-
 </div>
+  
+  <script>
 
-</script>
+    function openReportModal() {
+      document.getElementById("reportModal").style.display = "flex";
+    }
+
+    function closeReportModal() {
+      document.getElementById("reportModal").style.display = "none";
+    }
+
+  </script>
 {% endblock %}

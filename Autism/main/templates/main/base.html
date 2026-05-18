@@ -69,12 +69,12 @@
 
                     <!-- Children appear here once added -->
                     {% if user.is_authenticated %}
-                    {% for child in user.children.all %}
-                    <a href="{% url 'children:profile' child.id %}" class="nav-link-item child-item">
-                        <span class="nav-label">{{ child.name }}</span>
-                        <i class="bi bi-person-circle nav-icon"></i>
-                    </a>
-                    {% endfor %}
+                        {% for child in user.children.all %}
+                        <a href="{% url 'children:profile' child.id %}" class="nav-link-item child-item">
+                            <span class="nav-label">{{ child.name }}</span>
+                            <i class="bi bi-person-circle nav-icon"></i>
+                        </a>
+                        {% endfor %}
                     {% endif %}
                 </div>
 

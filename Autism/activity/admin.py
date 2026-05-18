@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Activity
+from ai_analysis.models import Activity
 
 # Register your models here.
 

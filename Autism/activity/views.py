@@ -1,7 +1,7 @@
 import json
 from django.shortcuts import render, get_object_or_404
 from django.core.serializers.json import DjangoJSONEncoder
-from .models import Activity
+from ai_analysis.models import Activity
 
 
 def activity_list(request):

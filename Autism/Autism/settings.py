@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 from decouple import config
+import cloudinary
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -54,6 +56,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'chatbot',
     'accounts.apps.AccountsConfig',
+    'ai_analysis',
 
 ]
 SITE_ID = 1
@@ -136,12 +139,19 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': config('CLOUD_NAME'),
     'API_KEY': config('API_KEY'),
     'API_SECRET': config('API_SECRET'),
 }
+
+
+cloudinary.config(
+    cloud_name=config("CLOUD_NAME"),
+    api_key=config("API_KEY"),
+    api_secret=config("API_SECRET"),
+    secure=True
+)
 
 STORAGES = {
     "default": {
@@ -203,3 +213,5 @@ SOCIALACCOUNT_LOGIN_REDIRECT_URL = 'main:home_page_view'
 
 SESSION_COOKIE_AGE = 1209600
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+GEMINI_API_KEY = "AIzaSyB1CviMAzNhzRCe3zg3xgtKZ6s8oC_lOlU"

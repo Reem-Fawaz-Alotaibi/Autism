@@ -243,6 +243,8 @@
 
 .dropdown-menu a:hover {
   background: #f7f7f7;
+}
+
 .report-btn{
     display: flex;
     align-items: center;
@@ -412,8 +414,6 @@
 
 
 /*create post*/
-
-
 .create-page {
   max-width: 760px;
   margin: auto;
@@ -451,7 +451,7 @@
   color: #333;
 }
 
-.form-input,
+.form-input-community,
 .form-select,
 .form-textarea {
   width: 100%;
@@ -465,7 +465,7 @@
   transition: 0.2s;
 }
 
-.form-input:focus,
+.form-input-community:focus,
 .form-select:focus,
 .form-textarea:focus {
   border-color: #8A9B72;
