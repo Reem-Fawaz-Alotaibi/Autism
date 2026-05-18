@@ -1,7 +1,8 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-theme="{{ theme }}">
+
 
 <head>
     <meta charset="UTF-8">
@@ -18,11 +19,11 @@
     <!-- Arabic Font -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'main/css/theme.css' %}">
 
 </head>
 
-<body>
-
+<body id="top">
     <div class="app-shell">
 
         <aside class="sidebar">
@@ -113,7 +114,7 @@
                     <a href="{% url 'map:support_map_view'%}" class="nav-link-item">
                         <span class="nav-label">خريطة الدعم</span>
                         <i class="bi bi-map nav-icon"></i>
-                        
+
                     </a>
                 </div>
 
@@ -355,79 +356,79 @@
 
         const convId = 1;
 
-    function openChat() {
-        document.getElementById("chatModal").classList.add("active");
-        loadMessages();
-    }
-
-    function closeChat() {
-        document.getElementById("chatModal").classList.remove("active");
-    }
-
-    async function loadMessages() {
-        if (!convId) return;
-
-        let res = await fetch(`/chatbot/conversation/${convId}/messages/`);
-        let data = await res.json();
-
-        let box = document.getElementById("messages");
-        box.innerHTML = "";
-
-        data.forEach(msg => {
-            let div = document.createElement("div");
-            div.classList.add("msg");
-            div.classList.add(msg.message_type === "user" ? "user" : "bot");
-            div.innerText = msg.content;
-            box.appendChild(div);
-        });
-
-        box.scrollTop = box.scrollHeight;
-    }
-
-    async function sendMessage() {
-        let input = document.getElementById("input");
-        if (!input.value.trim() || !convId) return;
-
-        await fetch(`/chatbot/conversation/${convId}/send/`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": getCookie("csrftoken")
-            },
-            body: JSON.stringify({ content: input.value })
-        });
-
-        input.value = "";
-        loadMessages();
-    }
-
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== "") {
-            document.cookie.split(";").forEach(cookie => {
-                let c = cookie.trim();
-                if (c.startsWith(name + "=")) {
-                    cookieValue = decodeURIComponent(c.substring(name.length + 1));
-                }
-            });
+        function openChat() {
+            document.getElementById("chatModal").classList.add("active");
+            loadMessages();
         }
-        return cookieValue;
-    }
 
-    document.getElementById("input").addEventListener("keydown", function(e) {
-        if (e.key === "Enter") sendMessage();
-    });
-            // تحسين حركة التنقل السلس (Smooth Scroll) للروابط الجانبية
-            document.querySelectorAll('.toc-link').forEach(link => {
-                link.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    document.querySelector(targetId).scrollIntoView({
-                        behavior: 'smooth'
-                    });
+        function closeChat() {
+            document.getElementById("chatModal").classList.remove("active");
+        }
+
+        async function loadMessages() {
+            if (!convId) return;
+
+            let res = await fetch(`/chatbot/conversation/${convId}/messages/`);
+            let data = await res.json();
+
+            let box = document.getElementById("messages");
+            box.innerHTML = "";
+
+            data.forEach(msg => {
+                let div = document.createElement("div");
+                div.classList.add("msg");
+                div.classList.add(msg.message_type === "user" ? "user" : "bot");
+                div.innerText = msg.content;
+                box.appendChild(div);
+            });
+
+            box.scrollTop = box.scrollHeight;
+        }
+
+        async function sendMessage() {
+            let input = document.getElementById("input");
+            if (!input.value.trim() || !convId) return;
+
+            await fetch(`/chatbot/conversation/${convId}/send/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCookie("csrftoken")
+                },
+                body: JSON.stringify({ content: input.value })
+            });
+
+            input.value = "";
+            loadMessages();
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== "") {
+                document.cookie.split(";").forEach(cookie => {
+                    let c = cookie.trim();
+                    if (c.startsWith(name + "=")) {
+                        cookieValue = decodeURIComponent(c.substring(name.length + 1));
+                    }
+                });
+            }
+            return cookieValue;
+        }
+
+        document.getElementById("input").addEventListener("keydown", function (e) {
+            if (e.key === "Enter") sendMessage();
+        });
+        // تحسين حركة التنقل السلس (Smooth Scroll) للروابط الجانبية
+        document.querySelectorAll('.toc-link').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                document.querySelector(targetId).scrollIntoView({
+                    behavior: 'smooth'
                 });
             });
-        
+        });
+
 
     </script>
     {% block extra_js %}{% endblock %}

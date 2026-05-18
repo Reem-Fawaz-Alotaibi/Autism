@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpRequest
 from chatbot.models import Conversation
 
@@ -34,3 +34,9 @@ def terms_of_service_view(request: HttpRequest):
 
 def questions_view(request: HttpRequest):
     return render(request, 'main/questions.html')
+
+
+# 
+def set_theme(request, theme):
+    request.session['theme'] = theme
+    return redirect(request.GET.get('next', '/'))

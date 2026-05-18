@@ -36,4 +36,5 @@ urlpatterns = [
     path('reset-complete/',auth_views.PasswordResetCompleteView.as_view(template_name='accounts/reset-password-complete.html'),name='password_reset_complete'),
     path('chatbot/', include ('chatbot.urls')),
     path('api/', include('chatbot.urls')),
+    path('payments/', include('payments.urls')),
 ]
