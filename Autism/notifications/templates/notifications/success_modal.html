@@ -1,0 +1,135 @@
+<div id="django-messages" style="display:none;">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="django-message">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+</div>
+
+<!-- Custom Success Modal -->
+<div id="successModal" class="custom-modal">
+    <div class="custom-modal-content">
+        <span class="custom-close-btn" onclick="closeSuccessModal()">&times;</span>
+        <div class="success-icon" id="modalIcon">
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+        <h2 id="modalTitle">تم الاشتراك بنجاح!</h2>
+        <p id="modalMessage">شكراً لانضمامك إلينا. ستصلك تذكيراتنا قريباً.</p>
+        <button onclick="closeSuccessModal()" class="btn-ok">حسناً</button>
+    </div>
+</div>
+
+<style>
+    .custom-modal {
+        display: none;
+        position: fixed;
+        z-index: 10000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        backdrop-filter: blur(4px);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .custom-modal-content {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        animation: modalFadeIn 0.3s ease;
+        position: relative;
+    }
+
+    @keyframes modalFadeIn {
+        from {transform: scale(0.8); opacity: 0;}
+        to {transform: scale(1); opacity: 1;}
+    }
+
+    .custom-close-btn {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        font-size: 24px;
+        color: #aaa;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+
+    .custom-close-btn:hover {
+        color: #333;
+    }
+
+    .success-icon {
+        font-size: 60px;
+        color: #556B2F; /* Olive green matching the footer button */
+        margin-bottom: 15px;
+    }
+
+    .custom-modal-content h2 {
+        font-family: 'Tajawal', sans-serif;
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .custom-modal-content p {
+        font-family: 'Tajawal', sans-serif;
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 20px;
+    }
+
+    .btn-ok {
+        background-color: #556B2F;
+        color: white;
+        border: none;
+        padding: 10px 40px;
+        border-radius: 10px;
+        font-family: 'Tajawal', sans-serif;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .btn-ok:hover {
+        background-color: #445626;
+    }
+</style>
+
+<script>
+    function closeSuccessModal() {
+        document.getElementById('successModal').style.display = 'none';
+    }
+
+    function showModal(title, message, isSuccess) {
+        document.getElementById('modalTitle').innerText = title;
+        document.getElementById('modalMessage').innerText = message;
+        const iconDiv = document.getElementById('modalIcon');
+        if (isSuccess) {
+            iconDiv.innerHTML = '<i class="bi bi-check-circle-fill"></i>';
+            iconDiv.style.color = '#556B2F';
+        } else {
+            iconDiv.innerHTML = '<i class="bi bi-exclamation-circle-fill"></i>';
+            iconDiv.style.color = '#d9534f'; // Red for error
+        }
+        document.getElementById('successModal').style.display = 'flex';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const messages = document.querySelectorAll('.django-message');
+        messages.forEach(msg => {
+            const text = msg.innerText;
+            if (text === "تم الاشتراك بنجاح!") {
+                showModal("تم الاشتراك بنجاح!", "شكراً لانضمامك إلينا. ستصلك تذكيراتنا قريباً.", true);
+            } else if (text === "هذا البريد الإلكتروني مسجل بالفعل أو غير صالح.") {
+                showModal("تنبيه", text, false);
+            }
+        });
+    });
+</script>

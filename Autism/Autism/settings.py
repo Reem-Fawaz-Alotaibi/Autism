@@ -12,6 +12,13 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 from decouple import config
+import ssl
+
+try:
+    ssl._create_default_https_context = ssl._create_unverified_context
+    ssl.create_default_context = ssl._create_unverified_context
+except AttributeError:
+    pass
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -54,6 +61,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'chatbot',
     'accounts.apps.AccountsConfig',
+    'notifications',
 
 ]
 SITE_ID = 1

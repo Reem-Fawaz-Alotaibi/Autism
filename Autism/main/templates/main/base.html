@@ -263,10 +263,11 @@
                         <p class="footer-newsletter-desc">
                             احصل على تذكيرات لطيفة أسبوعية ونصائح دعم مباشرة في بريدك.
                         </p>
-                        <div class="footer-newsletter-form">
+                          <form action="{% url 'subscribe' %}" method="POST" class="footer-newsletter-form">
+                            {% csrf_token %}
                             <button type="submit">انضم</button>
-                            <input type="email" placeholder="البريد الإلكتروني">
-                        </div>
+                            <input type="email" name="email" placeholder="البريد الإلكتروني" required>
+                        </form>
                     </div>
 
                 </div>
@@ -431,6 +432,8 @@
 
     </script>
     {% block extra_js %}{% endblock %}
+    
+    {% include 'notifications/success_modal.html' %}
 </body>
 
 </html>
