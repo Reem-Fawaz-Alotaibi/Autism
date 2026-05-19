@@ -1,7 +1,8 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-theme="{{ theme }}">
+
 
 <head>
     <meta charset="UTF-8">
@@ -18,11 +19,11 @@
     <!-- Arabic Font -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'main/css/theme.css' %}">
 
 </head>
 
-<body>
-
+<body id="top">
     <div class="app-shell">
 
         <aside class="sidebar">
@@ -56,7 +57,8 @@
                 <div class="nav-group">
                     <div class="nav-group-label">إدارة الأطفال</div>
                     {% if user.is_authenticated %}
-                    <a href="{% url 'children:add_child' %}" class="nav-link-item {% block nav_add_child %}{% endblock %}">
+                    <a href="{% url 'children:add_child' %}"
+                        class="nav-link-item {% block nav_add_child %}{% endblock %}">
                         <span class="nav-label">إضافة طفل</span>
                         <i class="bi bi-person-plus nav-icon"></i>
                     </a>
@@ -69,12 +71,12 @@
 
                     <!-- Children appear here once added -->
                     {% if user.is_authenticated %}
-                    {% for child in user.children.all %}
-                    <a href="{% url 'children:profile' child.id %}" class="nav-link-item child-item">
-                        <span class="nav-label">{{ child.name }}</span>
-                        <i class="bi bi-person-circle nav-icon"></i>
-                    </a>
-                    {% endfor %}
+                        {% for child in user.children.all %}
+                        <a href="{% url 'children:profile' child.id %}" class="nav-link-item child-item">
+                            <span class="nav-label">{{ child.name }}</span>
+                            <i class="bi bi-person-circle nav-icon"></i>
+                        </a>
+                        {% endfor %}
                     {% endif %}
                 </div>
 
@@ -113,7 +115,7 @@
                     <a href="{% url 'map:support_map_view'%}" class="nav-link-item">
                         <span class="nav-label">خريطة الدعم</span>
                         <i class="bi bi-map nav-icon"></i>
-                        
+
                     </a>
                 </div>
 
@@ -149,6 +151,30 @@
 
                 <div class="profile-card">
 
+                    {% if user.is_staff %}
+
+                    <a href="{%url 'admin_panel:dashboard_view'%}" class="profile-top">
+
+                        <div class="profile-avatar">
+                            <i class="bi bi-speedometer2"></i>
+                        </div>
+
+                        <div class="profile-text">
+                            <div class="profile-name">
+                                لوحة التحكم
+                            </div>
+
+                            <div class="profile-role">
+                                دخول الإدارة
+                            </div>
+                        </div>
+
+                        <i class="bi bi-chevron-left profile-arrow"></i>
+
+                    </a>
+
+                    {% else %}
+
                     <a href="{% url 'accounts:profile' %}" class="profile-top">
 
                         <div class="profile-avatar">
@@ -169,6 +195,8 @@
 
                     </a>
 
+                    {% endif %}
+
                     <div class="profile-divider"></div>
 
                     <form method="POST" action="{% url 'accounts:logout' %}">
@@ -182,6 +210,7 @@
                 </div>
 
                 {% else %}
+
                 <div class="profile-card">
 
                     <a href="{% url 'accounts:signin' %}" class="profile-top">
@@ -203,7 +232,9 @@
                         <i class="bi bi-chevron-left profile-arrow"></i>
 
                     </a>
+
                 </div>
+
                 {% endif %}
 
             </div>
@@ -393,15 +424,15 @@
         }
     }
 
-    function closeChat() {
-        document.getElementById("chatModal").classList.remove("active");
-    }
+        function closeChat() {
+            document.getElementById("chatModal").classList.remove("active");
+        }
 
-    async function loadMessages() {
-        if (!convId) return;
+        async function loadMessages() {
+            if (!convId) return;
 
-        let res = await fetch(`/chatbot/conversation/${convId}/messages/`);
-        let data = await res.json();
+            let res = await fetch(`/chatbot/conversation/${convId}/messages/`);
+            let data = await res.json();
 
         let box = document.getElementById("messages");
         if (!box) return;
@@ -415,8 +446,8 @@
             box.appendChild(div);
         });
 
-        box.scrollTop = box.scrollHeight;
-    }
+            box.scrollTop = box.scrollHeight;
+        }
 
     async function sendMessage() {
         let input = document.getElementById("input");
@@ -450,23 +481,21 @@
                 }
             });
         }
-        return cookieValue;
-    }
 
-    document.getElementById("input").addEventListener("keydown", function(e) {
-        if (e.key === "Enter") sendMessage();
-    });
-            // تحسين حركة التنقل السلس (Smooth Scroll) للروابط الجانبية
-            document.querySelectorAll('.toc-link').forEach(link => {
-                link.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    document.querySelector(targetId).scrollIntoView({
-                        behavior: 'smooth'
-                    });
+        document.getElementById("input").addEventListener("keydown", function (e) {
+            if (e.key === "Enter") sendMessage();
+        });
+        // تحسين حركة التنقل السلس (Smooth Scroll) للروابط الجانبية
+        document.querySelectorAll('.toc-link').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                document.querySelector(targetId).scrollIntoView({
+                    behavior: 'smooth'
                 });
             });
-        
+        });
+
 
     </script>
     {% block extra_js %}{% endblock %}

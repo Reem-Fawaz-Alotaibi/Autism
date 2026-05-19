@@ -1,0 +1,179 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %} بناء الخطة - الخطوة 3 {% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'assessment/css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="inner-header">
+    <div style="display:flex; align-items:center; gap:12px;">
+        <div>
+            <div style="font-weight: bold; color: var(--primary-green); font-size: 16px;">
+                بناء الخطة
+            </div>
+            <div style="font-size: 12px; color: var(--text-gray);">
+                الخطوة 3 من 3
+            </div>
+        </div>
+    </div>
+    <button onclick="history.back()"
+        style="background:none;border:1px solid #ddd;padding:8px 15px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:8px;color:#666;font-size:14px;">
+        رجوع <i class="bi bi-arrow-left"></i>
+    </button>
+</div>
+
+<div class="main-content-area">
+
+    <div class="header-title">
+        <h2>جاري إنشاء الخطة الذكية لطفلك</h2>
+        <p>نقوم الآن بتحليل {% if path == 'video' %}الفيديو و{% endif %}الإجابات باستخدام الذكاء الاصطناعي لبناء خطة مناسبة.</p>
+    </div>
+
+    <div class="plan-loading-card">
+
+        <div class="ai-loader-wrap">
+            <div class="ai-loader-circle" id="loader-circle"></div>
+            <div class="ai-icon"><i class="bi bi-stars"></i></div>
+        </div>
+
+        <div class="loading-content">
+            <span class="ai-badge">AI Analysis</span>
+            <h3>جاري بناء الخطة الذكية لطفلك</h3>
+            <p>نقوم الآن بتحليل {% if path == 'video' %}الفيديو و{% endif %}الإجابات لإنشاء خطة مخصصة.</p>
+        </div>
+
+        <div class="loading-progress-info">
+            <span id="progress-text">جاري التحليل...</span>
+            <span id="progress-percent">0%</span>
+        </div>
+
+        <div class="loading-bar">
+            <div class="loading-fill" id="loading-fill" style="width:0%;transition:width 0.5s;"></div>
+        </div>
+
+        <div class="steps-list">
+
+            {% if path == 'video' %}
+            <div id="step-1" class="waiting-step">
+                <div class="step-status waiting" id="step-1-status"></div>
+                <span>تحليل الفيديو بـ Gemini AI</span>
+            </div>
+            {% endif %}
+
+            <div id="step-2" class="waiting-step">
+                <div class="step-status waiting" id="step-2-status"></div>
+                <span>تحليل إجابات الاستبيان بـ OpenAI</span>
+            </div>
+
+            <div id="step-3" class="waiting-step">
+                <div class="step-status waiting" id="step-3-status"></div>
+                <span>إنشاء الخطة الأسبوعية والروتين اليومي</span>
+            </div>
+
+            <div id="step-4" class="waiting-step">
+                <div class="step-status waiting" id="step-4-status"></div>
+                <span>تجهيز الأنشطة والفيديوهات المناسبة</span>
+            </div>
+
+        </div>
+
+        <button id="ready-btn" class="action-btn ready-btn" disabled>
+            جاري تجهيز الخطة...
+        </button>
+
+    </div>
+</div>
+
+<script>
+    const isVideoPath = "{{ path }}" === "video";
+    const fillEl      = document.getElementById('loading-fill');
+    const percentEl   = document.getElementById('progress-percent');
+    const progressEl  = document.getElementById('progress-text');
+    const readyBtn    = document.getElementById('ready-btn');
+
+    function setStep(stepNum, state) {
+        const step   = document.getElementById(`step-${stepNum}`);
+        const status = document.getElementById(`step-${stepNum}-status`);
+        if (!step || !status) return;
+
+        step.className   = state === 'done' ? 'done-step' : state === 'active' ? 'active-step' : 'waiting-step';
+        status.className = `step-status ${state === 'done' ? 'done' : state === 'active' ? 'loading' : 'waiting'}`;
+        status.innerHTML = state === 'done' ? '<i class="bi bi-check-lg"></i>' : '';
+    }
+
+    function setProgress(percent, text) {
+        fillEl.style.width   = percent + '%';
+        percentEl.innerText  = percent + '%';
+        progressEl.innerText = text;
+    }
+
+    function startAnalysis() {
+
+        // خطوة 1 — تحليل الفيديو (مسار أ فقط)
+        if (isVideoPath) {
+            setStep(1, 'active');
+            setProgress(10, 'جاري تحليل الفيديو بـ Gemini...');
+        }
+
+        // خطوة 2 — تحليل الاستبيان
+        setTimeout(() => {
+            if (isVideoPath) setStep(1, 'done');
+            setStep(2, 'active');
+            setProgress(30, 'جاري تحليل إجابات الاستبيان...');
+        }, 1500);
+
+        // إرسال AJAX للـ backend
+        fetch("{% url 'assessment:processing' %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'X-Requested-With': 'XMLHttpRequest',
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                setStep(2, 'done');
+                setStep(3, 'active');
+                setProgress(75, 'جاري إنشاء الخطة الأسبوعية...');
+
+                setTimeout(() => {
+                    setStep(3, 'done');
+                    setStep(4, 'active');
+                    setProgress(90, 'تجهيز الأنشطة والفيديوهات...');
+
+                    setTimeout(() => {
+                        setStep(4, 'done');
+                        setProgress(100, 'اكتمل التحليل!');
+
+                        document.getElementById('loader-circle').style.animation = 'none';
+
+                        readyBtn.disabled  = false;
+                        readyBtn.innerText = '✅ الخطة جاهزة! اضغط للمتابعة';
+                        readyBtn.onclick   = () => { window.location.href = data.redirect_url; };
+                    }, 800);
+                }, 800);
+
+            } else {
+                setProgress(0, 'حدث خطأ، حاول مجدداً');
+                readyBtn.disabled  = false;
+                readyBtn.innerText = '⚠️ حدث خطأ، اضغط للمحاولة مجدداً';
+                readyBtn.onclick   = () => { location.reload(); };
+            }
+        })
+        .catch(() => {
+            setProgress(0, 'حدث خطأ في الاتصال');
+            readyBtn.disabled  = false;
+            readyBtn.innerText = '⚠️ حدث خطأ، اضغط للمحاولة مجدداً';
+            readyBtn.onclick   = () => { location.reload(); };
+        });
+    }
+
+    window.onload = () => setTimeout(startAnalysis, 800);
+</script>
+
+{% endblock %}

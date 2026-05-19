@@ -37,4 +37,6 @@ urlpatterns = [
     path('notifications/', include('notifications.urls')),
     path('chatbot/', include ('chatbot.urls')),
     path('api/', include('chatbot.urls')),
+    path('payments/', include('payments.urls')),
+    path('admin-panel/', include('admin_panel.urls')),
 ]

@@ -1,0 +1,90 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}تفاصيل البلاغ {% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'admin_panel/css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="report-container">
+
+        <div class="report-card">
+
+            <h1 class="page-title">
+                تفاصيل البلاغ
+            </h1>
+
+            <div class="report-info">
+
+                <div class="info-box">
+                    <span class="info-label">
+                        المستخدم
+                    </span>
+
+                    <div class="info-value">
+                        {{ report.user.username }}
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <span class="info-label">
+                        سبب البلاغ
+                    </span>
+
+                    <div class="info-value">
+                        {{ report.get_reason_display }}
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <span class="info-label">
+                        حالة البلاغ
+                    </span>
+
+                    <div class="info-value">
+
+                        <span class="status-report {{ report.status }}">
+                            {{ report.get_status_display }}
+                        </span>
+
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <span class="info-label">
+                        تاريخ البلاغ
+                    </span>
+
+                    <div class="info-value">
+                        {{ report.created_at|date:"Y-m-d h:i A" }}
+                    </div>
+                </div>
+
+                <div class="info-box">
+
+                    <span class="info-label">
+                        المنشور المُبلغ عنه
+                    </span>
+
+                    <a href="{% url 'community:details_post_view' report.post.id %}"
+                       class="post-link">
+
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+                        عرض المنشور
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+{% endblock %}

@@ -12,7 +12,11 @@
 
 
     <div class="cp-hero">
-        <div class="cp-hero-avatar"></div>
+        <div class="cp-hero-avatar">
+            {% if child.name %}
+            {{ child.name|first|upper }}
+            {% endif %}
+        </div>
         <div class="cp-hero-info">
             <h1>{{ child.name }}</h1>
             <div class="cp-hero-meta">
@@ -80,7 +84,7 @@
                 </svg>
                 العمر
             </div>
-            <div class="info-value"><span>{{ child.age }} سنوات</span></div>
+            <div class="info-value"><span>{{ age }} سنوات</span></div>
         </div>
 
         <div class="info-card">
@@ -127,16 +131,16 @@
             <div class="badge-row">
 
                 {% if child.sensory_sensitivities == 'sound' %}
-                <span class="badge badge-peach"> الصوت</span>
+                <span> الصوت</span>
 
                 {% elif child.sensory_sensitivities == 'touch' %}
-                <span class="badge badge-peach"> اللمس</span>
+                <span> اللمس</span>
 
                 {% elif child.sensory_sensitivities == 'light' %}
-                <span class="badge badge-peach"> الضوء</span>
+                <span> الضوء</span>
 
                 {% else %}
-                <span class="badge badge-peach">لا توجد</span>
+                <span>لا توجد</span>
                 {% endif %}
 
             </div>

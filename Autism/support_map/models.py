@@ -31,94 +31,94 @@ class AutismSupportPlace(models.Model):
     REGION_POSITIONS = {
 
         'riyadh': {
-            'x_min': 20,
-            'x_max': 60,
-            'y_min': 65,
-            'y_max': 75,
+            'x_min': 47,
+            'x_max': 62,
+            'y_min': 42,
+            'y_max': 71,
         },
 
         'eastern': {
-            'x_min': 68,
-            'x_max': 82,
-            'y_min': 45,
-            'y_max': 62,
+            'x_min': 63,
+            'x_max': 75,
+            'y_min': 39,
+            'y_max': 75,
         },
 
         'makkah': {
-            'x_min': 28,
-            'x_max': 42,
-            'y_min': 58,
-            'y_max': 78,
+            'x_min': 22,
+            'x_max': 40,
+            'y_min': 57,
+            'y_max': 65,
         },
 
         'madinah': {
-            'x_min': 30,
-            'x_max': 42,
-            'y_min': 42,
-            'y_max': 58,
+            'x_min': 21,
+            'x_max': 33,
+            'y_min': 43,
+            'y_max': 56,
         },
 
         'asir': {
             'x_min': 35,
-            'x_max': 48,
-            'y_min': 78,
-            'y_max': 92,
+            'x_max': 43,
+            'y_min': 70,
+            'y_max': 78,
         },
 
         'jazan': {
-            'x_min': 28,
-            'x_max': 38,
-            'y_min': 88,
-            'y_max': 98,
+            'x_min': 37,
+            'x_max': 41,
+            'y_min': 80,
+            'y_max': 86,
         },
 
         'najran': {
-            'x_min': 50,
-            'x_max': 62,
-            'y_min': 82,
-            'y_max': 95,
+            'x_min': 44,
+            'x_max': 60,
+            'y_min': 73,
+            'y_max': 82,
         },
 
         'qassim': {
-            'x_min': 42,
-            'x_max': 54,
-            'y_min': 40,
-            'y_max': 52,
+            'x_min': 34,
+            'x_max': 44,
+            'y_min': 39,
+            'y_max': 43,
         },
 
         'hail': {
-            'x_min': 38,
-            'x_max': 50,
+            'x_min': 27,
+            'x_max': 43,
             'y_min': 28,
-            'y_max': 42,
+            'y_max': 38,
         },
 
         'tabuk': {
-            'x_min': 20,
-            'x_max': 35,
-            'y_min': 15,
-            'y_max': 32,
+            'x_min': 8,
+            'x_max': 12,
+            'y_min': 30,
+            'y_max': 35,
         },
 
         'jouf': {
-            'x_min': 10,
-            'x_max': 26,
+            'x_min': 15,
+            'x_max': 30,
             'y_min': 17,
             'y_max': 26,
         },
 
         'northern_borders': {
-            'x_min': 50,
-            'x_max': 68,
-            'y_min': 10,
+            'x_min': 40,
+            'x_max': 50,
+            'y_min': 25,
             'y_max': 28,
         },
 
         'bahah': {
-            'x_min': 34,
-            'x_max': 44,
-            'y_min': 72,
-            'y_max': 82,
+            'x_min': 30,
+            'x_max': 34,
+            'y_min': 69,
+            'y_max': 72,
         },
     }
 

@@ -1,245 +1,232 @@
-{%extends 'main/base.html'%}
-{%load static%}
-{% block title %}  الخطة اليومية{% endblock %}
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %} الخطة اليومية {% endblock %}
 
-{% block style %} <link rel="stylesheet" href="{% static 'plans/css/style.css' %}"> {% endblock %}
-
+{% block style %}
+<link rel="stylesheet" href="{% static 'plans/css/style.css' %}">
+{% endblock %}
 
 {% block content %}
 
+<div class="page">
 
-  <div class="page">
+  <!-- Main Content -->
+  <div class="content">
 
-    <!-- Main Content -->
-    <div class="content">
-
-      <!-- Header -->
-      <div class="header">
-
-        <div class="title-section">
-          <h1>الأنشطة</h1>
-          <p>أنشطة يومية تساعد طفلك على التطور والنمو</p>
-        </div>
-
-        <div class="plan-duration">
-          <div>
-            <h3>مدة الخطة</h3>
-            <p>من 10 مايو إلى 16 مايو</p>
-          </div>
-          <i class="bi bi-calendar-event"></i>
-        </div>
+    <!-- Header -->
+    <div class="header">
+      <div class="title-section">
+        <h1>أنشطة {{ child.name }}</h1>
+        <p>أنشطة يومية تساعد طفلك على التطور والنمو</p>
       </div>
 
-      <!-- Info Cards -->
-      <div class="info-cards">
+      <div class="plan-duration">
+        <div>
+          <h3>مدة الخطة</h3>
+          <p>من {{ start_date }} إلى {{ end_date }}</p>
+        </div>
+        <i class="bi bi-calendar-event"></i>
+      </div>
+    </div>
 
-        <div class="info-card">
+    <!-- AI Summary -->
+    <div class="ai-summary-box">
+      <div class="ai-summary-left">
+        <span class="ai-tag">AI Generated Plan</span>
+        <h2>تم إنشاء أنشطة مخصصة لـ {{ child.name }}</h2>
+        <p>
+          {% if plan.session.path == 'video' %}
+            تم اختيار هذه الأنشطة بناءً على تحليل الفيديو ونتائج التقييم الخاصة بالطفل.
+          {% else %}
+            تم اختيار هذه الأنشطة بناءً على نتائج التقييم الخاصة بالطفل.
+          {% endif %}
+        </p>
+        <!-- التصنيفات -->
+        <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+          {% for cat in categories %}
+            <span style="background:#e8f5e9; color:#1D9E75; padding:4px 12px; border-radius:20px; font-size:12px;">
+              {% if cat == 'visual' %}👁️ بصري
+              {% elif cat == 'sensory' %}👂 حسي
+              {% elif cat == 'motor' %}🏃 حركي
+              {% elif cat == 'language' %}🗣️ لغوي
+              {% endif %}
+            </span>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="ai-summary-icon">
+        <i class="bi bi-stars"></i>
+      </div>
+    </div>
+
+    <!-- Main Activity Cards -->
+    <div class="main-activity-cards">
+
+      <!-- النشاط الحالي -->
+      {% if current_activity %}
+      <div class="main-activity-card active-now">
+        <div class="activity-top">
           <div>
             <span>النشاط الحالي</span>
-            <h3>نشاط حسي</h3>
+            <h3>{{ current_activity.title }}</h3>
           </div>
-
-          <div class="icon purple">
-            
+          <div class="activity-icon purple-bg">
+            {% if current_activity.category == 'sensory' %}👂
+            {% elif current_activity.category == 'visual' %}👁️
+            {% elif current_activity.category == 'motor' %}🏃
+            {% elif current_activity.category == 'language' %}🗣️
+            {% endif %}
           </div>
         </div>
-
-        <div class="info-card">
-          <div>
-            <span>الوقت الحالي</span>
-            <h3>10:00 ص</h3>
-          </div>
-
-          <div class="icon green">
+        <p>{{ current_activity.description }}</p>
+        <div class="activity-footer">
+          <div class="activity-time">
             <i class="bi bi-clock"></i>
+            {{ current_activity.duration_minutes }} دقيقة
           </div>
+          {% if current_activity.activity_id %}
+          <a href="{% url 'activity:activity_play' current_activity.activity_id %}" class="start-btn">
+            ابدأ النشاط
+          </a>
+          {% endif %}
         </div>
+      </div>
+      {% endif %}
 
-        <div class="info-card">
+      <!-- النشاط التالي -->
+      {% if next_activity %}
+      <div class="main-activity-card">
+        <div class="activity-top">
           <div>
-            <span>المدة المتوقعة</span>
-            <h3>60 دقيقة</h3>
+            <span>النشاط التالي</span>
+            <h3>{{ next_activity.title }}</h3>
           </div>
-
-          <div class="icon green">
-            <i class="bi bi-alarm"></i>
+          <div class="activity-icon yellow-bg">
+            {% if next_activity.category == 'sensory' %}👂
+            {% elif next_activity.category == 'visual' %}👁️
+            {% elif next_activity.category == 'motor' %}🏃
+            {% elif next_activity.category == 'language' %}🗣️
+            {% endif %}
           </div>
         </div>
+        <p>{{ next_activity.description }}</p>
+        <div class="activity-footer">
+          <div class="activity-time">
+            <i class="bi bi-alarm"></i>
+            {{ next_activity.duration_minutes }} دقيقة
+          </div>
+          {% if next_activity.activity_id %}
+          <a href="{% url 'activity:activity_play' next_activity.activity_id %}" class="start-btn secondary">
+            عرض النشاط
+          </a>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
 
+    </div>
+
+    <!-- جميع أنشطة الأسبوع -->
+    {% if plan_activities %}
+    <div style="margin-top:24px;">
+      <h3 style="margin-bottom:16px; color:var(--primary-green);">📅 خطة الأسبوع الكاملة</h3>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        {% for item in plan_activities %}
+        <div style="background:var(--color-background-primary); border:0.5px solid #eee; border-radius:12px; padding:14px 18px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-weight:600; font-size:14px;">{{ item.get_day_display }}</div>
+            <div style="font-size:13px; color:#666; margin-top:4px;">{{ item.title }}</div>
+          </div>
+          <div style="font-size:12px; color:var(--primary-green);">
+            <i class="bi bi-clock"></i> {{ item.duration_minutes }} د
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- نصيحة اليوم -->
+    <div class="tip-box">
+      <div class="tip-text">
+        <h3>نصيحة اليوم</h3>
+        <p>
+          {% if 'sensory' in categories %}
+            وفّر بيئة هادئة وخالية من الضوضاء لتساعد طفلك على التركيز.
+          {% elif 'language' in categories %}
+            تحدث مع طفلك ببطء ووضوح وكرر الكلمات الجديدة يومياً.
+          {% elif 'visual' in categories %}
+            استخدم بطاقات مصورة ملونة لتعزيز التواصل البصري.
+          {% elif 'motor' in categories %}
+            خصص وقتاً يومياً للعب الحر والحركة لتقوية المهارات الحركية.
+          {% else %}
+            التفاعل وخلق بيئة هادئة يساعد على زيادة تركيز طفلك.
+          {% endif %}
+        </p>
+      </div>
+      <div class="tip-icon">
+        <i class="bi bi-lightbulb"></i>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar-plan">
+
+    <a class="back-btn" href="{% url 'plans:main_plan_view' %}">
+      <i class="fa-solid fa-arrow-right"></i>
+      العودة للخطة
+    </a>
+
+    <h2 class="sidebar-title">أقسام الخطة</h2>
+
+    <div class="steps">
+
+      <div class="step active">
+        <div>
+          <h3>الأنشطة المقترحة</h3>
+          <p>أنشطة يومية تساعد على تطور طفلك</p>
+        </div>
+        <span>1</span>
       </div>
 
-      <!-- Activities -->
-      <section class="activities-section">
+      <div class="step">
+        <a href="{% url 'plans:video_plan_view' %}" class="step-btn">
+          <h3>فيديوهات تعليمية</h3>
+          <p>فيديوهات توضيحية وتدريبية</p>
+        </a>
+        <span>2</span>
+      </div>
 
-        <div class="section-header">
-          <h2>1. الأنشطة المقترحة</h2>
-          <p>اختر نشاطاً لبدء الجلسة</p>
-        </div>
-
-        <div class="activities-wrapper">
-
-          <button class="slider-btn">
-            <i class="bi bi-chevron-right"></i>
-          </button>
-
-          <div class="activities">
-
-            <!-- Card -->
-            <div class="activity-card active-card">
-
-              <div class="check">
-                <i class="bi bi-check2"></i>
-              </div>
-
-              <div class="activity-icon purple-bg">
-                
-              </div>
-
-              <h3>نشاط حسي</h3>
-              <p>لعب بالمعجون الحسي</p>
-
-              <div class="time">
-                
-                10 دقائق
-              </div>
-
-            </div>
-
-            <!-- Card -->
-            <div class="activity-card">
-
-              <div class="activity-icon green-bg">
-                
-              </div>
-
-              <h3>اللعب التفاعلي</h3>
-              <p>ألعاب تركيب وتنمية المهارات</p>
-
-              <div class="time">
-                
-                15 دقيقة
-              </div>
-
-            </div>
-
-            <!-- Card -->
-            <div class="activity-card">
-
-              <div class="activity-icon yellow-bg">
-                
-              </div>
-
-              <h3>نشاط بصري</h3>
-              <p>بطاقات الصور والألوان</p>
-
-              <div class="time">
-                
-                10 دقائق
-              </div>
-
-            </div>
-
-            <!-- Card -->
-            <div class="activity-card">
-
-              <div class="activity-icon pink-bg">
-            
-              </div>
-
-              <h3>نشاط سمعي</h3>
-              <p>الاستماع والموسيقى</p>
-
-              <div class="time">
-                10 دقائق
-              </div>
-
-            </div>
-
-          </div>
-
-          <button class="slider-btn">
-            <i class="bi bi-chevron-left"></i>
-          </button>
-
-        </div>
-
-      </section>
-
-      <!-- Tip -->
-      <div class="tip-box">
-
-        <div class="tip-text">
-          <h3>نصيحة اليوم</h3>
-          <p>
-            التفاعل والخلق بيئة هادئة يساعد على زيادة تركيز الطفل واستجابته للنشاط.
-          </p>
-        </div>
-
-        <div class="tip-icon">
-         <i class="bi bi-lightbulb"></i>
-        </div>
-
+      <div class="step">
+        <a href="{% url 'plans:support_strategies_view' %}" class="step-btn">
+          <h3>استراتيجيات الدعم</h3>
+          <p>طرق ونصائح لدعم طفلك</p>
+        </a>
+        <span>3</span>
       </div>
 
     </div>
 
-    <aside class="sidebar-plan">
-
-      <a class="back-btn" href="{%url 'plans:main_plan_view'%}">
-        <i class="fa-solid fa-arrow-right"></i>
-        العودة للخطة
-      </a>
-
-      <h2 class="sidebar-title">أقسام الخطة</h2>
-
-      <div class="steps">
-
-        <div class="step active">
-          <div>
-            <h3>الأنشطة المقترحة</h3>
-            <p>أنشطة يومية تساعد على تطور طفلك</p>
-          </div>
-          <span>1</span>
-        </div>
-
-        <div class="step">
-          <div>
-            <h3>فيديوهات تعليمية</h3>
-            <p>فيديوهات توضيحية وتدريبية</p>
-          </div>
-          <span>2</span>
-        </div>
-
-        <div class="step">
-          <div>
-            <h3>استراتيجيات الدعم</h3>
-            <p>طرق ونصائح لدعم طفلك</p>
-          </div>
-          <span>3</span>
-        </div>
-
-        
-
+    <!-- معلومات الطفل -->
+    <div class="progress-box" style="margin-top:20px;">
+      <h3>معلومات الطفل</h3>
+      <div style="margin-top:10px; font-size:13px; color:#666; display:flex; flex-direction:column; gap:8px;">
+        <div>👦 <strong>الاسم:</strong> {{ child.name }}</div>
+        <div>💬 <strong>نوع التواصل:</strong> {{ child.get_communication_type_display }}</div>
+        <div>👂 <strong>الحساسية:</strong> {{ child.get_sensory_sensitivities_display }}</div>
+        {% if child.goals %}
+        <div>🎯 <strong>الأهداف:</strong> {{ child.goals }}</div>
+        {% endif %}
+        {% if child.notes %}
+        <div>📝 <strong>ملاحظات:</strong> {{ child.notes }}</div>
+        {% endif %}
       </div>
+    </div>
 
-      <div class="progress-box">
-        <h3>تقدم الطفل</h3>
-        <p>المرحلة الحالية</p>
+  </aside>
 
-        <h4>1 من 3</h4>
-
-        <div class="circle">
-          <span>25%</span>
-        </div>
-
-        <div class="success">
-
-          <p>أنت على الطريق الصحيح!</p>
-        </div>
-      </div>
-
-    </aside>
-
-  </div>
+</div>
 
 {% endblock %}

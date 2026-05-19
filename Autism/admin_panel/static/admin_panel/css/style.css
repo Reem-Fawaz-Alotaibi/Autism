@@ -1,0 +1,403 @@
+.dashboard-container {
+    padding: 30px;
+}
+
+/* العنوان */
+
+.dashboard-header {
+    background: white;
+    border-radius: 25px;
+    padding: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-header h1 {
+    color: #1c1c1c;
+    margin-bottom: 10px;
+    font-size: 32px;
+}
+
+.dashboard-header p {
+    color: #777;
+}
+
+.dashboard-icon {
+    width: 80px;
+    height: 80px;
+    background: #e2eee3;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    color: #4caf50;
+}
+
+/* الإحصائيات */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 22px;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+    color: white;
+}
+
+.blue .stat-icon {
+    background: #5b7cff;
+}
+
+.green .stat-icon {
+    background: #23c58f;
+}
+
+.orange .stat-icon {
+    background: #ffb547;
+}
+
+.red .stat-icon {
+    background: #ff5b61;
+}
+
+.purple .stat-icon {
+    background: #8f5cff;
+}
+
+.cyan .stat-icon {
+    background: #4dbfff;
+}
+
+.state-text{
+    margin-top: 15px;
+}
+
+.stat-card h3 {
+    font-size: 20px;
+    color: #222;
+}
+
+.stat-card p {
+    color: #777;
+}
+
+/* الأقسام */
+
+.top-section{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.bottom-section{
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.chart-card,
+.reports-card,
+.users-card,
+.activity-card {
+    background: white;
+    border-radius: 25px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* العناوين */
+
+.card-title {
+    margin-bottom: 40px;
+}
+
+.card-title h2 {
+    color: #222;
+    font-size: 24px;
+}
+
+/* الجداول */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th {
+    text-align: right;
+    padding-bottom: 15px;
+    color: #666;
+    font-size: 15px;
+}
+
+table td {
+    padding: 18px 0;
+    border-top: 1px solid #eee;
+    color: #555;
+    font-size: 15px;
+}
+
+.table-wrapper{
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+/* الحالات */
+
+.status {
+    padding:6px 10px;
+    border-radius: 30px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.pending {
+    background: #fff3df;
+    color: #e49a17;
+}
+
+.danger {
+    background: #ffe5e7;
+    color: #ff4d5b;
+}
+
+.solved {
+    background: #e6fff2;
+    color: #20b97a;
+}
+
+/* المستخدم */
+
+.active-user {
+    background: #e6fff2;
+    color: #20b97a;
+    padding: 6px 10px;
+    border-radius: 30px;
+    font-size: 10;
+    font-weight: bold;
+}
+
+.blocked-user {
+    background: #ffe5e7;
+    color: #ff4d5b;
+    padding: 7px 14px;
+    border-radius: 30px;
+}
+
+.actions-user{
+    padding: 6px 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.block-btn,
+.unblock-btn,
+.delete-btn{
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 10px;
+    color: white;
+}
+
+.block-btn{
+    background: #ff9800;
+}
+
+.unblock-btn{
+    background: #4caf50;
+}
+
+.delete-btn{
+    background: #f44336;
+}
+/* الإجراءات */
+
+.actions-btn {
+    display: flex;
+    gap: 15px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.actions-btn a{
+    color: #555;
+}
+
+/* النشاط */
+
+.activity-item {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 25px;
+    align-items: center;
+}
+
+.activity-icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.blue-bg {
+    background: #5b7cff;
+}
+
+.purple-bg {
+    background: #8f5cff;
+}
+
+.red-bg {
+    background: #ff5b61;
+}
+
+.activity-item h4 {
+    margin-bottom: 5px;
+    color: #222;
+}
+
+.activity-item p {
+    color: #777;
+}
+
+.empty-state {
+    padding: 40px 20px;
+    text-align: center;
+    color: #888;
+}
+
+
+/* responsive */
+
+@media(max-width:1000px) {
+
+    .top-section,
+    .bottom-section {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media(max-width:700px) {
+
+    .dashboard-header {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+
+}
+
+
+/*report*/
+
+.report-container {
+    max-width: 800px;
+    margin: auto;
+}
+
+.report-card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.page-title {
+    margin-bottom: 25px;
+    color: #222;
+    font-size: 28px;
+}
+
+.report-info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.info-box {
+    background: #f8f9fc;
+    padding: 18px;
+    border-radius: 14px;
+}
+
+.info-label {
+    display: block;
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 8px;
+}
+
+.info-value {
+    font-size: 18px;
+    color: #222;
+    font-weight: 600;
+}
+
+.status-report {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.pending {
+    background: #fff4d6;
+    color: #c58b00;
+}
+
+.solved {
+    background: #dff7e3;
+    color: #1c8b3f;
+}
+
+.post-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    background: #6b8c72;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 12px;
+    transition: 0.3s;
+    width: fit-content;
+}
+
+.post-link:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}

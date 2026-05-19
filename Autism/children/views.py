@@ -1,14 +1,30 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Child
-
+from datetime import date
 
 @login_required
 def profile_view(request, id):
     child = get_object_or_404(Child, id=id, user=request.user)
 
+    age = None
+
+    if child.birth_date:
+
+        today = date.today()
+
+        age = today.year - child.birth_date.year
+
+        if (
+            (today.month, today.day)
+            <
+            (child.birth_date.month, child.birth_date.day)
+        ):
+            age -= 1
+
     return render(request, 'children/profile.html', {
-        'child': child
+        'child': child,
+        'age': age
     })
 
 
@@ -22,7 +38,7 @@ def edit_child(request, id):
     
     if request.method == 'POST':
         child.name = request.POST.get('name')
-        child.age = request.POST.get('age')
+        child.birth_date = request.POST.get('age')
         child.gender = request.POST.get('gender')
         child.communication_type = request.POST.get('communication_type')
         child.sensory_sensitivities = request.POST.get('sensory_sensitivities')
@@ -44,7 +60,7 @@ def add_child_view(request):
         child = Child.objects.create(
             user=request.user,
             name=request.POST.get("name"),
-            age=request.POST.get("age"),
+            birth_date=request.POST.get("age"),
             gender=request.POST.get("gender"),
             communication_type=request.POST.get("communication_type"),
             sensory_sensitivities=request.POST.get("sensory_sensitivities"),

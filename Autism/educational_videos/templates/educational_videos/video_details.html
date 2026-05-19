@@ -1,0 +1,73 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}
+{{ video.title }}
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'educational_videos/css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="video-page">
+
+    <div class="video-wrapper">
+
+        <div class="video-player-card">
+
+            <div class="video-player">
+
+                <video controls controlsList="nodownload">
+                    <source src="{{ video.video_file.url }}">
+                </video>
+
+            </div>
+
+        </div>
+
+        <div class="video-side">
+
+            <div class="video-info-card">
+
+                <span class="video-category">
+                    {{ video.get_category_display }}
+                </span>
+
+                <h1 class="video-title">
+                    {{ video.title }}
+                </h1>
+
+                <p class="video-desc">
+                    {{ video.description }}
+                </p>
+
+                <div class="video-meta">
+
+                    <div class="meta-box">
+                        <div class="meta-label">
+                            العمر المناسب
+                        </div>
+
+                        <div class="meta-value">
+                            {{ video.age_min }} - {{ video.age_max }}
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <a href="{% url 'edu_video:all_educational_videos_view' %}">
+                <button class="all-watch-btn">
+                ← العودة للفيديوهات
+                </button>
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,86 +1,174 @@
 {% extends "main/base.html" %}
 
-{% load static%}
+{% load static %}
 
 {% block title %} بناء الخطة - الخطوة 1 {% endblock %}
 
-{% block style %} <link rel="stylesheet" href="{% static 'assessment/css/style.css' %}"> {% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'assessment/css/style.css' %}">
+{% endblock %}
 
 {% block content %}
+
 <div class="inner-header">
     <div style="display:flex; align-items:center; gap:12px;">
         <div>
-            <div style="font-weight: bold; color: var(--primary-green); font-size: 16px;">بناء الخطة</div>
-            <div style="font-size: 12px; color: var(--text-gray);">الخطوة 1 من 3</div>
+            <div style="font-weight: bold; color: var(--primary-green); font-size: 16px;">
+                بناء الخطة
+            </div>
+            <div style="font-size: 12px; color: var(--text-gray);">
+                الخطوة 1 من 3
+            </div>
         </div>
     </div>
-    <button onclick="history.back()" style="background: none;border: 1px solid #ddd;padding: 8px 15px;border-radius: 8px;cursor: pointer;display: flex;align-items: center;gap: 8px;color: #666;font-size: 14px;">
+
+    <a href="{%url 'main:home_page_view'%}"
+   style="background: none;
+          border: 1px solid #ddd;
+          padding: 8px 15px;
+          border-radius: 8px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: #666;
+          font-size: 14px;
+          text-decoration: none;">
+
     رجوع
-    <i class="bi bi-arrow-left"></i> 
-</button>
+
+    <i class="bi bi-arrow-left"></i>
+
+</a>
 </div>
 
 <div class="main-content-area">
+
     <div class="header-title">
         <h2>قبل بناء الخطة، نحتاج إلى بيانات من الطفل</h2>
-        <p>قم بتحميل مقطع فيديو للطفل ومن ثم قم بالإجابة على الإستبيان المرفق</p>
+        <p>
+    قم برفع مقطع فيديو قصير للطفل ليتم تحليله باستخدام الذكاء الاصطناعي وبناء خطة مناسبة له.
+</p>
     </div>
 
-    <div class="cards-grid">
+    <div class="questionnaire-wrapper">
+
+        <!-- رفع الفيديو -->
         <div class="card-option">
+
             <div class="card-icon-header">
-                <h4 style="margin:0">1. رفع فيديو للطفل</h4>
-            </div>
-            <p style="font-size:13px; color:var(--text-gray);">قم برفع مقطع فيديو قصير للطفل أثناء قيامه بأنشطة يومية لمدة 3-5 دقائق.</p>
-            
-            <div class="upload-box-v2">
-                <div style="font-size:40px; margin-bottom:10px;">☁️</div>
-                <div style="font-weight:bold; font-size:15px;">اضغط لرفع الفيديو</div>
-                <div style="font-size:12px; color:#aaa; margin-top:5px;">أو اسحب الملف هنا</div>
+                <h4 style="margin:0">
+                    1. رفع فيديو للطفل
+                </h4>
             </div>
 
-            <div class="privacy-footer">
-                <b>خصوصية وأمان:</b> يتم تشفير جميع الفيديوهات المرفوعة ولا يتم مشاركتها مع أي جهة خارجية.
-            </div>
+            <p style="font-size:13px; color:var(--text-gray);">
+                قم برفع مقطع فيديو قصير للطفل أثناء قيامه بأنشطة يومية لمدة 3-5 دقائق.
+            </p>
 
-            <button href="#" class="action-btn">متابعة </button>
-        </div>
+            <form method="POST"
+                  action="{% url 'assessment:upload_video' %}"
+                  enctype="multipart/form-data">
 
-        <div class="card-option">
-            <div class="card-icon-header">
-                <h4 style="margin:0">2. الإجابة على الاستبيان</h4>
-            </div>
-            <p style="font-size:13px; color:var(--text-gray);">أجب على مجموعة من الأسئلة لتقييم سلوك الطفل وبناء الخطة المناسبة له.</p>
+                {% csrf_token %}
 
-            <div class="quiz-preview">
-                <div style="color:var(--primary-green); font-size:12px; font-weight:bold; display:flex; justify-content:space-between;">
-                    <span>السؤال 3 من 4</span>
-                    <span>75%</span>
-                </div>
-                <div class="progress-bar-v2">
-                    <div class="progress-fill-v2"></div>
-                </div>
-                
-                <h5 style="margin:0 0 15px; font-size:15px;">كيف يتواصل طفلك مع الآخرين؟</h5>
-                
-                <div class="choice-item">
-                    <span>يتواصل بسهولة</span>
-                    <div class="check-dot"></div>
-                </div>
-                <div class="choice-item selected">
-                    <span>يتواصل أحياناً</span>
-                    <div class="check-dot"></div>
-                </div>
-                <div class="choice-item">
-                    <span>يتواصل بصعوبة</span>
-                    <div class="check-dot"></div>
-                </div>
-            </div>
+                <!-- اختيار الطفل -->
+                <div style="margin-bottom:15px;">
 
-            <button href="#" class="action-btn">ابدأ الاستبيان </button>
-        </div>
-    </div>
+                    <label style="display:block; margin-bottom:8px; font-size:14px; font-weight:bold;">
+                        اختر الطفل
+                    </label>
 
+                    <select name="child"
+                            required
+                            style="width:100%; padding:12px; border-radius:10px; border:1px solid #ddd;">
+
+                        {% for child in children %}
+                            <option value="{{ child.id }}">
+                                {{ child.name }}
+                            </option>
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <!-- رفع الفيديو -->
+                <label for="video-upload" class="upload-box-v2" style="cursor:pointer; display:block; text-align:center;">
+
+                    <div style="font-size:40px; margin-bottom:10px;">
+                        ☁️
+                    </div>
+
+                    <div style="font-weight:bold; font-size:15px;">
+                        اضغط لرفع الفيديو
+                    </div>
+
+                    <div style="font-size:12px; color:#aaa; margin-top:5px;">
+                        أو اسحب الملف هنا
+                    </div>
+
+                    <input type="file"
+                           id="video-upload"
+                           name="video"
+                           accept="video/*"
+                           required
+                           hidden>
+                           <div id="videoPreviewContainer" style="display:none; margin-top:15px;">
+
+    <video id="videoPreview"
+           controls
+           style="
+                width:100%;
+                border-radius:16px;
+                max-height:300px;
+                object-fit:cover;
+           ">
+    </video>
 
 </div>
+
+                </label>
+
+                <div class="privacy-footer">
+                    <b>خصوصية وأمان:</b>
+                    يتم تشفير جميع الفيديوهات المرفوعة ولا يتم مشاركتها مع أي جهة خارجية.
+                </div>
+
+                <button type="submit" class="action-btn">
+                    متابعة
+                </button>
+
+            </form>
+
+        </div>
+        
+
+    </div>
+
+</div>
+
+<script>
+
+const videoInput = document.getElementById('video-upload');
+
+const videoPreview = document.getElementById('videoPreview');
+
+const videoPreviewContainer = document.getElementById('videoPreviewContainer');
+
+videoInput.addEventListener('change', function () {
+
+    const file = this.files[0];
+
+    if (file) {
+
+        const videoURL = URL.createObjectURL(file);
+
+        videoPreview.src = videoURL;
+
+        videoPreviewContainer.style.display = 'block';
+    }
+});
+
+</script>
 {% endblock %}

@@ -54,6 +54,26 @@
     background:#E2A857;
 }
 
+.filter-btn{
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.filter-btn:hover{
+    transform:translateY(-2px);
+    border-color:#7BAE7F;
+}
+
+.filter-btn.active{
+    background:#7BAE7F;
+    color:white;
+    border-color:#7BAE7F;
+}
+
+.filter-btn.active .legend-color{
+    box-shadow:0 0 0 2px white inset;
+}
+
 .search-form{
     display: flex;
     gap: 10px;
@@ -392,6 +412,30 @@ svg{
     pointer-events:none;
 
     font-size:14px;
+}
+
+@media(max-width:768px){
+
+    .map-wrapper{
+        width:100%;
+        overflow-x:auto;
+    }
+
+    .place-detail-card{
+        width:90%;
+        right:5%;
+        top:80px;
+    }
+
+    .search-form{
+        flex-direction:column;
+    }
+
+    .search-btn{
+        width:100%;
+        height:50px;
+    }
+
 }
 
 

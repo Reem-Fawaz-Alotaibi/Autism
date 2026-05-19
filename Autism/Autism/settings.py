@@ -19,6 +19,15 @@ try:
     ssl.create_default_context = ssl._create_unverified_context
 except AttributeError:
     pass
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+import cloudinary
+
+
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -33,7 +42,7 @@ SECRET_KEY = 'django-insecure-3x751$072+v2i^^x#f(#3ivud^%rzbogx)-12h*0+uq1h+5hb^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '0.0.0.0']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '0.0.0.0','spooky-darkish-underwent.ngrok-free.dev']
 # Application definition
 
 INSTALLED_APPS = [
@@ -62,6 +71,10 @@ INSTALLED_APPS = [
     'chatbot',
     'accounts.apps.AccountsConfig',
     'notifications',
+    'payments',
+
+    'ai_analysis',
+    'admin_panel'
 
 ]
 SITE_ID = 1
@@ -89,6 +102,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'main.context_processors.theme',
             ],
         },
     },
@@ -144,12 +158,19 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': config('CLOUD_NAME'),
     'API_KEY': config('API_KEY'),
     'API_SECRET': config('API_SECRET'),
 }
+
+
+cloudinary.config(
+    cloud_name=config("CLOUD_NAME"),
+    api_key=config("API_KEY"),
+    api_secret=config("API_SECRET"),
+    secure=True
+)
 
 STORAGES = {
     "default": {
@@ -211,3 +232,11 @@ SOCIALACCOUNT_LOGIN_REDIRECT_URL = 'main:home_page_view'
 
 SESSION_COOKIE_AGE = 1209600
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+
+MOYASAR_PUBLIC_KEY = os.getenv("MOYASAR_PUBLIC_KEY")
+MOYASAR_SECRET_KEY = os.getenv("MOYASAR_SECRET_KEY")
+GEMINI_API_KEY = config('GEMINI_API_KEY')
+
+OPENAI_API_KEY = config('OPENAI_API_KEY')
+

@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpRequest
 from chatbot.models import Conversation
+from children.models import Child
 
 
 def home_page_view(request: HttpRequest):
@@ -8,8 +9,9 @@ def home_page_view(request: HttpRequest):
     if request.user.is_authenticated:
         conv, _ = Conversation.objects.get_or_create(user=request.user)
         conv_id = conv.id
+        children = Child.objects.filter(user=request.user)
     
-    return render(request, 'main/home.html', {"conv_id": conv_id})
+    return render(request, 'main/home.html', {"conv_id": conv_id,'children': children})
 
 
 def about_us_view(request: HttpRequest):
@@ -34,3 +36,19 @@ def terms_of_service_view(request: HttpRequest):
 
 def questions_view(request: HttpRequest):
     return render(request, 'main/questions.html')
+
+
+# 
+def set_theme(request, theme):
+    request.session['theme'] = theme
+    return redirect(request.GET.get('next', '/'))
+    return render(request, 'main/questions.html')
+
+def dashboard_view(request: HttpRequest):
+    return render(request, 'main/dashbord_admin.html')
+
+def test_view(request: HttpRequest):
+    return render(request, 'main/404.html')
+
+    
+

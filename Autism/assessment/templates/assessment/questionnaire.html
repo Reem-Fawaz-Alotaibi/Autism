@@ -1,40 +1,93 @@
 {% extends 'main/base.html' %}
 {% load static %}
 
-{% block title %} الإستبيان لتحليل الطفل{% endblock %}
+{% block title %} الاستبيان لتحليل الطفل {% endblock %}
 
-{% block style %} <link rel="stylesheet" href="{% static 'assessment/css/style.css' %}"> {% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'assessment/css/style.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="discovery-wrapper">
-    
+
     <header class="header-content">
         <span class="status-badge">Discovery Phase</span>
-        <h1> أخبرنا عن طفلك</h1>
+        <h1>أخبرنا عن طفلك</h1>
         <p>إجاباتك تساعدنا في إنشاء رحلة مخصصة تناسب شخصية طفلك.</p>
     </header>
 
-    <!-- <div class="progress-section">
-        <div class="progress-fill">
-            <span class="bear-pointer">🐻</span>
-        </div>
-        <div class="end-star">⭐<br>Profile Set</div>
-    </div> -->
-
     <section class="question-card">
-        <h2>هل يفضل أحمد الزوايا الهادئة اليوم؟</h2>
-        <div class="answer-options">
-            <button class="answer-btn">نعم</button>
-            <button class="answer-btn">لا</button>
-            <button class="answer-btn">أحياناً</button>
+
+        <div style="font-weight:bold; color:var(--primary-green); margin-bottom:8px;">
+            السؤال {{ current_index }} من {{ total }} — {{ progress }}%
         </div>
-        <p style="margin-top: 25px; color: #aaa; font-size: 0.85rem;">🌱 اختر الخيار الذي يبدو أكثر طبيعية اليوم.</p>
+
+        <div class="progress-bar-v2" style="margin-bottom:20px;">
+            <div class="progress-fill-v2" style="width:{{ progress }}%;"></div>
+        </div>
+
+        <h2>{{ question.text }}</h2>
+        <div style="font-size:12px; color:#aaa; margin-bottom:16px;">
+            المصدر: {{ question.source }}
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="question_id" value="{{ question.id }}">
+            <input type="hidden" name="current_index" value="{{ current_index }}">
+
+            <div class="answer-options">
+                <button type="submit" name="answer" value="always" 
+                    class="answer-btn {% if saved_answer == 'always' %}selected{% endif %}">
+                    دائماً
+                </button>
+                <button type="submit" name="answer" value="sometimes"
+                    class="answer-btn {% if saved_answer == 'sometimes' %}selected{% endif %}">
+                    أحياناً
+                </button>
+                <button type="submit" name="answer" value="rarely"
+                    class="answer-btn {% if saved_answer == 'rarely' %}selected{% endif %}">
+                    نادراً
+                </button>
+                <button type="submit" name="answer" value="never"
+                    class="answer-btn {% if saved_answer == 'never' %}selected{% endif %}">
+                    أبداً
+                </button>
+            </div>
+
+        </form>
+
     </section>
 
     <div class="nav-actions">
-        <a href="#" style="color: var(--light-text); text-decoration: none;">&lt; السابق</a>
-        <span style="color: #bbb;">الخطوة 2 من 5</span>
-        <a href="#" class="btn-next" style="text-decoration:none">السؤال التالي &gt;</a>
+        <form method="POST" style="display:inline;">
+            {% csrf_token %}
+            <input type="hidden" name="question_id" value="{{ question.id }}">
+            <input type="hidden" name="current_index" value="{{ current_index }}">
+            {% if current_index > 1 %}
+            <button type="submit" name="direction" value="prev" 
+                style="background:none; border:none; color:var(--light-text); cursor:pointer;">
+                &lt; السابق
+            </button>
+            {% endif %}
+        </form>
+
+        <span style="color: #bbb;">الخطوة {{ current_index }} من {{ total }}</span>
+
+        <form method="POST" style="display:inline;">
+            {% csrf_token %}
+            <input type="hidden" name="question_id" value="{{ question.id }}">
+            <input type="hidden" name="current_index" value="{{ current_index }}">
+            {% if current_index == total %}
+            <button type="submit" name="direction" value="finish" class="btn-next">
+                إنهاء وتحليل
+            </button>
+            {% else %}
+            <button type="submit" name="direction" value="next" class="btn-next">
+                السؤال التالي &gt;
+            </button>
+            {% endif %}
+        </form>
     </div>
 
     <footer class="bottom-grid">

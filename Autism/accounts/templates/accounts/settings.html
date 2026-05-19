@@ -205,7 +205,8 @@
             </div>
 
             <div class="theme-options">
-                <div class="theme-option active" onclick="setTheme('light', this)">
+
+                <a href="{% url 'main:set_theme' 'default' %}?next={{ request.path }}" class="theme-option active">
                     <div class="theme-preview light-preview">
                         <div class="theme-prev-sidebar"></div>
                         <div class="theme-prev-content">
@@ -213,28 +214,44 @@
                             <div class="theme-prev-bar short"></div>
                         </div>
                     </div>
-                    <span>فاتح</span>
-                </div>
-                <div class="theme-option" onclick="setTheme('dark', this)">
-                    <div class="theme-preview dark-preview">
+                    <span>الافتراضي</span>
+                </a>
+
+                <a href="{% url 'main:set_theme' 'pink' %}?next={{ request.path }}" class="theme-option">
+                    <div class="theme-preview pink-preview">
                         <div class="theme-prev-sidebar"></div>
                         <div class="theme-prev-content">
                             <div class="theme-prev-bar"></div>
                             <div class="theme-prev-bar short"></div>
                         </div>
                     </div>
-                    <span>داكن</span>
-                </div>
-                <div class="theme-option" onclick="setTheme('system', this)">
-                    <div class="theme-preview system-preview">
+                    <span>وردي</span>
+                </a>
+
+
+                <a href="{% url 'main:set_theme' 'blue' %}?next={{ request.path }}" class="theme-option">
+                    <div class="theme-preview pink-preview">
                         <div class="theme-prev-sidebar"></div>
                         <div class="theme-prev-content">
                             <div class="theme-prev-bar"></div>
                             <div class="theme-prev-bar short"></div>
                         </div>
                     </div>
-                    <span>تلقائي</span>
-                </div>
+                    <span>الازرق</span>
+                </a>
+
+
+                <a href="{% url 'main:set_theme' 'purple' %}?next={{ request.path }}" class="theme-option">
+                    <div class="theme-preview pink-preview">
+                        <div class="theme-prev-sidebar"></div>
+                        <div class="theme-prev-content">
+                            <div class="theme-prev-bar"></div>
+                            <div class="theme-prev-bar short"></div>
+                        </div>
+                    </div>
+                    <span>البنفسجي</span>
+                </a>
+
             </div>
         </div>
 
@@ -365,6 +382,49 @@
             window.location.href = '';
         }
     }
+    function setCookie(name, value, days) {
+        let date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        document.cookie = name + "=" + value + ";expires=" + date.toUTCString() + ";path=/";
+    }
+
+    function getCookie(name) {
+        let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        return match ? match[2] : null;
+    }
+
+    function applyFontSize(value) {
+        let size;
+
+        if (value == 1) size = "14px";
+        else if (value == 2) size = "16px";
+        else size = "18px";
+
+        document.documentElement.style.setProperty('--font-size', size);
+    }
+
+    // عند التغيير
+    function updateFontLabel(input) {
+        const labels = ['صغير', 'متوسط', 'كبير'];
+        document.getElementById('font-size-label').textContent = labels[input.value - 1];
+
+        setCookie("fontSize", input.value, 30);
+        applyFontSize(input.value);
+    }
+
+    // عند فتح الصفحة
+    window.addEventListener("load", () => {
+        let saved = getCookie("fontSize");
+
+        const slider = document.getElementById("fontSlider");
+
+        if (saved && slider) {
+            slider.value = saved;
+            applyFontSize(saved);
+        }
+    });
+
+
 </script>
 
 
