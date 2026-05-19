@@ -12,9 +12,11 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 from decouple import config
-import cloudinary
 import os
-from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
+import cloudinary
 
 
 
@@ -33,7 +35,7 @@ SECRET_KEY = 'django-insecure-3x751$072+v2i^^x#f(#3ivud^%rzbogx)-12h*0+uq1h+5hb^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '0.0.0.0']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '0.0.0.0','spooky-darkish-underwent.ngrok-free.dev']
 # Application definition
 
 INSTALLED_APPS = [
@@ -61,6 +63,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'chatbot',
     'accounts.apps.AccountsConfig',
+    'payments',
+
     'ai_analysis',
     'admin_panel'
 
@@ -90,6 +94,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'main.context_processors.theme',
             ],
         },
     },
@@ -220,6 +225,9 @@ SOCIALACCOUNT_LOGIN_REDIRECT_URL = 'main:home_page_view'
 SESSION_COOKIE_AGE = 1209600
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
+
+MOYASAR_PUBLIC_KEY = os.getenv("MOYASAR_PUBLIC_KEY")
+MOYASAR_SECRET_KEY = os.getenv("MOYASAR_SECRET_KEY")
 GEMINI_API_KEY = config('GEMINI_API_KEY')
 
 OPENAI_API_KEY = config('OPENAI_API_KEY')
