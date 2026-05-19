@@ -10,73 +10,73 @@
 {% block content %}
 <main class="main-content">
 
-    <div class="page-top">
-        <div class="page-badge">📊 الأنشطة</div>
-        <h1 class="page-title">اختر النشاط <span>المناسب</span> لطفلك اليوم</h1>
-        <p class="page-desc">كل نشاط مصمم بعناية لدعم تطور طفلك في مجال محدد</p>
+  <div class="page-top">
+    <div class="page-badge">📊 الأنشطة</div>
+    <h1 class="page-title">اختر النشاط <span>المناسب</span> لطفلك اليوم</h1>
+    <p class="page-desc">كل نشاط مصمم بعناية لدعم تطور طفلك في مجال محدد</p>
+  </div>
+
+  <div class="categories-grid" id="categoriesGrid">
+
+    <div class="cat-card" onclick="selectCategory('visual')">
+      <div class="cat-icon-wrap" style="background:#e8f5e0;">
+        <span class="cat-icon">👁️</span>
+      </div>
+      <div class="cat-info">
+        <div class="cat-name">نشاط بصري</div>
+        <div class="cat-desc">تعزيز التواصل البصري والتركيز والتتبع</div>
+        <div class="cat-count">{{ visual.count }} أنشطة متاحة</div>
+      </div>
+      <div class="cat-arrow">←</div>
     </div>
 
-    <div class="categories-grid" id="categoriesGrid">
-
-        <div class="cat-card" onclick="selectCategory('visual')">
-            <div class="cat-icon-wrap" style="background:#e8f5e0;">
-                <span class="cat-icon">👁️</span>
-            </div>
-            <div class="cat-info">
-                <div class="cat-name">نشاط بصري</div>
-                <div class="cat-desc">تعزيز التواصل البصري والتركيز والتتبع</div>
-                <div class="cat-count">{{ visual.count }} أنشطة متاحة</div>
-            </div>
-            <div class="cat-arrow">←</div>
-        </div>
-
-        <div class="cat-card" onclick="selectCategory('sensory')">
-            <div class="cat-icon-wrap" style="background:#fff3e0;">
-                <span class="cat-icon">🤲</span>
-            </div>
-            <div class="cat-info">
-                <div class="cat-name">نشاط حسي</div>
-                <div class="cat-desc">تنمية الحواس والاستجابة للمؤثرات البيئية</div>
-                <div class="cat-count">{{ sensory.count }} أنشطة متاحة</div>
-            </div>
-            <div class="cat-arrow">←</div>
-        </div>
-
-        <div class="cat-card" onclick="selectCategory('motor')">
-            <div class="cat-icon-wrap" style="background:#fce4ec;">
-                <span class="cat-icon">🏃</span>
-            </div>
-            <div class="cat-info">
-                <div class="cat-name">نشاط حركي</div>
-                <div class="cat-desc">تطوير المهارات الحركية الدقيقة والكبيرة</div>
-                <div class="cat-count">{{ motor.count }} أنشطة متاحة</div>
-            </div>
-            <div class="cat-arrow">←</div>
-        </div>
-
-        <div class="cat-card" onclick="selectCategory('language')">
-            <div class="cat-icon-wrap" style="background:#e8eaf6;">
-                <span class="cat-icon">💬</span>
-            </div>
-            <div class="cat-info">
-                <div class="cat-name">نشاط لغوي</div>
-                <div class="cat-desc">تنمية مهارات التواصل والتعبير اللغوي</div>
-                <div class="cat-count">{{ language.count }} أنشطة متاحة</div>
-            </div>
-            <div class="cat-arrow">←</div>
-        </div>
-
+    <div class="cat-card" onclick="selectCategory('sensory')">
+      <div class="cat-icon-wrap" style="background:#fff3e0;">
+        <span class="cat-icon">🤲</span>
+      </div>
+      <div class="cat-info">
+        <div class="cat-name">نشاط حسي</div>
+        <div class="cat-desc">تنمية الحواس والاستجابة للمؤثرات البيئية</div>
+        <div class="cat-count">{{ sensory.count }} أنشطة متاحة</div>
+      </div>
+      <div class="cat-arrow">←</div>
     </div>
 
-    <div class="visual-section" id="visualSection">
-        <div class="back-row">
-            <button class="back-btn" onclick="goBack()">→ رجوع للأنشطة</button>
-            <div class="visual-badge">👁️ الأنشطة البصرية</div>
-        </div>
-        <h2 class="section-title" id="sectionTitle">اختر النشاط</h2>
-        <p class="section-sub">أنشطة تفاعلية مصممة خصيصاً لدعم تطور طفلك</p>
-        <div class="activities-grid" id="activitiesGrid"></div>
+    <div class="cat-card" onclick="selectCategory('motor')">
+      <div class="cat-icon-wrap" style="background:#fce4ec;">
+        <span class="cat-icon">🏃</span>
+      </div>
+      <div class="cat-info">
+        <div class="cat-name">نشاط حركي</div>
+        <div class="cat-desc">تطوير المهارات الحركية الدقيقة والكبيرة</div>
+        <div class="cat-count">{{ motor.count }} أنشطة متاحة</div>
+      </div>
+      <div class="cat-arrow">←</div>
     </div>
+
+    <div class="cat-card" onclick="selectCategory('language')">
+      <div class="cat-icon-wrap" style="background:#e8eaf6;">
+        <span class="cat-icon">💬</span>
+      </div>
+      <div class="cat-info">
+        <div class="cat-name">نشاط لغوي</div>
+        <div class="cat-desc">تنمية مهارات التواصل والتعبير اللغوي</div>
+        <div class="cat-count">{{ language.count }} أنشطة متاحة</div>
+      </div>
+      <div class="cat-arrow">←</div>
+    </div>
+
+  </div>
+
+  <div class="visual-section" id="visualSection">
+    <div class="back-row">
+      <button class="back-btn" onclick="goBack()">→ رجوع للأنشطة</button>
+      <div class="visual-badge">👁️ الأنشطة البصرية</div>
+    </div>
+    <h2 class="section-title" id="sectionTitle">اختر النشاط</h2>
+    <p class="section-sub">أنشطة تفاعلية مصممة خصيصاً لدعم تطور طفلك</p>
+    <div class="activities-grid" id="activitiesGrid"></div>
+  </div>
 
 </main>
 
@@ -84,27 +84,27 @@
 <script>
   // جلب البيانات مباشرة من Django
   const allData = {
-    visual:   {{ visual_json|safe }},
-    sensory:  {{ sensory_json|safe }},
-    motor:    {{ motor_json|safe }},
-    language: {{ language_json|safe }},
+    visual: {{ visual_json | safe }},
+  sensory: { { sensory_json | safe } },
+  motor: { { motor_json | safe } },
+  language: { { language_json | safe } }
   };
 
   const bgColors = {
-    visual:   '#fff3e0',
-    sensory:  '#fff8e1',
-    motor:    '#fce4ec',
+    visual: '#fff3e0',
+    sensory: '#fff8e1',
+    motor: '#fce4ec',
     language: '#e8eaf6',
   };
 
-  const levelDisplay = { easy:'سهل', medium:'متوسط', hard:'صعب' };
+  const levelDisplay = { easy: 'سهل', medium: 'متوسط', hard: 'صعب' };
   const labels = {
-    visual:'👁️ الأنشطة البصرية', sensory:'🤲 الأنشطة الحسية',
-    motor:'🏃 الأنشطة الحركية', language:'💬 الأنشطة اللغوية',
+    visual: '👁️ الأنشطة البصرية', sensory: '🤲 الأنشطة الحسية',
+    motor: '🏃 الأنشطة الحركية', language: '💬 الأنشطة اللغوية',
   };
   const titles = {
-    visual:'اختر النشاط البصري', sensory:'اختر النشاط الحسي',
-    motor:'اختر النشاط الحركي', language:'اختر النشاط اللغوي',
+    visual: 'اختر النشاط البصري', sensory: 'اختر النشاط الحسي',
+    motor: 'اختر النشاط الحركي', language: 'اختر النشاط اللغوي',
   };
 
   function selectCategory(type) {
@@ -122,7 +122,7 @@
             <div class="act-name">${act.title}</div>
             <div class="act-desc">${act.description}</div>
             <div class="act-footer">
-              <span class="act-level">⭐ ${levelDisplay[act.level]||act.level}</span>
+              <span class="act-level">⭐ ${levelDisplay[act.level] || act.level}</span>
               <span class="act-start">ابدأ ←</span>
             </div>
           </div>

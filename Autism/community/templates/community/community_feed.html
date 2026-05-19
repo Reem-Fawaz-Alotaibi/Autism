@@ -40,10 +40,6 @@
       </div>
 
       <div class="topic">
-<<<<<<< HEAD
-
-=======
->>>>>>> 44e4f9949ed06081a3bcc609920331320b9b557c
 
         <div class="topic-left">
 
@@ -131,7 +127,7 @@
 
         <div class="user">
 
-          <div class="avatar red">
+          <div class="avatar-inside">
             {{ post.user.first_name|first }}{{ post.user.last_name|first }}
           </div>
 
@@ -220,13 +216,13 @@
 
   </div>
   <script>
-function openReportModal(){
-    document.getElementById("reportModal").style.display = "flex";
-}
+    function openReportModal() {
+      document.getElementById("reportModal").style.display = "flex";
+    }
 
-function closeReportModal(){
-    document.getElementById("reportModal").style.display = "none";
-}
+    function closeReportModal() {
+      document.getElementById("reportModal").style.display = "none";
+    }
 
 </script>
 {% endblock %}

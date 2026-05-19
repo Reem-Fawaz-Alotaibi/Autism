@@ -266,3 +266,4 @@ def delete_account(request):
         return redirect("main:home_page_view")
 
     return redirect("accounts:settings")
+
