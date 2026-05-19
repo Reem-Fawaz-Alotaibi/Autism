@@ -51,7 +51,19 @@
             </div>
             <h2>رفع فيديو</h2>
             <p>التقط لحظة لمراجعة مختصين وفهم سلوك الطفل.</p>
-            <a href="{% url 'assessment:upload_video' %}">اذهب للرفع</a>
+           {% if children %}
+
+    <a href="{% url 'assessment:upload_video' %}">
+        اذهب للرفع
+    </a>
+
+{% else %}
+
+    <a href="{% url 'children:add_child' %}">
+        أضف طفل أولاً
+    </a>
+
+{% endif %}
         </article>
 
         <article class="home-action-card survey-card">

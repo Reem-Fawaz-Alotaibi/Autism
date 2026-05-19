@@ -28,12 +28,10 @@
     <div class="vid-filters">
 
     <a href="?category=all" class="vid-btn {% if request.GET.category == 'all' or not request.GET.category %}active{% endif %}">الكل</a>
-    <a href="?category=focus" class="vid-btn {% if request.GET.category == 'focus' or not request.GET.category %}active{% endif %}">التركيز والانتباه</a>
-    <a href="?category=eye_contact" class="vid-btn {% if request.GET.category == 'eye_contact' or not request.GET.category %}active{% endif %}">التواصل البصري</a>
-    <a href="?category=social" class="vid-btn {% if request.GET.category == 'social' or not request.GET.category %}active{% endif %}">التفاعل الاجتماعي</a>
-    <a href="?category=communication" class="vid-btn {% if request.GET.category == 'communication' or not request.GET.category %}active{% endif %}"> التواصل اللغوي</a>
-    <a href="?category=motor" class="vid-btn {% if request.GET.category == 'motor' or not request.GET.category %}active{% endif %}"> المهارات الحركية</a>
-    <a href="?category=behavior" class="vid-btn {% if request.GET.category == 'behavior' or not request.GET.category %}active{% endif %}"> السلوك والتصرفات</a>
+    <a href="?category=visual" class="vid-btn {% if request.GET.category == 'visual' %}active{% endif %}"> بصري</a>
+    <a href="?category=sensory" class="vid-btn {% if request.GET.category == 'sensory'  %}active{% endif %}"> حسي</a>
+    <a href="?category=motor" class="vid-btn {% if request.GET.category == 'motor'  %}active{% endif %}"> حركي</a>
+    <a href="?category=language" class="vid-btn {% if request.GET.category == 'language'  %}active{% endif %}"> لغوي </a>
 
 </div>
     <form method="GET" class="vid-search">

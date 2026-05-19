@@ -15,7 +15,7 @@ from cloudinary.uploader import upload
 # استيراد الدالة التي أنشأناها في الخطوة السابقة
 from ai_analysis.gemini_service import analyze_video
 
-@login_required
+@login_required(login_url='accounts:signin')
 def upload_video(request):
     # جلب الأطفال التابعين للمستخدم الحالي لتضمينهم في القائمة المنسدلة (Dropdown)
     children = Child.objects.filter(user=request.user)
@@ -77,3 +77,10 @@ def upload_video(request):
 
 def questionnaire(request: HttpRequest):
     return render(request, 'assessment/questionnaire.html')
+
+def questionnaire_video(request: HttpRequest):
+    return render(request, 'assessment/questionnaire-video.html')
+
+
+def processing_view(request: HttpRequest):
+    return render(request, 'assessment/processing.html')

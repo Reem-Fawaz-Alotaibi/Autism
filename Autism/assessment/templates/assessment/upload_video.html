@@ -22,11 +22,24 @@
         </div>
     </div>
 
-    <button onclick="history.back()"
-        style="background: none;border: 1px solid #ddd;padding: 8px 15px;border-radius: 8px;cursor: pointer;display: flex;align-items: center;gap: 8px;color: #666;font-size: 14px;">
-        رجوع
-        <i class="bi bi-arrow-left"></i>
-    </button>
+    <a href="{%url 'main:home_page_view'%}"
+   style="background: none;
+          border: 1px solid #ddd;
+          padding: 8px 15px;
+          border-radius: 8px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: #666;
+          font-size: 14px;
+          text-decoration: none;">
+
+    رجوع
+
+    <i class="bi bi-arrow-left"></i>
+
+</a>
 </div>
 
 <div class="main-content-area">
@@ -34,11 +47,11 @@
     <div class="header-title">
         <h2>قبل بناء الخطة، نحتاج إلى بيانات من الطفل</h2>
         <p>
-            قم بتحميل مقطع فيديو للطفل ومن ثم قم بالإجابة على الإستبيان المرفق
-        </p>
+    قم برفع مقطع فيديو قصير للطفل ليتم تحليله باستخدام الذكاء الاصطناعي وبناء خطة مناسبة له.
+</p>
     </div>
 
-    <div class="cards-grid">
+    <div class="questionnaire-wrapper">
 
         <!-- رفع الفيديو -->
         <div class="card-option">
@@ -101,6 +114,19 @@
                            accept="video/*"
                            required
                            hidden>
+                           <div id="videoPreviewContainer" style="display:none; margin-top:15px;">
+
+    <video id="videoPreview"
+           controls
+           style="
+                width:100%;
+                border-radius:16px;
+                max-height:300px;
+                object-fit:cover;
+           ">
+    </video>
+
+</div>
 
                 </label>
 
@@ -116,58 +142,33 @@
             </form>
 
         </div>
-
-        <!-- الاستبيان -->
-        <div class="card-option">
-
-            <div class="card-icon-header">
-                <h4 style="margin:0">
-                    2. الإجابة على الاستبيان
-                </h4>
-            </div>
-
-            <p style="font-size:13px; color:var(--text-gray);">
-                أجب على مجموعة من الأسئلة لتقييم سلوك الطفل وبناء الخطة المناسبة له.
-            </p><div class="quiz-preview">
-
-                <div style="color:var(--primary-green); font-size:12px; font-weight:bold; display:flex; justify-content:space-between;">
-                    <span>السؤال 3 من 4</span>
-                    <span>75%</span>
-                </div>
-
-                <div class="progress-bar-v2">
-                    <div class="progress-fill-v2"></div>
-                </div>
-
-                <h5 style="margin:0 0 15px; font-size:15px;">
-                    كيف يتواصل طفلك مع الآخرين؟
-                </h5>
-
-                <div class="choice-item">
-                    <span>يتواصل بسهولة</span>
-                    <div class="check-dot"></div>
-                </div>
-
-                <div class="choice-item selected">
-                    <span>يتواصل أحياناً</span>
-                    <div class="check-dot"></div>
-                </div>
-
-                <div class="choice-item">
-                    <span>يتواصل بصعوبة</span>
-                    <div class="check-dot"></div>
-                </div>
-
-            </div>
-
-            <a href="#" class="action-btn">
-                ابدأ الاستبيان
-            </a>
-
-        </div>
+        
 
     </div>
 
 </div>
 
+<script>
+
+const videoInput = document.getElementById('video-upload');
+
+const videoPreview = document.getElementById('videoPreview');
+
+const videoPreviewContainer = document.getElementById('videoPreviewContainer');
+
+videoInput.addEventListener('change', function () {
+
+    const file = this.files[0];
+
+    if (file) {
+
+        const videoURL = URL.createObjectURL(file);
+
+        videoPreview.src = videoURL;
+
+        videoPreviewContainer.style.display = 'block';
+    }
+});
+
+</script>
 {% endblock %}

@@ -5,12 +5,10 @@ from cloudinary.models import CloudinaryField
 
 
 class SkillCategory(models.TextChoices):
-    FOCUS         = 'focus',         'التركيز والانتباه'
-    EYE_CONTACT   = 'eye_contact',   'التواصل البصري'
-    SOCIAL        = 'social',        'التفاعل الاجتماعي'
-    COMMUNICATION = 'communication', 'التواصل اللغوي'
-    MOTOR         = 'motor',         'المهارات الحركية'
-    BEHAVIOR      = 'behavior',      'السلوك والتصرفات'
+    VISUAL   = 'visual',   'بصري'
+    SENSORY  = 'sensory',  'حسي'
+    MOTOR    = 'motor',    'حركي'
+    LANGUAGE = 'language', 'لغوي'
 
 
 
@@ -22,16 +20,9 @@ class Activity(models.Model):
         ('hard',   'صعب'),
     ]
 
-    CATEGORY_CHOICES = [
-         ('visual',   'بصري'),
-         ('sensory',  'حسي'),
-         ('motor',    'حركي'),
-         ('language', 'لغوي'),
-     ]
-
     title       = models.CharField(max_length=200, verbose_name="اسم النشاط")
     description = models.TextField(verbose_name="وصف النشاط")
-    category    = models.CharField(max_length=50, choices=CATEGORY_CHOICES, verbose_name="التصنيف")
+    category = models.CharField(max_length=50,choices=SkillCategory.choices, verbose_name="التصنيف")
     level       = models.CharField(max_length=10, choices=LEVEL_CHOICES, default='easy', verbose_name="المستوى")
     age_min     = models.PositiveIntegerField(default=2, verbose_name="العمر الأدنى")
     age_max     = models.PositiveIntegerField(default=12, verbose_name="العمر الأقصى")
@@ -39,8 +30,10 @@ class Activity(models.Model):
     activity_file = models.CharField(max_length=100, default='null')  # مثال: color_match.html
     is_active   = models.BooleanField(default=True, verbose_name="مفعّل")
     order       = models.PositiveIntegerField(default=0, verbose_name="الترتيب")
+    duration_minutes = models.PositiveIntegerField(default=10,verbose_name="مدة النشاط بالدقائق")
     created_at  = models.DateTimeField(auto_now_add=True)
     tag         = models.CharField(max_length=50, blank=True)  # مثال: "بصري + حركي"
+
 
     class Meta:
         ordering = ['order']
@@ -57,7 +50,7 @@ class ResourceVideo(models.Model):
     description = models.TextField(blank=True, verbose_name="وصف الفيديو")
     video_file  = CloudinaryField(resource_type='video', verbose_name="ملف الفيديو")
     thumbnail   = models.ImageField(upload_to='video_thumbnails/', blank=True, null=True, verbose_name="صورة مصغرة")
-    category    = models.CharField(max_length=50, choices=SkillCategory.choices, verbose_name="التصنيف")
+    category = models.CharField(max_length=50,choices=SkillCategory.choices,verbose_name="التصنيف")
     age_min     = models.PositiveIntegerField(default=2, verbose_name="العمر الأدنى")
     age_max     = models.PositiveIntegerField(default=12, verbose_name="العمر الأقصى")
     is_active   = models.BooleanField(default=True, verbose_name="مفعّل")
