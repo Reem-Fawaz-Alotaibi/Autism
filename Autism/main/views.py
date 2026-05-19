@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from django.http import HttpRequest
 from chatbot.models import Conversation
+from children.models import Child
 
 
 def home_page_view(request: HttpRequest):
@@ -8,8 +9,9 @@ def home_page_view(request: HttpRequest):
     if request.user.is_authenticated:
         conv, _ = Conversation.objects.get_or_create(user=request.user)
         conv_id = conv.id
+        children = Child.objects.filter(user=request.user)
     
-    return render(request, 'main/home.html', {"conv_id": conv_id})
+    return render(request, 'main/home.html', {"conv_id": conv_id,'children': children})
 
 
 def about_us_view(request: HttpRequest):
