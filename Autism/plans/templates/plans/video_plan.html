@@ -1,0 +1,188 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %} الفيديوهات التعليمية {% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'plans/css/style.css' %}">
+
+<style>
+
+
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="page">
+
+<div class="content">
+
+    <!-- header -->
+
+    <div class="videos-header">
+
+        <div>
+
+            <span class="video-tag">
+                AI Recommended Videos
+            </span>
+
+            <h2>
+                فيديوهات تعليمية مخصصة لطفلك
+            </h2>
+
+            <p>
+                تم اختيار هذه الفيديوهات بناءً على تحليل
+                سلوك الطفل واحتياجاته التعليمية.
+            </p>
+
+        </div>
+
+        <div class="video-icon">
+            <i class="bi bi-play-circle"></i>
+        </div>
+
+    </div>
+
+    <!-- videos -->
+
+    <div class="videos-grid">
+
+        <!-- video -->
+
+        <div class="video-card">
+
+            <div class="video-thumb">
+
+                <img src="{% static 'images/video1.jpg' %}">
+
+                <div class="play-btn">
+                    <i class="bi bi-play-fill"></i>
+                </div>
+
+            </div>
+
+            <div class="video-body">
+
+                <h3>
+                    تعلم الألوان
+                </h3>
+
+                <p>
+                    فيديو يساعد الطفل على التعرف على الألوان
+                    وتحسين الانتباه البصري.
+                </p>
+
+                <div class="video-meta">
+
+                    <div class="video-time">
+                        <i class="bi bi-clock"></i>
+                        5 دقائق
+                    </div>
+
+                    <a href="#" class="watch-btn">
+                        مشاهدة
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- video -->
+
+        <div class="video-card">
+
+            <div class="video-thumb">
+
+                <img src="{% static 'images/video2.jpg' %}">
+
+                <div class="play-btn">
+                    <i class="bi bi-play-fill"></i>
+                </div>
+
+            </div>
+
+            <div class="video-body">
+
+                <h3>
+                    تعابير الوجه
+                </h3>
+
+                <p>
+                    يساعد الطفل على فهم المشاعر
+                    والتفاعل الاجتماعي بطريقة ممتعة.
+                </p>
+
+                <div class="video-meta">
+
+                    <div class="video-time">
+                        <i class="bi bi-clock"></i>
+                        7 دقائق
+                    </div>
+
+                    <a href="#" class="watch-btn">
+                        مشاهدة
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- sidebar -->
+
+<aside class="sidebar-plan">
+
+    <a class="back-btn" href="#">
+        <i class="fa-solid fa-arrow-right"></i>
+        العودة للخطة
+    </a>
+
+    <h2 class="sidebar-title">
+        أقسام الخطة
+    </h2>
+
+    <div class="steps">
+
+        <div class="step done">
+            <div>
+                <h3>الأنشطة المقترحة</h3>
+                <p>تم إكمال المرحلة</p>
+            </div>
+            <span>
+                <i class="bi bi-check-lg"></i>
+            </span>
+        </div>
+
+        <div class="step active">
+            <div>
+                <h3>فيديوهات تعليمية</h3>
+                <p>فيديوهات مخصصة للطفل</p>
+            </div>
+            <span>2</span>
+        </div>
+
+        <div class="step">
+            <div>
+                <h3>استراتيجيات الدعم</h3>
+                <p>طرق ونصائح يومية</p>
+            </div>
+            <span>3</span>
+        </div>
+
+    </div>
+
+</aside>
+
+</div>
+
+{% endblock %}

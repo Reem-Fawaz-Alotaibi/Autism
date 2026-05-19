@@ -31,139 +31,125 @@
       </div>
 
       <!-- Info Cards -->
-      <div class="info-cards">
+      <!-- AI Summary -->
 
-        <div class="info-card">
-          <div>
-            <span>النشاط الحالي</span>
-            <h3>نشاط حسي</h3>
-          </div>
+<div class="ai-summary-box">
 
-          <div class="icon purple">
-            
-          </div>
-        </div>
+  <div class="ai-summary-left">
 
-        <div class="info-card">
-          <div>
-            <span>الوقت الحالي</span>
-            <h3>10:00 ص</h3>
-          </div>
+    <span class="ai-tag">
+      AI Generated Plan
+    </span>
 
-          <div class="icon green">
-            <i class="bi bi-clock"></i>
-          </div>
-        </div>
+    <h2>
+      تم إنشاء أنشطة مخصصة لطفلك
+    </h2>
 
-        <div class="info-card">
-          <div>
-            <span>المدة المتوقعة</span>
-            <h3>60 دقيقة</h3>
-          </div>
+    <p>
+      تم اختيار هذه الأنشطة بناءً على تحليل الفيديو
+      ونتائج التقييم الخاصة بالطفل.
+    </p>
 
-          <div class="icon green">
-            <i class="bi bi-alarm"></i>
-          </div>
-        </div>
+  </div>
+
+  <div class="ai-summary-icon">
+    <i class="bi bi-stars"></i>
+  </div>
+
+</div>
+
+<!-- Main Activity Cards -->
+
+<div class="main-activity-cards">
+
+  <!-- Current Activity -->
+
+  <div class="main-activity-card active-now">
+
+    <div class="activity-top">
+
+      <div>
+
+        <span>
+          النشاط الحالي
+        </span>
+
+        <h3>
+          نشاط حسي
+        </h3>
 
       </div>
 
-      <!-- Activities -->
-      <section class="activities-section">
+      <div class="activity-icon purple-bg">
 
-        <div class="section-header">
-          <h2>1. الأنشطة المقترحة</h2>
-          <p>اختر نشاطاً لبدء الجلسة</p>
-        </div>
+      </div>
 
-        <div class="activities-wrapper">
+    </div>
 
-          <button class="slider-btn">
-            <i class="bi bi-chevron-right"></i>
-          </button>
+    <p>
+      يساعد هذا النشاط على تحسين التركيز والاستجابة الحسية لدى الطفل.
+    </p>
 
-          <div class="activities">
+    <div class="activity-footer">
 
-            <!-- Card -->
-            <div class="activity-card active-card">
+      <div class="activity-time">
+        <i class="bi bi-clock"></i>
+        10 دقائق
+      </div>
 
-              <div class="check">
-                <i class="bi bi-check2"></i>
-              </div>
+      <a href="#" class="start-btn">
+        ابدأ النشاط
+      </a>
 
-              <div class="activity-icon purple-bg">
-                
-              </div>
+    </div>
 
-              <h3>نشاط حسي</h3>
-              <p>لعب بالمعجون الحسي</p>
+  </div>
 
-              <div class="time">
-                
-                10 دقائق
-              </div>
+  <!-- Recommended -->
 
-            </div>
+  <div class="main-activity-card">
 
-            <!-- Card -->
-            <div class="activity-card">
+    <div class="activity-top">
 
-              <div class="activity-icon green-bg">
-                
-              </div>
+      <div>
 
-              <h3>اللعب التفاعلي</h3>
-              <p>ألعاب تركيب وتنمية المهارات</p>
+        <span>
+          النشاط التالي
+        </span>
 
-              <div class="time">
-                
-                15 دقيقة
-              </div>
+        <h3>
+          نشاط بصري
+        </h3>
 
-            </div>
+      </div>
 
-            <!-- Card -->
-            <div class="activity-card">
+      <div class="activity-icon yellow-bg">
 
-              <div class="activity-icon yellow-bg">
-                
-              </div>
+      </div>
 
-              <h3>نشاط بصري</h3>
-              <p>بطاقات الصور والألوان</p>
+    </div>
 
-              <div class="time">
-                
-                10 دقائق
-              </div>
+    <p>
+      تمارين بصرية تساعد الطفل على التتبع والانتباه البصري.
+    </p>
 
-            </div>
+    <div class="activity-footer">
 
-            <!-- Card -->
-            <div class="activity-card">
+      <div class="activity-time">
+        <i class="bi bi-alarm"></i>
+        15 دقيقة
+      </div>
 
-              <div class="activity-icon pink-bg">
-            
-              </div>
+      <a href="#" class="start-btn secondary">
+        عرض النشاط
+      </a>
 
-              <h3>نشاط سمعي</h3>
-              <p>الاستماع والموسيقى</p>
+    </div>
 
-              <div class="time">
-                10 دقائق
-              </div>
+  </div>
 
-            </div>
+</div>
 
-          </div>
-
-          <button class="slider-btn">
-            <i class="bi bi-chevron-left"></i>
-          </button>
-
-        </div>
-
-      </section>
 
       <!-- Tip -->
       <div class="tip-box">
@@ -203,10 +189,10 @@
         </div>
 
         <div class="step">
-          <div>
+          <a href="{%url 'plans:video_plan_view'%}" class="step-btn">
             <h3>فيديوهات تعليمية</h3>
             <p>فيديوهات توضيحية وتدريبية</p>
-          </div>
+          </a>
           <span>2</span>
         </div>
 

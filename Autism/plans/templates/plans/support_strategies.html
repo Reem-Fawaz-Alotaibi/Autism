@@ -1,0 +1,181 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %} استراتيجيات الدعم {% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'plans/css/style.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+<div class="page">
+
+<div class="content">
+
+    <!-- header -->
+
+    <div class="support-header">
+
+        <div>
+
+            <span class="support-tag">
+                AI Support Strategies
+            </span>
+
+            <h2>
+                استراتيجيات الدعم اليومية
+            </h2>
+
+            <p>
+                نصائح واستراتيجيات تم اقتراحها لمساعدة الطفل
+                على التفاعل والتطور بشكل أفضل.
+            </p>
+
+        </div>
+
+        <div class="support-icon">
+            <i class="bi bi-lightbulb"></i>
+        </div>
+
+    </div>
+
+    <!-- strategies -->
+
+    <div class="strategies-grid">
+
+        <div class="strategy-card">
+
+            <div class="strategy-icon">
+                <i class="bi bi-volume-up"></i>
+            </div>
+
+            <h3>
+                تقليل المشتتات
+            </h3>
+
+            <p>
+                حاول تقليل الأصوات العالية أثناء الأنشطة
+                لزيادة تركيز الطفل واستجابته.
+            </p>
+
+        </div>
+
+        <div class="strategy-card">
+
+            <div class="strategy-icon">
+                <i class="bi bi-emoji-smile"></i>
+            </div>
+
+            <h3>
+                التعزيز الإيجابي
+            </h3>
+
+            <p>
+                استخدم كلمات التشجيع والمكافآت البسيطة
+                عند إتمام الطفل للنشاط بنجاح.
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- feedback -->
+
+    <div class="feedback-box">
+
+        <h3>
+            كيف كانت استجابة الطفل؟
+        </h3>
+
+        <p>
+            ساعدنا بتحسين الخطة من خلال مشاركة ملاحظاتك اليومية.
+        </p>
+
+        <div class="feedback-actions">
+
+            <button class="feedback-btn yes">
+                نعم، الوضع ممتاز
+            </button>
+
+            <button class="feedback-btn no"
+                    onclick="showFeedbackField()">
+                لا، واجهنا مشكلة
+            </button>
+
+        </div>
+
+        <textarea
+            id="feedbackField"
+            class="feedback-textarea"
+            placeholder="اكتب ماذا حدث مع الطفل أو ما الصعوبة التي واجهتها..."></textarea>
+
+        <button class="action-btn submit-feedback">
+            إرسال الملاحظات
+        </button>
+
+    </div>
+
+</div>
+
+<!-- sidebar -->
+
+<aside class="sidebar-plan">
+
+    <a class="back-btn" href="#">
+        <i class="fa-solid fa-arrow-right"></i>
+        العودة للخطة
+    </a>
+
+    <h2 class="sidebar-title">
+        أقسام الخطة
+    </h2>
+
+    <div class="steps">
+
+        <div class="step done">
+            <div>
+                <h3>الأنشطة المقترحة</h3>
+                <p>تم إكمال المرحلة</p>
+            </div>
+            <span>
+                <i class="bi bi-check-lg"></i>
+            </span>
+        </div>
+
+        <div class="step done">
+            <div>
+                <h3>فيديوهات تعليمية</h3>
+                <p>تم إكمال المرحلة</p>
+            </div>
+            <span>
+                <i class="bi bi-check-lg"></i>
+            </span>
+        </div>
+
+        <div class="step active">
+            <div>
+                <h3>استراتيجيات الدعم</h3>
+                <p>متابعة وتحسين الخطة</p>
+            </div>
+            <span>3</span>
+        </div>
+
+    </div>
+
+</aside>
+
+</div>
+
+<script>
+
+function showFeedbackField(){
+
+    document.getElementById("feedbackField").style.display = "block";
+
+}
+
+</script>
+
+{% endblock %}

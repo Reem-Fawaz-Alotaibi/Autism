@@ -11,3 +11,11 @@ def support_plan_view(request:HttpRequest):
 
     return render(request, 'plans/support_plan.html')
 
+def video_plan_view(request:HttpRequest):
+
+    return render(request, 'plans/video_plan.html')
+
+def support_strategies_view(request:HttpRequest):
+
+    return render(request, 'plans/support_strategies.html')
+
