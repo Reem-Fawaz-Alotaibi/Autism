@@ -1,92 +1,63 @@
-{%extends 'main/base.html'%}
-{%load static%}
-{% block title %}الخطة الأسبوعية{% endblock %}
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %} الخطة الأسبوعية {% endblock %}
 
-{% block style %} <link rel="stylesheet" href="{% static 'plans/css/style.css' %}"> {% endblock %}
-
+{% block style %}
+<link rel="stylesheet" href="{% static 'plans/css/style.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="container">
 
     <!-- TOP -->
-
     <div class="top">
 
         <div class="card">
-
-        <div class="card-title">
-            مؤشر المزاج
+            <div class="card-title">مؤشر المزاج</div>
+            <div class="moods">
+                <div class="mood active"><i class="bi bi-emoji-grin"></i></div>
+                <div class="mood"><i class="bi bi-emoji-smile"></i></div>
+                <div class="mood"><i class="bi bi-emoji-neutral"></i></div>
+                <div class="mood"><i class="bi bi-emoji-frown"></i></div>
+                <div class="mood"><i class="bi bi-emoji-tear"></i></div>
+            </div>
         </div>
-
-        <div class="moods">
-
-            <div class="mood active"><i class="bi bi-emoji-grin"></i></div>
-
-            <div class="mood"><i class="bi bi-emoji-smile"></i></div>
-
-            <div class="mood"><i class="bi bi-emoji-neutral"></i></div>
-
-            <div class="mood"><i class="bi bi-emoji-frown"></i></div>
-
-            <div class="mood"><i class="bi bi-emoji-tear"></i></div>
-
-        </div>
-
-    </div>
 
         <div class="card now-card">
-
             <div class="card-activate">
                 <div class="card-title">يحدث الآن</div>
-                <h1>وقت الفقاعات!</h1>
-                <p>التركيز: التطور الحسي والتنسيق بين اليد والعين.</p>
+                {% if current_activity %}
+                    <h1>{{ current_activity.title }}</h1>
+                    <p>{{ current_activity.description }}</p>
+                {% else %}
+                    <h1>لا يوجد نشاط حالي</h1>
+                    <p>ابدأ بإنشاء خطة دعم لطفلك</p>
+                {% endif %}
             </div>
-
-            <a class="btn-support" href="{% url 'plans:support_plan_view'%}">بدء النشاط</a>
-
+            {% if plan %}
+                <a class="btn-support" href="{% url 'plans:support_plan_view' %}">بدء النشاط</a>
+            {% else %}
+                <a class="btn-support" href="{% url 'assessment:questionnaire' %}">ابدأ التقييم</a>
+            {% endif %}
         </div>
 
     </div>
 
     <!-- DAYS -->
-
     <div class="days-wrapper">
 
         <div class="arrow"><i class="bi bi-chevron-right"></i></div>
 
         <div class="days">
-
-            <div class="day">
-                <h3>الأحد</h3>
-                <p>26 مايو</p>
-                
+            {% for day in week_days %}
+            <div class="day {% if day.is_today %}active{% endif %}">
+                {% if day.is_today %}
+                    <div style="font-size:32px;"><i class="bi bi-calendar-week"></i></div>
+                {% endif %}
+                <h3>{{ day.name }}</h3>
+                <p>{{ day.date }}</p>
             </div>
-
-            <div class="day">
-                <h3>الإثنين</h3>
-                <p>27 مايو</p>
-                
-            </div>
-
-            <div class="day active">
-                <div style="font-size:32px;"><i class="bi bi-calendar-week"></i></div>
-                <h3>الثلاثاء</h3>
-                <p>28 مايو</p>
-                <div style="font-size:30px;margin-top:8px;"></div>
-            </div>
-
-            <div class="day">
-                <h3>الأربعاء</h3>
-                <p>29 مايو</p>
-                
-            </div>
-
-            <div class="day">
-                <h3>الخميس</h3>
-                <p>30 مايو</p>
-                
-            </div>
-
+            {% endfor %}
         </div>
 
         <div class="arrow"><i class="bi bi-chevron-left"></i></div>
@@ -94,256 +65,197 @@
     </div>
 
     <!-- TIMELINE -->
-
     <div class="timeline-card">
 
         <div class="timeline-top">
-
             <div style="display:flex;align-items:center;gap:10px;">
-                <h2 style="font-size:34px;">الثلاثاء 28 مايو</h2>
+                <h2 style="font-size:34px;">{{ today_display }}</h2>
                 <div class="today-badge">اليوم</div>
             </div>
-
             <div class="close-btn">إغلاق اليوم ⌃</div>
-
         </div>
 
         <div class="timeline">
-
             <div class="line"></div>
 
-            <!-- ITEM -->
-
+            <!-- روتين الصباح -->
             <div class="timeline-item">
-
                 <div class="dot"></div>
-
                 <div class="time">8:00 ص</div>
-
                 <div class="activity">
-
                     <div class="activity-left">
-
                         <div class="icon yellow">☀️</div>
-
                         <div>
                             <h2>استيقاظ وفطور صحي</h2>
                             <p>بداية يوم هادئ مع فطور متوازن.</p>
                         </div>
-
                     </div>
-
                     <div class="tag tag-orange">روتين أساسي</div>
-
                 </div>
-
             </div>
 
-            <!-- ITEM -->
-
+            <!-- أنشطة من الخطة -->
+            {% for item in today_activities %}
             <div class="timeline-item">
-
                 <div class="dot"></div>
-
                 <div class="time">10:00 ص</div>
-
                 <div class="activity">
-
                     <div class="activity-left">
-
-                        <div class="icon purple">🖐️</div>
-
-                        <div>
-                            <h2>نشاط حسي</h2>
-                            <p>لعب بالمعجون الحسي لتحفيز الحواس.</p>
+                        <div class="icon purple">
+                            {% if item.category == 'sensory' %}🖐️
+                            {% elif item.category == 'visual' %}👁️
+                            {% elif item.category == 'motor' %}🏃
+                            {% elif item.category == 'language' %}🗣️
+                            {% endif %}
                         </div>
-
+                        <div>
+                            <h2>{{ item.title }}</h2>
+                            <p>{{ item.description }}</p>
+                        </div>
                     </div>
-
-                    <div class="tag tag-purple">نشاط حسي</div>
-
+                    <div class="tag tag-purple">
+                        {% if item.category == 'sensory' %}نشاط حسي
+                        {% elif item.category == 'visual' %}نشاط بصري
+                        {% elif item.category == 'motor' %}نشاط حركي
+                        {% elif item.category == 'language' %}نشاط لغوي
+                        {% endif %}
+                    </div>
                 </div>
-
             </div>
-
-            <!-- ITEM -->
-
+            {% empty %}
             <div class="timeline-item">
-
                 <div class="dot"></div>
-
-                <div class="time">1:00 م</div>
-
+                <div class="time">10:00 ص</div>
                 <div class="activity">
-
                     <div class="activity-left">
+                        <div class="icon purple">🧩</div>
+                        <div>
+                            <h2>لا توجد أنشطة مجدولة</h2>
+                            <p>ابدأ بالتقييم لإنشاء خطة مخصصة لطفلك</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
 
+            <!-- قيلولة -->
+            <div class="timeline-item">
+                <div class="dot"></div>
+                <div class="time">1:00 م</div>
+                <div class="activity">
+                    <div class="activity-left">
                         <div class="icon blue">🌙</div>
-
                         <div>
                             <h2>قيلولة الظهر</h2>
                             <p>راحة هادئة لاستعادة الطاقة.</p>
                         </div>
-
                     </div>
-
                     <div class="tag tag-blue">روتين أساسي</div>
-
                 </div>
-
             </div>
 
-            <!-- ITEM -->
-
+            <!-- نشاط مسائي -->
+            {% if next_activity %}
             <div class="timeline-item">
-
                 <div class="dot"></div>
-
                 <div class="time">4:00 م</div>
-
                 <div class="activity">
-
                     <div class="activity-left">
-
                         <div class="icon green">🧩</div>
-
                         <div>
-                            <h2>اللعب التفاعلي</h2>
-                            <p>ألعاب تركيب وتنمية المهارات.</p>
+                            <h2>{{ next_activity.title }}</h2>
+                            <p>{{ next_activity.description }}</p>
                         </div>
-
                     </div>
-
                     <div class="tag tag-green">نشاط تعليمي</div>
-
                 </div>
-
             </div>
+            {% endif %}
 
-            <!-- ITEM -->
-
+            <!-- العشاء -->
             <div class="timeline-item">
-
                 <div class="dot"></div>
-
                 <div class="time">6:00 م</div>
-
                 <div class="activity">
-
                     <div class="activity-left">
-
                         <div class="icon orange">🍽️</div>
-
                         <div>
                             <h2>العشاء</h2>
                             <p>وجبة خفيفة ومتوازنة.</p>
                         </div>
-
                     </div>
-
                     <div class="tag tag-orange">روتين أساسي</div>
-
                 </div>
-
             </div>
 
-            <!-- ITEM -->
-
+            <!-- روتين النوم -->
             <div class="timeline-item">
-
                 <div class="dot"></div>
-
                 <div class="time">8:00 م</div>
-
                 <div class="activity">
-
                     <div class="activity-left">
-
                         <div class="icon purple">🌜</div>
-
                         <div>
                             <h2>روتين النوم</h2>
                             <p>قصص قصيرة وتهيئة للنوم.</p>
                         </div>
-
                     </div>
-
                     <div class="tag tag-purple">وقت هدوء</div>
-
                 </div>
-
             </div>
 
         </div>
-
     </div>
 
     <!-- CLOSED DAYS -->
-
+    {% for day in other_days %}
     <div class="closed-day">
-
-        <h2>الأربعاء 29 مايو</h2>
-
-        <div style="font-size:28px;"> <i class="bi bi-caret-down"></i></div>
-
+        <h2>{{ day.name }} {{ day.date }}</h2>
+        <div style="font-size:28px;"><i class="bi bi-caret-down"></i></div>
     </div>
-
-    <div class="closed-day">
-
-        <h2>الخميس 30 مايو</h2>
-
-        <div style="font-size:28px;"> <i class="bi bi-caret-down"></i></div>
-
-    </div>
+    {% endfor %}
 
     <!-- BOTTOM -->
-
     <div class="bottom">
 
-    <!-- Behavioral -->
-
-    <div class="bottom-card behavior-card">
-
-        <div class="bottom-content">
-
-            <h2>نصائح سلوكية</h2>
-
-            <p>
-                التعزيز الإيجابي يعمل بشكل أفضل أثناء الأنشطة الحسية.
-                استخدم كلمات لطيفة وثابتة لخلق بيئة آمنة ومحفزة لطفلك.
-            </p>
-
+        <div class="bottom-card behavior-card">
+            <div class="bottom-content">
+                <h2>نصائح سلوكية</h2>
+                <p>
+                    {% if plan %}
+                        {% if 'sensory' in plan.categories %}
+                            التعزيز الإيجابي يعمل بشكل أفضل أثناء الأنشطة الحسية. استخدم كلمات لطيفة وثابتة لخلق بيئة آمنة ومحفزة لطفلك.
+                        {% elif 'language' in plan.categories %}
+                            تحدث مع طفلك ببطء ووضوح وكرر الكلمات الجديدة يومياً في سياقات مختلفة.
+                        {% elif 'visual' in plan.categories %}
+                            استخدم بطاقات مصورة ملونة لتعزيز التواصل البصري مع طفلك.
+                        {% elif 'motor' in plan.categories %}
+                            خصص وقتاً يومياً للعب الحر والحركة لتقوية المهارات الحركية.
+                        {% endif %}
+                    {% else %}
+                        التعزيز الإيجابي يساعد طفلك على التطور. ابدأ بالتقييم لمعرفة احتياجات طفلك.
+                    {% endif %}
+                </p>
+            </div>
+            <div class="bottom-icon behavior-icon">
+                <i class="fa-solid fa-brain"></i>
+            </div>
         </div>
 
-        <div class="bottom-icon behavior-icon">
-            <i class="fa-solid fa-brain"></i>
-        </div>
-
-    </div>
-
-    <!-- Calm -->
-
-    <div class="bottom-card calm-card">
-
-        <div class="bottom-content">
-
-            <h2>ركن التهدئة</h2>
-
-            <p>
-                إذا كان طفلك يشعر بالإرهاق، جرّب 5 دقائق من اللعب
-                بالضوء الخافت أو الاستماع لموسيقى هادئة.
-            </p>
-
-        </div>
-
-        <div class="bottom-icon calm-icon">
-            <i class="bi bi-emoji-smile"></i>
+        <div class="bottom-card calm-card">
+            <div class="bottom-content">
+                <h2>ركن التهدئة</h2>
+                <p>
+                    إذا كان طفلك يشعر بالإرهاق، جرّب 5 دقائق من اللعب
+                    بالضوء الخافت أو الاستماع لموسيقى هادئة.
+                </p>
+            </div>
+            <div class="bottom-icon calm-icon">
+                <i class="bi bi-emoji-smile"></i>
+            </div>
         </div>
 
     </div>
 
 </div>
-
-</div>
-
 {% endblock %}
