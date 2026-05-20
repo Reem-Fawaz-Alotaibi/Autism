@@ -39,7 +39,7 @@ def edit_child(request, id):
     
     if request.method == 'POST':
         child.name = request.POST.get('name')
-        child.birth_date = request.POST.get('birth_date')
+        child.birth_date = request.POST.get('age')
         child.gender = request.POST.get('gender')
         child.communication_type = request.POST.get('communication_type')
         child.sensory_sensitivities = request.POST.get('sensory_sensitivities')
@@ -62,7 +62,7 @@ def add_child_view(request):
         child = Child.objects.create(
             user=request.user,
             name=request.POST.get("name"),
-            birth_date = request.POST.get('birth_date'),
+            birth_date = request.POST.get('age'),
             gender=request.POST.get("gender"),
             communication_type=request.POST.get("communication_type"),
             sensory_sensitivities=request.POST.get("sensory_sensitivities"),

@@ -12,6 +12,13 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 from decouple import config
+import ssl
+
+try:
+    ssl._create_default_https_context = ssl._create_unverified_context
+    ssl.create_default_context = ssl._create_unverified_context
+except AttributeError:
+    pass
 import os
 from dotenv import load_dotenv
 
@@ -63,6 +70,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'chatbot',
     'accounts.apps.AccountsConfig',
+    'notifications',
     'payments',
     'ai_analysis',
     'admin_panel'
@@ -204,11 +212,14 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = "username_email"
-ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_LOGIN_METHODS = {"username", "email"}
+
+ACCOUNT_SIGNUP_FIELDS = [
+    "email*",
+    "username*",
+    "password1*",
+    "password2*",
+]
 
 
 SOCIALACCOUNT_EMAIL_AUTHENTICATION = True

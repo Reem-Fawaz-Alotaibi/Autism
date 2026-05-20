@@ -9,12 +9,17 @@ from django.conf import settings
 def home_page_view(request: HttpRequest):
 
     conv_id = None
-    children = []  
+    children = []
 
     if request.user.is_authenticated:
         conv, _ = Conversation.objects.get_or_create(user=request.user)
         conv_id = conv.id
         children = Child.objects.filter(user=request.user)
+
+    return render(request, 'main/home.html', {
+        "conv_id": conv_id,
+        'children': children
+    })
 
     return render(request, 'main/home.html', {
         "conv_id": conv_id,

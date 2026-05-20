@@ -61,9 +61,8 @@
                 <div class="form-group">
                     <label for="c-age">العمر *</label>
                     <div class="input-wrap">
-
-<input type="date" id="c-birth_date" name="birth_date"
-       value="{{ child.birth_date|date:'Y-m-d' }}" required />                    </div>
+<input class="form-input" type="date" id="c-age" name="age" value="{{  child.birth_date|date:'Y-m-d' }}" min="1" max="18" required />
+                    </div>
                 </div>
             </div>
 
