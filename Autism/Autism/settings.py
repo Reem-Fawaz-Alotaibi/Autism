@@ -151,16 +151,16 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': config('CLOUD_NAME'),
-    'API_KEY': config('API_KEY'),
-    'API_SECRET': config('API_SECRET'),
+    'CLOUD_NAME': os.getenv('CLOUD_NAME'),
+    'API_KEY': os.getenv('API_KEY'),
+    'API_SECRET': os.getenv('API_SECRET'),
 }
 
 
 cloudinary.config(
-    cloud_name=config("CLOUD_NAME"),
-    api_key=config("API_KEY"),
-    api_secret=config("API_SECRET"),
+    cloud_name=os.getenv("CLOUD_NAME"),
+    api_key=os.getenv("API_KEY"),
+    api_secret=os.getenv("API_SECRET"),
     secure=True
 )
 
@@ -199,8 +199,8 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
@@ -228,7 +228,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 MOYASAR_PUBLIC_KEY = os.getenv("MOYASAR_PUBLIC_KEY")
 MOYASAR_SECRET_KEY = os.getenv("MOYASAR_SECRET_KEY")
-GEMINI_API_KEY = config('GEMINI_API_KEY')
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 
-OPENAI_API_KEY = config('OPENAI_API_KEY')
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 

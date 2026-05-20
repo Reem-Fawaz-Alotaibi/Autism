@@ -12,8 +12,6 @@ from ai_analysis.models import Activity, ResourceVideo
 from .models import SupportPlan, PlanActivity
 
 
-
-
 def support_plan_redirect(request):
     plan = SupportPlan.objects.filter(user=request.user).first()
 
@@ -249,6 +247,7 @@ def support_strategies_view(request: HttpRequest):
         for cat in plan.categories:
             if cat in category_strategies:
                 strategies.extend(category_strategies[cat])
+            strategies = strategies[:3]
 
     return render(request, 'plans/support_strategies.html', {
         'strategies': strategies,

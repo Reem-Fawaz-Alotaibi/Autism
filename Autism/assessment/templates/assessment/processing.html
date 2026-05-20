@@ -30,7 +30,8 @@
 
     <div class="header-title">
         <h2>جاري إنشاء الخطة الذكية لطفلك</h2>
-        <p>نقوم الآن بتحليل {% if path == 'video' %}الفيديو و{% endif %}الإجابات باستخدام الذكاء الاصطناعي لبناء خطة مناسبة.</p>
+        <p>نقوم الآن بتحليل {% if path == 'video' %}الفيديو و{% endif %}الإجابات باستخدام الذكاء الاصطناعي لبناء خطة
+            مناسبة.</p>
     </div>
 
     <div class="plan-loading-card">
@@ -90,43 +91,40 @@
 
 <script>
     const isVideoPath = "{{ path }}" === "video";
-    const fillEl      = document.getElementById('loading-fill');
-    const percentEl   = document.getElementById('progress-percent');
-    const progressEl  = document.getElementById('progress-text');
-    const readyBtn    = document.getElementById('ready-btn');
+    const fillEl = document.getElementById('loading-fill');
+    const percentEl = document.getElementById('progress-percent');
+    const progressEl = document.getElementById('progress-text');
+    const readyBtn = document.getElementById('ready-btn');
 
     function setStep(stepNum, state) {
-        const step   = document.getElementById(`step-${stepNum}`);
+        const step = document.getElementById(`step-${stepNum}`);
         const status = document.getElementById(`step-${stepNum}-status`);
         if (!step || !status) return;
 
-        step.className   = state === 'done' ? 'done-step' : state === 'active' ? 'active-step' : 'waiting-step';
+        step.className = state === 'done' ? 'done-step' : state === 'active' ? 'active-step' : 'waiting-step';
         status.className = `step-status ${state === 'done' ? 'done' : state === 'active' ? 'loading' : 'waiting'}`;
         status.innerHTML = state === 'done' ? '<i class="bi bi-check-lg"></i>' : '';
     }
 
     function setProgress(percent, text) {
-        fillEl.style.width   = percent + '%';
-        percentEl.innerText  = percent + '%';
+        fillEl.style.width = percent + '%';
+        percentEl.innerText = percent + '%';
         progressEl.innerText = text;
     }
 
     function startAnalysis() {
 
-        // خطوة 1 — تحليل الفيديو (مسار أ فقط)
         if (isVideoPath) {
             setStep(1, 'active');
             setProgress(10, 'جاري تحليل الفيديو بـ Gemini...');
         }
 
-        // خطوة 2 — تحليل الاستبيان
         setTimeout(() => {
             if (isVideoPath) setStep(1, 'done');
             setStep(2, 'active');
             setProgress(30, 'جاري تحليل إجابات الاستبيان...');
         }, 1500);
 
-        // إرسال AJAX للـ backend
         fetch("{% url 'assessment:processing' %}", {
             method: 'POST',
             headers: {
@@ -134,43 +132,43 @@
                 'X-Requested-With': 'XMLHttpRequest',
             }
         })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                setStep(2, 'done');
-                setStep(3, 'active');
-                setProgress(75, 'جاري إنشاء الخطة الأسبوعية...');
-
-                setTimeout(() => {
-                    setStep(3, 'done');
-                    setStep(4, 'active');
-                    setProgress(90, 'تجهيز الأنشطة والفيديوهات...');
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    setStep(2, 'done');
+                    setStep(3, 'active');
+                    setProgress(75, 'جاري إنشاء الخطة الأسبوعية...');
 
                     setTimeout(() => {
-                        setStep(4, 'done');
-                        setProgress(100, 'اكتمل التحليل!');
+                        setStep(3, 'done');
+                        setStep(4, 'active');
+                        setProgress(90, 'تجهيز الأنشطة والفيديوهات...');
 
-                        document.getElementById('loader-circle').style.animation = 'none';
+                        setTimeout(() => {
+                            setStep(4, 'done');
+                            setProgress(100, 'اكتمل التحليل!');
 
-                        readyBtn.disabled  = false;
-                        readyBtn.innerText = '✅ الخطة جاهزة! اضغط للمتابعة';
-                        readyBtn.onclick   = () => { window.location.href = data.redirect_url; };
+                            document.getElementById('loader-circle').style.animation = 'none';
+
+                            readyBtn.disabled = false;
+                            readyBtn.innerText = ' الخطة جاهزة! اضغط للمتابعة';
+                            readyBtn.onclick = () => { window.location.href = data.redirect_url; };
+                        }, 800);
                     }, 800);
-                }, 800);
 
-            } else {
-                setProgress(0, 'حدث خطأ، حاول مجدداً');
-                readyBtn.disabled  = false;
-                readyBtn.innerText = '⚠️ حدث خطأ، اضغط للمحاولة مجدداً';
-                readyBtn.onclick   = () => { location.reload(); };
-            }
-        })
-        .catch(() => {
-            setProgress(0, 'حدث خطأ في الاتصال');
-            readyBtn.disabled  = false;
-            readyBtn.innerText = '⚠️ حدث خطأ، اضغط للمحاولة مجدداً';
-            readyBtn.onclick   = () => { location.reload(); };
-        });
+                } else {
+                    setProgress(0, 'حدث خطأ، حاول مجدداً');
+                    readyBtn.disabled = false;
+                    readyBtn.innerText = ' حدث خطأ، اضغط للمحاولة مجدداً';
+                    readyBtn.onclick = () => { location.reload(); };
+                }
+            })
+            .catch(() => {
+                setProgress(0, 'حدث خطأ في الاتصال');
+                readyBtn.disabled = false;
+                readyBtn.innerText = ' حدث خطأ، اضغط للمحاولة مجدداً';
+                readyBtn.onclick = () => { location.reload(); };
+            });
     }
 
     window.onload = () => setTimeout(startAnalysis, 800);

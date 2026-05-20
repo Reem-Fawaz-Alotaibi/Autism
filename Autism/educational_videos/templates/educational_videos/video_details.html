@@ -19,8 +19,8 @@
             <div class="video-player">
 
                 <video controls controlsList="nodownload">
-                    <source src="{{ video.video_file.url }}">
-                </video>
+    <source src="{{ video.video_file.url|cut:'.mov' }}.mp4" type="video/mp4">
+</video>
 
             </div>
 

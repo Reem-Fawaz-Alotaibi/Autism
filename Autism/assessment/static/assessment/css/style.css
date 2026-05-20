@@ -756,3 +756,12 @@
     }
 
 }
+
+.answer-btn.selected {
+    background: var(--primary-green) !important;
+    color: white !important;
+    border-color: var(--primary-green) !important;
+}
+.answer-btn {
+    cursor: pointer;
+}
