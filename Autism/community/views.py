@@ -6,6 +6,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from .models import Post, Like, Comment, CommentLike,Report
 from django.contrib.auth.models import User
+from django.contrib import messages
 # Create your views here.
 
 def community_view (request:HttpResponse):
@@ -44,6 +45,7 @@ def create_post_view(request: HttpRequest):
             post.user = request.user
             post.save()
 
+            messages.success(request, "تم نشر المنشور بنجاح")
             return redirect('community:community_view')
 
         else:
@@ -69,6 +71,8 @@ def details_post_view(request:HttpRequest, post_id):
             comment.user = request.user
             comment.post = post
             comment.save()
+            messages.success(request, "تم إضافة التعليق بنجاح")
+
             return redirect('community:details_post_view',post_id=post.id)
     else:
         form = CommentForm()
@@ -90,8 +94,12 @@ def like_post_view(request:HttpRequest, post_id):
 
     if like_obj.exists():
         like_obj.delete()
+        messages.success(request, "تم إزالة الإعجاب")
+
     else:
         Like.objects.create(post=post, user=request.user)
+        messages.success(request, "تم الإعجاب بالمنشور")
+
 
     return redirect(request.META.get('HTTP_REFERER', 'community:community_view'))
 
@@ -105,6 +113,8 @@ def edit_post_view(request:HttpRequest, post_id):
             instance=post)
         if form.is_valid():
             form.save()
+            messages.success(request, "تم تعديل المنشور بنجاح")
+
             return redirect('community:details_post_view',post_id=post.id)
 
     else:
@@ -115,6 +125,8 @@ def edit_post_view(request:HttpRequest, post_id):
 def delete_post_view(request:HttpRequest, post_id):
     post = get_object_or_404(Post,id=post_id,user=request.user)
     post.delete()
+    messages.success(request, "تم حذف المنشور")
+
 
     return redirect('community:community_view')
 
@@ -126,6 +138,8 @@ def edit_comment_view(request:HttpRequest, comment_id):
     if request.method == 'POST':
         comment.content = request.POST.get('content')
         comment.save()
+        messages.success(request, "تم تعديل التعليق بنجاح")
+
 
     return redirect('community:details_post_view',post_id=comment.post.id)
 
@@ -135,6 +149,8 @@ def delete_comment_view(request:HttpRequest, comment_id):
     comment = get_object_or_404(Comment,id=comment_id,user=request.user)
     post_id = comment.post.id
     comment.delete()
+    messages.success(request, "تم حذف التعليق بنجاح")
+
 
     return redirect('community:details_post_view',post_id=post_id)
 
@@ -170,8 +186,11 @@ def like_comment_view(request, comment_id):
 
     if like_obj.exists():
         like_obj.delete()  
+        messages.success(request, "تم إزالة الإعجاب من التعليق")
+
     else:
         CommentLike.objects.create(comment=comment, user=request.user)  
+        messages.success(request, "تم الإعجاب بالتعليق")
 
     return redirect(request.META.get('HTTP_REFERER') or 'community:community_view')
 
@@ -200,7 +219,9 @@ def report_post(request:HttpRequest, post_id):
 
         if not already_reported:
             Report.objects.create(user=request.user,post=post,reason=reason)
-
+            messages.success(request, "تم إرسال البلاغ")
+        else:
+            messages.info(request, "لقد قمت بالإبلاغ عن هذا المنشور مسبقًا")
     return redirect('community:community_view')
 
 

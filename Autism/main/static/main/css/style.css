@@ -3290,11 +3290,12 @@ html {
     line-height: 1.7;
 }
 
+
 .sub-cards {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
-    align-items: stretch;
+    display: flex;
+    justify-content: center;
+
+    
 }
 
 .sub-card {
@@ -3306,9 +3307,9 @@ html {
     flex-direction: column;
     border: 1.5px solid rgba(122, 168, 122, 0.15);
     transition: transform 0.26s ease, box-shadow 0.26s ease;
-    height: 100%;
-}
 
+    width: 420px;
+}
 .sub-card:hover {
     transform: translateY(-5px);
 }
@@ -3708,4 +3709,88 @@ html {
         /* ← أضيفيه هنا */
         margin-top: -60px !important;
     }
+}
+
+
+
+.messages-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    z-index: 999999;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    width: 90%;
+    max-width: 420px;
+}
+
+/* الرسالة */
+
+/* الأنواع */
+.message-success {
+    background: #e6f7ec;
+    color: #1e7e34;
+    border: 1px solid #b7e4c7;
+}
+
+.message-error {
+    background: #fdecea;
+    color: #b02a37;
+    border: 1px solid #f5c2c7;
+}
+
+.message-warning {
+    background: #fff8e1;
+    color: #8a6d1f;
+    border: 1px solid #ffe58f;
+}
+
+.message-info {
+    background: #e7f3ff;
+    color: #0b5ed7;
+    border: 1px solid #b6d4fe;
+}
+
+@media (max-width: 768px) {
+    .messages-container {
+        max-width: 95%;
+        top: 10px;
+    }
+
+    .message {
+        font-size: 13px;
+        padding: 10px 12px;
+    }
+}
+
+.message {
+    position: relative;
+    padding: 12px 40px 12px 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* زر الإغلاق */
+.close-btn {
+    position: absolute;
+    top: 6px;
+    right: 10px;
+
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.close-btn:hover {
+    color: black;
 }
