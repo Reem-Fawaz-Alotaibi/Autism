@@ -64,7 +64,6 @@ INSTALLED_APPS = [
     'chatbot',
     'accounts.apps.AccountsConfig',
     'payments',
-
     'ai_analysis',
     'admin_panel'
 

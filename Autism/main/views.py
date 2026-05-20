@@ -37,11 +37,23 @@ def questions_view(request: HttpRequest):
 
 
 # 
-def set_theme(request, theme):
-    request.session['theme'] = theme
-    return redirect(request.GET.get('next', '/'))
-    return render(request, 'main/questions.html')
 
+
+def set_theme(request, theme):
+    request.session['theme'] = theme  
+
+    next_url = request.GET.get('next')
+
+    if not next_url:
+        next_url = request.META.get('HTTP_REFERER', '/')
+
+    return redirect(next_url)
+
+
+def theme_processor(request):
+    return {
+        'theme': request.session.get('theme', 'default')
+    }
 def dashboard_view(request: HttpRequest):
     return render(request, 'main/dashbord_admin.html')
 

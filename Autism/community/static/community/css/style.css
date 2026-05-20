@@ -1,3 +1,9 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 .community-container {
   width: 100%;
   display: flex;
@@ -245,18 +251,18 @@
   background: #f7f7f7;
 }
 
-.report-btn{
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    padding: 10px 12px;
-    border-radius: 8px;
-    transition: 0.3s;
-    font-size: 10px;
-    color: #333;
-    background: none !important;
-    border: none !important;
+.report-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  transition: 0.3s;
+  font-size: 10px;
+  color: #333;
+  background: none !important;
+  border: none !important;
 }
 
 .report-btn {
@@ -923,44 +929,81 @@
   outline: none;
 }
 
-@media(max-width:768px) {
+@media (max-width: 560px) {
 
-  .discussion-card,
-  .comment-card,
-  .add-comment {
-    padding: 18px;
+  .community-container {
+    direction: rtl !important;
+    padding: 60px 12px 12px !important;
+    align-items: stretch !important;
+    width: 100% !important;
   }
 
-  .post-title {
-    font-size: 20px;
+  .main,
+  .post,
+  .post-header,
+  .post-text,
+  .post-footer,
+  .tags,
+  .user,
+  .user-info,
+  .stats,
+  .search,
+  .community-sidebar,
+  .card,
+  .topic,
+  .topic-left {
+    direction: rtl !important;
+    text-align: right !important;
   }
 
-  .post-footer {
-    flex-direction: column;
-    gap: 16px;
-    align-items: flex-start;
+  .post {
+    width: 100% !important;
+    margin: 0 0 14px 0 !important;
+    padding: 16px !important;
+    border-radius: 16px !important;
   }
 
-}
+  .search {
+    width: 100% !important;
+    padding: 12px 16px !important;
+    margin-bottom: 14px !important;
+    text-align: right !important;
+  }
 
-@media (max-width: 768px){
+  .post-header {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 10px !important;
+    direction: rtl !important;
+  }
 
-    .comment-footer{
-        gap: 8px !important;
-        flex-wrap: wrap;
-    }
+  .user {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 10px !important;
+    direction: rtl !important;
+  }
 
-    .like-btn{
-        width: 34px;
-        height: 34px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+  .user-info {
+    text-align: right !important;
+    direction: rtl !important;
+  }
 
-    .like-btn i{
-        font-size: 16px;
-    }
+  .user-info h4,
+  .user-info span {
+    text-align: right !important;
+    display: block !important;
+  }
 
+  .tags {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    flex-direction: row !important;
+    justify-content: flex-end !important;
+    gap: 8px !important;
+    direction: rtl !important;
+  }
 }

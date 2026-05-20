@@ -2,11 +2,12 @@
 {%load static%}
 {% block title %}الخطة الأسبوعية{% endblock %}
 
-{% block style %} <link rel="stylesheet" href="{% static 'plans/css/style.css' %}"> {% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'plans/css/style.css' %}"> {% endblock %}
 
 
 {% block content %}
-<div class="container">
+<div class="weekly-container">
 
     <!-- TOP -->
 
@@ -14,25 +15,25 @@
 
         <div class="card">
 
-        <div class="card-title">
-            مؤشر المزاج
+            <div class="card-title">
+                مؤشر المزاج
+            </div>
+
+            <div class="moods">
+
+                <div class="mood active"><i class="bi bi-emoji-grin"></i></div>
+
+                <div class="mood"><i class="bi bi-emoji-smile"></i></div>
+
+                <div class="mood"><i class="bi bi-emoji-neutral"></i></div>
+
+                <div class="mood"><i class="bi bi-emoji-frown"></i></div>
+
+                <div class="mood"><i class="bi bi-emoji-tear"></i></div>
+
+            </div>
+
         </div>
-
-        <div class="moods">
-
-            <div class="mood active"><i class="bi bi-emoji-grin"></i></div>
-
-            <div class="mood"><i class="bi bi-emoji-smile"></i></div>
-
-            <div class="mood"><i class="bi bi-emoji-neutral"></i></div>
-
-            <div class="mood"><i class="bi bi-emoji-frown"></i></div>
-
-            <div class="mood"><i class="bi bi-emoji-tear"></i></div>
-
-        </div>
-
-    </div>
 
         <div class="card now-card">
 
@@ -59,13 +60,13 @@
             <div class="day">
                 <h3>الأحد</h3>
                 <p>26 مايو</p>
-                
+
             </div>
 
             <div class="day">
                 <h3>الإثنين</h3>
                 <p>27 مايو</p>
-                
+
             </div>
 
             <div class="day active">
@@ -78,13 +79,13 @@
             <div class="day">
                 <h3>الأربعاء</h3>
                 <p>29 مايو</p>
-                
+
             </div>
 
             <div class="day">
                 <h3>الخميس</h3>
                 <p>30 مايو</p>
-                
+
             </div>
 
         </div>
@@ -300,49 +301,49 @@
 
     <div class="bottom">
 
-    <!-- Behavioral -->
+        <!-- Behavioral -->
 
-    <div class="bottom-card behavior-card">
+        <div class="bottom-card behavior-card">
 
-        <div class="bottom-content">
+            <div class="bottom-content">
 
-            <h2>نصائح سلوكية</h2>
+                <h2>نصائح سلوكية</h2>
 
-            <p>
-                التعزيز الإيجابي يعمل بشكل أفضل أثناء الأنشطة الحسية.
-                استخدم كلمات لطيفة وثابتة لخلق بيئة آمنة ومحفزة لطفلك.
-            </p>
+                <p>
+                    التعزيز الإيجابي يعمل بشكل أفضل أثناء الأنشطة الحسية.
+                    استخدم كلمات لطيفة وثابتة لخلق بيئة آمنة ومحفزة لطفلك.
+                </p>
+
+            </div>
+
+            <div class="bottom-icon behavior-icon">
+                <i class="fa-solid fa-brain"></i>
+            </div>
 
         </div>
 
-        <div class="bottom-icon behavior-icon">
-            <i class="fa-solid fa-brain"></i>
+        <!-- Calm -->
+
+        <div class="bottom-card calm-card">
+
+            <div class="bottom-content">
+
+                <h2>ركن التهدئة</h2>
+
+                <p>
+                    إذا كان طفلك يشعر بالإرهاق، جرّب 5 دقائق من اللعب
+                    بالضوء الخافت أو الاستماع لموسيقى هادئة.
+                </p>
+
+            </div>
+
+            <div class="bottom-icon calm-icon">
+                <i class="bi bi-emoji-smile"></i>
+            </div>
+
         </div>
 
     </div>
-
-    <!-- Calm -->
-
-    <div class="bottom-card calm-card">
-
-        <div class="bottom-content">
-
-            <h2>ركن التهدئة</h2>
-
-            <p>
-                إذا كان طفلك يشعر بالإرهاق، جرّب 5 دقائق من اللعب
-                بالضوء الخافت أو الاستماع لموسيقى هادئة.
-            </p>
-
-        </div>
-
-        <div class="bottom-icon calm-icon">
-            <i class="bi bi-emoji-smile"></i>
-        </div>
-
-    </div>
-
-</div>
 
 </div>
 
