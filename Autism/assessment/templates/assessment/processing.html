@@ -1,0 +1,146 @@
+{% extends "main/base.html" %}
+
+{% load static %}
+
+{% block title %} بناء الخطة - الخطوة 3 {% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'assessment/css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="inner-header">
+    <div style="display:flex; align-items:center; gap:12px;">
+        <div>
+            <div style="font-weight: bold; color: var(--primary-green); font-size: 16px;">
+                بناء الخطة
+            </div>
+            <div style="font-size: 12px; color: var(--text-gray);">
+                الخطوة 3 من 3
+            </div>
+        </div>
+    </div>
+
+    <button onclick="history.back()"
+        style="background: none;border: 1px solid #ddd;padding: 8px 15px;border-radius: 8px;cursor: pointer;display: flex;align-items: center;gap: 8px;color: #666;font-size: 14px;">
+        رجوع
+        <i class="bi bi-arrow-left"></i>
+    </button>
+</div>
+
+<div class="main-content-area">
+
+    <div class="header-title">
+
+    <h2>
+        جاري إنشاء الخطة الذكية لطفلك
+    </h2>
+
+    <p>
+        نقوم الآن بتحليل الفيديو والإجابات باستخدام الذكاء الاصطناعي
+        لبناء خطة مناسبة لاحتياجات الطفل وقدراته.
+    </p>
+
+</div>
+
+   <div class="plan-loading-card">
+
+    <!-- top icon -->
+
+    <div class="ai-loader-wrap">
+
+        <div class="ai-loader-circle"></div>
+
+        <div class="ai-icon">
+            <i class="bi bi-stars"></i>
+        </div>
+
+    </div>
+
+    <!-- title -->
+
+    <div class="loading-content">
+
+        <span class="ai-badge">
+            AI Analysis
+        </span>
+
+        <h3>
+            جاري بناء الخطة الذكية لطفلك
+        </h3>
+
+        <p>
+            نقوم الآن بتحليل الفيديو والإجابات لإنشاء خطة
+            مخصصة تناسب احتياجات الطفل وقدراته.
+        </p>
+
+    </div>
+
+    <!-- progress -->
+
+    <div class="loading-progress-info">
+
+        <span>جاري التحليل...</span>
+        <span>75%</span>
+
+    </div>
+
+    <div class="loading-bar">
+        <div class="loading-fill"></div>
+    </div>
+
+    <!-- steps -->
+
+    <div class="steps-list">
+
+        <div class="done-step">
+            <div class="step-status done">
+                <i class="bi bi-check-lg"></i>
+            </div>
+
+            <span>
+                تم تحليل الفيديو بنجاح
+            </span>
+        </div>
+
+        <div class="done-step">
+            <div class="step-status done">
+                <i class="bi bi-check-lg"></i>
+            </div>
+
+            <span>
+                تم حفظ نتائج الاستبيان
+            </span>
+        </div>
+
+        <div class="active-step">
+            <div class="step-status loading"></div>
+
+            <span>
+                يتم الآن إنشاء الخطة الأسبوعية
+            </span>
+        </div>
+
+        <div class="waiting-step">
+            <div class="step-status waiting"></div>
+
+            <span>
+                تجهيز الفيديوهات والأنشطة المناسبة
+            </span>
+        </div>
+
+    </div>
+
+    <!-- button -->
+
+    <button class="action-btn ready-btn" disabled>
+        جاري تجهيز الخطة...
+    </button>
+
+</div>
+
+</div>
+
+
+{% endblock %}

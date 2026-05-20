@@ -1,0 +1,149 @@
+{% extends "main/base.html" %}
+
+{% load static %}
+
+{% block title %} بناء الخطة - الخطوة 2 {% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'assessment/css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="inner-header">
+    <div style="display:flex; align-items:center; gap:12px;">
+        <div>
+            <div style="font-weight: bold; color: var(--primary-green); font-size: 16px;">
+                بناء الخطة
+            </div>
+            <div style="font-size: 12px; color: var(--text-gray);">
+                الخطوة 2 من 3
+            </div>
+        </div>
+    </div>
+
+    <button onclick="history.back()"
+        style="background: none;border: 1px solid #ddd;padding: 8px 15px;border-radius: 8px;cursor: pointer;display: flex;align-items: center;gap: 8px;color: #666;font-size: 14px;">
+        رجوع
+        <i class="bi bi-arrow-left"></i>
+    </button>
+</div>
+
+<div class="main-content-area">
+
+    <div class="header-title">
+        <h2>قبل بناء الخطة، نحتاج إلى بعض البيانات عن طفلك</h2>
+        <p>
+             أجب على مجموعة من الأسئلة البسيطة لمساعدتنا في بناء خطة مناسبة لاحتياجات طفلك.
+        </p>
+    </div>
+
+    <div class="questionnaire-wrapper">
+
+    <div class="card-option questionnaire-card">
+
+        <!-- progress -->
+
+        <div class="quiz-progress-top">
+
+            <div>
+                <div style="font-weight:bold; color:var(--primary-green);">
+                    السؤال 3 من 10
+                </div>
+
+                <div style="font-size:12px; color:var(--text-gray); margin-top:4px;">
+                    أكمل الإجابة لبناء الخطة المناسبة
+                </div>
+            </div>
+
+            <div style="font-weight:bold; color:var(--primary-green);">
+                30%
+            </div>
+
+        </div>
+
+        <div class="progress-bar-v2" style="margin-top:15px;">
+            <div class="progress-fill-v2" style="width:30%;"></div>
+        </div>
+
+        <!-- question -->
+
+        <div class="question-box">
+
+            <h2>
+                كيف يتفاعل طفلك عند مناداته باسمه؟
+            </h2>
+
+        </div>
+
+        <!-- answers -->
+
+        <div class="answers-list">
+
+            <label class="answer-choice">
+
+                <input type="radio" name="answer">
+
+                <div class="answer-content">
+                    <span>يستجيب دائمًا</span>
+                    <div class="circle-check"></div>
+                </div>
+
+            </label>
+
+            <label class="answer-choice selected">
+
+                <input type="radio" name="answer">
+
+                <div class="answer-content">
+                    <span>يستجيب أحيانًا</span>
+                    <div class="circle-check"></div>
+                </div>
+
+            </label>
+
+            <label class="answer-choice">
+
+                <input type="radio" name="answer">
+
+                <div class="answer-content">
+                    <span>نادراً يستجيب</span>
+                    <div class="circle-check"></div>
+                </div>
+
+            </label>
+
+            <label class="answer-choice">
+
+                <input type="radio" name="answer">
+
+                <div class="answer-content">
+                    <span>لا يستجيب</span>
+                    <div class="circle-check"></div>
+                </div>
+
+            </label>
+
+        </div>
+
+        <!-- buttons -->
+
+        <div class="question-actions">
+
+            <button class="secondary-btn">
+                السابق
+            </button>
+
+            <button class="action-btn">
+                التالي
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+{% endblock %}

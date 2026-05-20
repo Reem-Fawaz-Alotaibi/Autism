@@ -41,6 +41,7 @@ def main_plan_view(request: HttpRequest):
 def support_plan_view(request: HttpRequest):
     return render(request, 'plans/support_plan.html')
 
+<<<<<<< HEAD
 
 @login_required
 def download_report(request, child_id):
@@ -194,3 +195,13 @@ def download_report(request, child_id):
     p.save()
 
     return response
+=======
+def video_plan_view(request:HttpRequest):
+
+    return render(request, 'plans/video_plan.html')
+
+def support_strategies_view(request:HttpRequest):
+
+    return render(request, 'plans/support_strategies.html')
+
+>>>>>>> b21ece247883f99f30ea46b301ad5c3ed4bd9485
