@@ -122,7 +122,7 @@
         <div class="chart-card">
 
             <div class="card-title">
-                <h2>نشاط المستخدمين</h2>
+                <h2>طرق التقييم المستخدمة</h2>
             </div>
 
             <canvas id="activityChart"></canvas>
@@ -388,48 +388,51 @@
 
 <script>
 
+    const videoCount = Number('{{ video_count }}');
+    const questionnaireCount = Number('{{ questionnaire_count }}');
+
     const ctx = document.getElementById('activityChart');
 
     new Chart(ctx, {
-
         type: 'line',
-
         data: {
-
-            labels: [
-                '10 مايو',
-                '11 مايو',
-                '12 مايو',
-                '13 مايو',
-                '14 مايو',
-                '15 مايو'
-            ],
-
-            datasets: [
-
-                {
-                    label: 'التسجيلات',
-                    data: [100, 140, 110, 150, 135, 170],
-                    borderColor: '#5b7cff',
-                    tension: 0.4
-                },
-
-                {
-                    label: 'التفاعلات',
-                    data: [70, 100, 75, 90, 85, 120],
-                    borderColor: '#23c58f',
-                    tension: 0.4
-                }
-
-            ]
+            labels: ['فيديو + تقييم','تقييم فقط'],
+            datasets: [{
+                data: [videoCount,questionnaireCount],
+                borderColor: '#7c5cff',
+                backgroundColor: 'rgba(124,92,255,0.15)',
+                fill: true,
+                tension: 0.5,
+                pointBackgroundColor: '#7c5cff',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 3,
+                pointRadius: 7,
+                pointHoverRadius: 9
+            }]
         },
-
         options: {
-            responsive: true
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0,0,0,0.05)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
         }
-
     });
-
 </script>
 
 {% endblock %}
