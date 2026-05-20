@@ -5,12 +5,6 @@
 
 {% block style %}
 <link rel="stylesheet" href="{% static 'plans/css/style.css' %}">
-
-<style>
-
-
-
-</style>
 {% endblock %}
 
 {% block content %}
@@ -20,147 +14,98 @@
 <div class="content">
 
     <!-- header -->
-
     <div class="videos-header">
-
         <div>
-
-            <span class="video-tag">
-                AI Recommended Videos
-            </span>
-
-            <h2>
-                فيديوهات تعليمية مخصصة لطفلك
-            </h2>
-
+            <span class="video-tag">AI Recommended Videos</span>
+            <h2>فيديوهات تعليمية مخصصة لطفلك</h2>
             <p>
                 تم اختيار هذه الفيديوهات بناءً على تحليل
                 سلوك الطفل واحتياجاته التعليمية.
             </p>
-
         </div>
-
         <div class="video-icon">
             <i class="bi bi-play-circle"></i>
         </div>
-
     </div>
 
     <!-- videos -->
-
+    {% if videos %}
     <div class="videos-grid">
-
-        <!-- video -->
-
+        {% for video in videos %}
         <div class="video-card">
 
             <div class="video-thumb">
-
-                <img src="{% static 'images/video1.jpg' %}">
-
+                {% if video.thumbnail %}
+                    <img src="{{ video.thumbnail.url }}" alt="{{ video.title }}">
+                {% else %}
+                    <div style="width:100%; height:160px; background:#f0f0f0; display:flex; align-items:center; justify-content:center; border-radius:12px;">
+                        <i class="bi bi-play-circle" style="font-size:48px; color:#ccc;"></i>
+                    </div>
+                {% endif %}
                 <div class="play-btn">
                     <i class="bi bi-play-fill"></i>
                 </div>
-
             </div>
 
             <div class="video-body">
-
-                <h3>
-                    تعلم الألوان
-                </h3>
-
-                <p>
-                    فيديو يساعد الطفل على التعرف على الألوان
-                    وتحسين الانتباه البصري.
-                </p>
-
+                <h3>{{ video.title }}</h3>
+                <p>{{ video.description }}</p>
                 <div class="video-meta">
-
                     <div class="video-time">
-                        <i class="bi bi-clock"></i>
-                        5 دقائق
+                        <span style="background:#e8f5e9; color:#1D9E75; padding:3px 10px; border-radius:20px; font-size:11px;">
+                            {% if video.category == 'visual' %}👁️ بصري
+                            {% elif video.category == 'sensory' %}👂 حسي
+                            {% elif video.category == 'motor' %}🏃 حركي
+                            {% elif video.category == 'language' %}🗣️ لغوي
+                            {% endif %}
+                        </span>
                     </div>
-
-                    <a href="#" class="watch-btn">
+                    <a href="{{ video.video_file.url }}" target="_blank" class="watch-btn">
                         مشاهدة
                     </a>
-
                 </div>
-
             </div>
 
         </div>
-
-        <!-- video -->
-
-        <div class="video-card">
-
-            <div class="video-thumb">
-
-                <img src="{% static 'images/video2.jpg' %}">
-
-                <div class="play-btn">
-                    <i class="bi bi-play-fill"></i>
-                </div>
-
-            </div>
-
-            <div class="video-body">
-
-                <h3>
-                    تعابير الوجه
-                </h3>
-
-                <p>
-                    يساعد الطفل على فهم المشاعر
-                    والتفاعل الاجتماعي بطريقة ممتعة.
-                </p>
-
-                <div class="video-meta">
-
-                    <div class="video-time">
-                        <i class="bi bi-clock"></i>
-                        7 دقائق
-                    </div>
-
-                    <a href="#" class="watch-btn">
-                        مشاهدة
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-
+        {% endfor %}
     </div>
+
+    {% else %}
+    <!-- لو ما في فيديوهات مناسبة لعمر الطفل -->
+    <div style="text-align:center; padding:60px 20px; background:var(--color-background-primary); border-radius:16px; margin-top:20px;">
+        <div style="font-size:64px; margin-bottom:16px;">🎬</div>
+        <h3 style="color:var(--primary-green); margin-bottom:8px;">لا توجد فيديوهات متاحة حالياً</h3>
+        <p style="color:#888; font-size:14px; max-width:400px; margin:0 auto;">
+            لم نجد فيديوهات تعليمية تناسب عمر طفلك في الوقت الحالي.
+            سيتم إضافة محتوى جديد قريباً.
+        </p>
+        <a href="{% url 'plans:support_plan_view' %}"
+           style="display:inline-block; margin-top:20px; background:var(--primary-green); color:white; padding:10px 24px; border-radius:10px; text-decoration:none; font-size:14px;">
+            العودة للأنشطة
+        </a>
+    </div>
+    {% endif %}
 
 </div>
 
 <!-- sidebar -->
-
 <aside class="sidebar-plan">
 
-    <a class="back-btn" href="#">
+    <a class="back-btn" href="{% url 'plans:main_plan_view' %}">
         <i class="fa-solid fa-arrow-right"></i>
         العودة للخطة
     </a>
 
-    <h2 class="sidebar-title">
-        أقسام الخطة
-    </h2>
+    <h2 class="sidebar-title">أقسام الخطة</h2>
 
     <div class="steps">
 
         <div class="step done">
-            <div>
+            <a href="{% url 'plans:support_plan_view' %}" class="step-btn">
                 <h3>الأنشطة المقترحة</h3>
                 <p>تم إكمال المرحلة</p>
-            </div>
-            <span>
-                <i class="bi bi-check-lg"></i>
-            </span>
+            </a>
+            <span><i class="bi bi-check-lg"></i></span>
         </div>
 
         <div class="step active">
@@ -172,14 +117,31 @@
         </div>
 
         <div class="step">
-            <div>
+            <a href="{% url 'plans:support_strategies_view' %}" class="step-btn">
                 <h3>استراتيجيات الدعم</h3>
                 <p>طرق ونصائح يومية</p>
-            </div>
+            </a>
             <span>3</span>
         </div>
 
     </div>
+
+    {% if plan %}
+    <div class="progress-box" style="margin-top:20px;">
+        <h3>التصنيفات</h3>
+        <div style="margin-top:10px; display:flex; flex-direction:column; gap:8px;">
+            {% for cat in plan.categories %}
+            <div style="font-size:13px; color:#666;">
+                {% if cat == 'visual' %}👁️ بصري
+                {% elif cat == 'sensory' %}👂 حسي
+                {% elif cat == 'motor' %}🏃 حركي
+                {% elif cat == 'language' %}🗣️ لغوي
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
 
 </aside>
 

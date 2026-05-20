@@ -1,5 +1,4 @@
 {% extends "main/base.html" %}
-
 {% load static %}
 
 {% block title %} بناء الخطة - الخطوة 2 {% endblock %}
@@ -33,117 +32,117 @@
 
     <div class="header-title">
         <h2>قبل بناء الخطة، نحتاج إلى بعض البيانات عن طفلك</h2>
-        <p>
-             أجب على مجموعة من الأسئلة البسيطة لمساعدتنا في بناء خطة مناسبة لاحتياجات طفلك.
-        </p>
+        <p>أجب على مجموعة من الأسئلة البسيطة لمساعدتنا في بناء خطة مناسبة لاحتياجات طفلك.</p>
     </div>
 
     <div class="questionnaire-wrapper">
+        <div class="card-option questionnaire-card">
 
-    <div class="card-option questionnaire-card">
-
-        <!-- progress -->
-
-        <div class="quiz-progress-top">
-
-            <div>
+            <!-- progress -->
+            <div class="quiz-progress-top">
+                <div>
+                    <div style="font-weight:bold; color:var(--primary-green);">
+                        السؤال {{ current_index }} من {{ total }}
+                    </div>
+                    <div style="font-size:12px; color:var(--text-gray); margin-top:4px;">
+                        أكمل الإجابة لبناء الخطة المناسبة
+                    </div>
+                </div>
                 <div style="font-weight:bold; color:var(--primary-green);">
-                    السؤال 3 من 10
-                </div>
-
-                <div style="font-size:12px; color:var(--text-gray); margin-top:4px;">
-                    أكمل الإجابة لبناء الخطة المناسبة
+                    {{ progress }}%
                 </div>
             </div>
 
-            <div style="font-weight:bold; color:var(--primary-green);">
-                30%
+            <div class="progress-bar-v2" style="margin-top:15px;">
+                <div class="progress-fill-v2" style="width:{{ progress }}%;"></div>
             </div>
 
-        </div>
+            <!-- question -->
+            <div class="question-box">
+                <h2>{{ question.text }}</h2>
+                <div style="font-size:12px; color:var(--text-gray); margin-top:8px;">
+                    المصدر العلمي: {{ question.source }}
+                </div>
+            </div>
 
-        <div class="progress-bar-v2" style="margin-top:15px;">
-            <div class="progress-fill-v2" style="width:30%;"></div>
-        </div>
+            <!-- form -->
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="question_id" value="{{ question.id }}">
+                <input type="hidden" name="current_index" value="{{ current_index }}">
 
-        <!-- question -->
+                <div class="answers-list">
 
-        <div class="question-box">
+                    <label class="answer-choice {% if saved_answer == 'always' %}selected{% endif %}">
+                        <input type="radio" name="answer" value="always" {% if saved_answer == 'always' %}checked{% endif %}>
+                        <div class="answer-content">
+                            <span>دائماً</span>
+                            <div class="circle-check"></div>
+                        </div>
+                    </label>
 
-            <h2>
-                كيف يتفاعل طفلك عند مناداته باسمه؟
-            </h2>
+                    <label class="answer-choice {% if saved_answer == 'sometimes' %}selected{% endif %}">
+                        <input type="radio" name="answer" value="sometimes" {% if saved_answer == 'sometimes' %}checked{% endif %}>
+                        <div class="answer-content">
+                            <span>أحياناً</span>
+                            <div class="circle-check"></div>
+                        </div>
+                    </label>
 
-        </div>
+                    <label class="answer-choice {% if saved_answer == 'rarely' %}selected{% endif %}">
+                        <input type="radio" name="answer" value="rarely" {% if saved_answer == 'rarely' %}checked{% endif %}>
+                        <div class="answer-content">
+                            <span>نادراً</span>
+                            <div class="circle-check"></div>
+                        </div>
+                    </label>
 
-        <!-- answers -->
+                    <label class="answer-choice {% if saved_answer == 'never' %}selected{% endif %}">
+                        <input type="radio" name="answer" value="never" {% if saved_answer == 'never' %}checked{% endif %}>
+                        <div class="answer-content">
+                            <span>أبداً</span>
+                            <div class="circle-check"></div>
+                        </div>
+                    </label>
 
-        <div class="answers-list">
-
-            <label class="answer-choice">
-
-                <input type="radio" name="answer">
-
-                <div class="answer-content">
-                    <span>يستجيب دائمًا</span>
-                    <div class="circle-check"></div>
                 </div>
 
-            </label>
+                <!-- buttons -->
+                <div class="question-actions">
+                    {% if current_index > 1 %}
+                    <button type="submit" name="direction" value="prev" class="secondary-btn">
+                        السابق
+                    </button>
+                    {% else %}
+                    <div></div>
+                    {% endif %}
 
-            <label class="answer-choice selected">
-
-                <input type="radio" name="answer">
-
-                <div class="answer-content">
-                    <span>يستجيب أحيانًا</span>
-                    <div class="circle-check"></div>
+                    {% if current_index == total %}
+                    <button type="submit" name="direction" value="finish" class="action-btn">
+                        إنهاء وتحليل
+                    </button>
+                    {% else %}
+                    <button type="submit" name="direction" value="next" class="action-btn">
+                        التالي
+                    </button>
+                    {% endif %}
                 </div>
 
-            </label>
-
-            <label class="answer-choice">
-
-                <input type="radio" name="answer">
-
-                <div class="answer-content">
-                    <span>نادراً يستجيب</span>
-                    <div class="circle-check"></div>
-                </div>
-
-            </label>
-
-            <label class="answer-choice">
-
-                <input type="radio" name="answer">
-
-                <div class="answer-content">
-                    <span>لا يستجيب</span>
-                    <div class="circle-check"></div>
-                </div>
-
-            </label>
+            </form>
 
         </div>
-
-        <!-- buttons -->
-
-        <div class="question-actions">
-
-            <button class="secondary-btn">
-                السابق
-            </button>
-
-            <button class="action-btn">
-                التالي
-            </button>
-
-        </div>
-
     </div>
-
 </div>
-
-</div>
-
+<script>
+document.querySelectorAll('.answer-choice').forEach(function(label) {
+    label.addEventListener('click', function() {
+        // نمسح selected من كل الخيارات
+        document.querySelectorAll('.answer-choice').forEach(function(l) {
+            l.classList.remove('selected');
+        });
+        // نضيف selected للخيار المضغوط
+        this.classList.add('selected');
+    });
+});
+</script>
 {% endblock %}

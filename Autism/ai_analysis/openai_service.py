@@ -1,74 +1,154 @@
+import json
 from openai import OpenAI
 from django.conf import settings
 from .models import Activity, ResourceVideo, SkillCategory
 
-client = OpenAI(api_key=settings.OPENAI_API_KEY)
+from decouple import config
+client = OpenAI(api_key=config('OPENAI_API_KEY'))
 
 
-def get_recommendations(video_analysis: str, questionnaire_answers: dict, child_age: int):
-    """
-    تاخذ نتيجة تحليل الفيديو + إجابات الأسئلة
-    وترجع أنشطة وفيديوهات مناسبة للطفل
-    """
+# ==========================================
+# الدالة 1 — تحليل التقييم وتحديد التصنيفات
+# ==========================================
 
-    # 1️⃣ نبني الـ prompt لـ OpenAI
+def get_recommendations(video_analysis: str, questionnaire_answers: dict, child_age: int, child_info: dict = {}):
+
     prompt = f"""
-    أنت متخصص في تقييم أطفال التوحد.
-    بناءً على المعلومات التالية، حدد التصنيفات التي يحتاج الطفل للتحسين فيها.
+    أنت متخصص في تقييم وتحليل سلوك أطفال التوحد.
+    بناءً على المعلومات التالية، حدد التصنيفات التي يحتاج الطفل للدعم فيها.
 
-    ** عمر الطفل:** {child_age} سنوات
+    عمر الطفل: {child_age} سنوات
+    نوع التواصل: {child_info.get('نوع التواصل', '')}
+    الحساسية الحسية: {child_info.get('الحساسية الحسية', '')}
+    الأهداف الحالية: {child_info.get('الأهداف الحالية', '')}
+    ملاحظات ولي الأمر: {child_info.get('ملاحظات ولي الأمر', '')}
 
-    ** نتيجة تحليل الفيديو:**
-    {video_analysis}
+    نتيجة تحليل الفيديو:
+    {video_analysis if video_analysis else "لا يوجد فيديو"}
 
-    ** إجابات تقييم الأسئلة:**
+    إجابات تقييم الأسئلة:
     {questionnaire_answers}
 
-    ** التصنيفات المتاحة:**
-    - focus: التركيز والانتباه
-    - eye_contact: التواصل البصري
-    - social: التفاعل الاجتماعي
-    - communication: التواصل اللغوي
-    - motor: المهارات الحركية
-    - behavior: السلوك والتصرفات
+    التصنيفات المتاحة فقط (لا تستخدم غيرها):
+    - visual:  صعوبات في التركيز البصري أو تتبع الأشياء بالعين
+    - sensory: حساسية تجاه الأصوات أو اللمس أو الضوء أو الروائح
+    - motor:   ضعف في المهارات الحركية الدقيقة أو الكبيرة
+    - language: تأخر في الكلام أو التواصل اللغوي
 
-    رجّع فقط قائمة JSON بالتصنيفات الأكثر أهمية للطفل مرتبة من الأعلى أولوية.
-    مثال: ["focus", "eye_contact", "communication"]
-    لا تضيف أي نص خارج الـ JSON.
+    قواعد الرد:
+    - رجّع فقط JSON array بالتصنيفات مرتبة من الأعلى أولوية للأقل
+    - لا تضيف أي نص أو شرح خارج الـ JSON
+    - مثال: ["sensory", "language", "visual"]
     """
 
-    # 2️⃣ نرسل لـ OpenAI
     response = client.chat.completions.create(
         model="gpt-4o",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.3
     )
 
-    # 3️⃣ نحلل الرد
-    import json
     raw = response.choices[0].message.content.strip()
+    if raw.startswith("```"):
+        raw = raw.split("```")[1]
+        if raw.startswith("json"):
+            raw = raw[4:]
+    raw = raw.strip()
+
     categories = json.loads(raw)
 
-    # 4️⃣ نتأكد إن التصنيفات صحيحة
-    valid_categories = [c for c in categories if c in SkillCategory.values]
+    # ✅ التعديل الوحيد — نجيب التصنيفات من SkillCategory
+    valid_values     = [choice[0] for choice in SkillCategory.choices]
+    valid_categories = [c for c in categories if c in valid_values]
 
-    # 5️⃣ نجيب الأنشطة والفيديوهات من DB
     activities = Activity.objects.filter(
         category__in=valid_categories,
         age_min__lte=child_age,
         age_max__gte=child_age,
         is_active=True
-    )[:6]  # أقصى 6 أنشطة
+    ).order_by('order')[:6]
 
     videos = ResourceVideo.objects.filter(
         category__in=valid_categories,
         age_min__lte=child_age,
         age_max__gte=child_age,
         is_active=True
-    )[:4]  # أقصى 4 فيديوهات
+    ).order_by('order')[:4]
 
     return {
         "categories": valid_categories,
-        "activities": activities,
-        "videos": videos
+        "activities": list(activities),
+        "videos":     list(videos)
     }
+
+
+# ==========================================
+# الدالة 2 — بناء الخطة اليومية الروتينية
+# ==========================================
+
+def build_daily_routine(child_age: int, categories: list, child_info: dict = {}):
+
+    prompt = f"""
+    أنت متخصص في تأهيل أطفال طيف التوحد.
+    بناءً على معلومات الطفل التالية، ابنِ له جدولاً يومياً روتينياً كاملاً ومناسباً.
+
+    معلومات الطفل:
+    - العمر: {child_age} سنوات
+    - نوع التواصل: {child_info.get('نوع التواصل', '')}
+    - الحساسية الحسية: {child_info.get('الحساسية الحسية', '')}
+    - الأهداف الحالية: {child_info.get('الأهداف الحالية', '')}
+    - ملاحظات ولي الأمر: {child_info.get('ملاحظات ولي الأمر', '')}
+    - مجالات الدعم المطلوبة: {', '.join(categories)}
+
+    الجدول اليومي يشمل هذه الفئات الثابتة:
+    - روتين_صباح: الاستيقاظ والفطور
+    - نشاط_صباح: نشاط تعليمي أو علاجي مخصص
+    - غداء: وجبة الغداء ونصائح غذائية
+    - قيلولة: وقت الراحة
+    - نشاط_مساء: نشاط ثانٍ مخصص
+    - عشاء: وجبة العشاء
+    - روتين_نوم: التهيئة للنوم
+
+    قواعد الرد — رجّع JSON فقط بهذا الشكل بدون أي نص خارجه:
+    {{
+        "routine": [
+            {{
+                "time": "8:00 ص",
+                "title": "استيقاظ وفطور",
+                "description": "وصف مخصص للطفل",
+                "category": "روتين",
+                "icon": "☀️",
+                "tag": "روتين أساسي",
+                "tag_color": "orange"
+            }},
+            {{
+                "time": "10:00 ص",
+                "title": "اسم النشاط",
+                "description": "وصف مخصص بناءً على احتياجات الطفل",
+                "category": "نشاط",
+                "icon": "🖐️",
+                "tag": "نشاط حسي",
+                "tag_color": "purple"
+            }}
+        ],
+        "behavioral_tip": "نصيحة سلوكية مخصصة للطفل",
+        "calm_tip": "نصيحة تهدئة مخصصة للطفل"
+    }}
+
+    tag_color المتاحة: orange, purple, blue, green, yellow
+    الجدول يحتوي على 7 عناصر بالضبط بالترتيب الزمني.
+    """
+
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.5
+    )
+
+    raw = response.choices[0].message.content.strip()
+    if raw.startswith("```"):
+        raw = raw.split("```")[1]
+        if raw.startswith("json"):
+            raw = raw[4:]
+    raw = raw.strip()
+
+    return json.loads(raw)
