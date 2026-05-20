@@ -3,7 +3,8 @@ from openai import OpenAI
 from django.conf import settings
 from .models import Activity, ResourceVideo, SkillCategory
 
-client = OpenAI(api_key=settings.OPENAI_API_KEY)
+from decouple import config
+client = OpenAI(api_key=config('OPENAI_API_KEY'))
 
 
 # ==========================================
@@ -54,7 +55,9 @@ def get_recommendations(video_analysis: str, questionnaire_answers: dict, child_
     raw = raw.strip()
 
     categories = json.loads(raw)
-    valid_values = [choice[0] for choice in Activity.CATEGORY_CHOICES]
+
+    # ✅ التعديل الوحيد — نجيب التصنيفات من SkillCategory
+    valid_values     = [choice[0] for choice in SkillCategory.choices]
     valid_categories = [c for c in categories if c in valid_values]
 
     activities = Activity.objects.filter(
@@ -74,7 +77,7 @@ def get_recommendations(video_analysis: str, questionnaire_answers: dict, child_
     return {
         "categories": valid_categories,
         "activities": list(activities),
-        "videos": list(videos)
+        "videos":     list(videos)
     }
 
 

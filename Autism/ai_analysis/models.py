@@ -27,7 +27,7 @@ class Activity(models.Model):
     age_min     = models.PositiveIntegerField(default=2, verbose_name="العمر الأدنى")
     age_max     = models.PositiveIntegerField(default=12, verbose_name="العمر الأقصى")
     emoji       = models.CharField(max_length=10, blank=True, verbose_name="إيموجي")
-    activity_file = models.CharField(max_length=100, default='null')  # مثال: color_match.html
+    activity_file = models.CharField(max_length=100, blank=True, default='')
     is_active   = models.BooleanField(default=True, verbose_name="مفعّل")
     order       = models.PositiveIntegerField(default=0, verbose_name="الترتيب")
     duration_minutes = models.PositiveIntegerField(default=10,verbose_name="مدة النشاط بالدقائق")
@@ -75,7 +75,7 @@ class VideoAnalysis(models.Model):
         related_name="video_analyses"
     )
 
-    video = models.FileField(upload_to="videos/")
+    video = models.TextField(verbose_name="رابط الفيديو")
 
     ai_summary = models.TextField()
 

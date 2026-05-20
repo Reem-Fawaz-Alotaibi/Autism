@@ -1,34 +1,45 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest
+from django.http import HttpRequest, JsonResponse
 from django.utils import timezone
-
-from assessment.models import AssessmentSession, AssessmentResult
+from datetime import date, timedelta
+from openai import OpenAI
+from django.conf import settings
+import json
+from django.urls import reverse
+from assessment.models import AssessmentSession
 from ai_analysis.models import Activity, ResourceVideo
 from .models import SupportPlan, PlanActivity
 
 
+
+
+def support_plan_redirect(request):
+    plan = SupportPlan.objects.filter(user=request.user).first()
+
+    if not plan:
+        return redirect(f"{reverse('main:home_page_view')}#start")
+
+    return redirect('plans:main_plan_view')
+
 # ==========================================
-# صفحة الخطة الرئيسية
+# صفحة الأنشطة المقترحة
 # ==========================================
 
 @login_required(login_url='accounts:signin')
 def support_plan_view(request: HttpRequest):
 
-    # جلب آخر خطة للمستخدم
     plan = SupportPlan.objects.filter(user=request.user).first()
 
     if not plan:
-        # لو ما في خطة، نبنيها من السيشن
-        categories    = request.session.get('result_categories', [])
-        activity_ids  = request.session.get('result_activities', [])
-        video_ids     = request.session.get('result_videos', [])
-        ai_summary    = request.session.get('ai_summary', '')
+        categories         = request.session.get('result_categories', [])
+        activity_ids       = request.session.get('result_activities', [])
+        ai_summary         = request.session.get('ai_summary', '')
+        daily_routine_data = request.session.get('daily_routine', {})
 
         if not categories:
             return redirect('assessment:questionnaire')
 
-        # جلب آخر جلسة مكتملة
         session = AssessmentSession.objects.filter(
             user=request.user,
             status='completed'
@@ -37,25 +48,31 @@ def support_plan_view(request: HttpRequest):
         if not session:
             return redirect('assessment:questionnaire')
 
-        # جلب الأنشطة والفيديوهات
+        # جلب الأنشطة
         activities = list(Activity.objects.filter(id__in=activity_ids))
-        videos     = list(ResourceVideo.objects.filter(id__in=video_ids))
 
-        # بناء الخطة الأسبوعية
+        # الخطة الأسبوعية — أنشطة موزعة على الأيام
         days = ['saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday']
-        weekly_plan = []
+        weekly_activities = []
         for i, day in enumerate(days):
             activity = activities[i % len(activities)] if activities else None
-            weekly_plan.append({
-                'day': day,
-                'activity': activity.title if activity else '',
+            weekly_activities.append({
+                'day':         day,
+                'activity':    activity.title if activity else '',
                 'description': activity.description if activity else '',
-                'category': activity.category if activity else '',
-                'duration': activity.duration_minutes if activity else 15,
+                'category':    activity.category if activity else '',
+                'duration':    activity.duration_minutes if activity else 15,
                 'activity_id': activity.id if activity else None,
             })
 
-        # حفظ الخطة في DB
+        # نحفظ الروتين من AI + الأنشطة الأسبوعية معاً
+        weekly_plan = {
+            'routine':         daily_routine_data.get('routine', []),
+            'calm_tip':        daily_routine_data.get('calm_tip', ''),
+            'behavioral_tip':  daily_routine_data.get('behavioral_tip', ''),
+            'activities':      weekly_activities,
+        }
+
         plan = SupportPlan.objects.create(
             session=session,
             child=session.child,
@@ -65,8 +82,7 @@ def support_plan_view(request: HttpRequest):
             weekly_plan=weekly_plan,
         )
 
-        # حفظ أنشطة الخطة
-        for item in weekly_plan:
+        for item in weekly_activities:
             PlanActivity.objects.create(
                 plan=plan,
                 day=item['day'],
@@ -77,26 +93,27 @@ def support_plan_view(request: HttpRequest):
                 activity_id=item['activity_id'],
             )
 
-        # مسح السيشن
-        for key in ['result_categories', 'result_activities', 'result_videos', 'ai_summary']:
+        for key in ['result_categories', 'result_activities', 'result_videos', 'ai_summary', 'daily_routine']:
             request.session.pop(key, None)
 
-    # جلب الأنشطة من DB
-    plan_activities = PlanActivity.objects.filter(plan=plan)
+    # جلب الأنشطة
+    plan_activities  = PlanActivity.objects.filter(plan=plan)
     current_activity = plan_activities.first()
     next_activity    = plan_activities[1] if plan_activities.count() > 1 else None
 
-    # جلب الفيديوهات
+    # جلب الفيديوهات حسب التصنيف وعمر الطفل
+    child_age = (date.today() - plan.child.birth_date).days // 365
     videos = ResourceVideo.objects.filter(
         category__in=plan.categories,
+        age_min__lte=child_age,
+        age_max__gte=child_age,
         is_active=True
-    )[:4]
+    ).order_by('order')[:4]
 
-    # تاريخ الخطة
     start_date = plan.created_at
     end_date   = start_date + timezone.timedelta(days=6)
 
-    context = {
+    return render(request, 'plans/support_plan.html', {
         'plan':             plan,
         'current_activity': current_activity,
         'next_activity':    next_activity,
@@ -107,83 +124,97 @@ def support_plan_view(request: HttpRequest):
         'start_date':       start_date.strftime('%d %B'),
         'end_date':         end_date.strftime('%d %B'),
         'child':            plan.child,
-    }
-
-    return render(request, 'plans/support_plan.html', context)
+    })
 
 
 # ==========================================
-# صفحة الخطة الرئيسية (اختيار المسار)
+# الخطة الرئيسية — الروتين اليومي من AI
 # ==========================================
-
-from datetime import date, timedelta
 
 @login_required(login_url='accounts:signin')
 def main_plan_view(request: HttpRequest):
     plan = SupportPlan.objects.filter(user=request.user).first()
 
-    # أيام الأسبوع
-    today = date.today()
-    day_names = ['الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت','الأحد']
+    today     = date.today()
+    day_names = ['الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت', 'الأحد']
+
     week_days = []
     for i in range(5):
-        d = today + timedelta(days=i-2)
+        d = today + timedelta(days=i - 2)
         week_days.append({
-            'name': day_names[d.weekday()],
-            'date': d.strftime('%d %B'),
+            'name':     day_names[d.weekday()],
+            'date':     d.strftime('%d %B'),
             'is_today': d == today,
         })
 
     other_days = [d for d in week_days if not d['is_today']][2:]
 
-    # أنشطة اليوم
-    today_activities = []
+    daily_routine    = []
+    calm_tip         = ''
+    behavioral_tip   = ''
     current_activity = None
-    next_activity = None
+    next_activity    = None
+    today_activities = []
 
     if plan:
-        today_name = day_names[today.weekday()].lower()
         day_map = {
             'الاثنين': 'monday', 'الثلاثاء': 'tuesday',
             'الأربعاء': 'wednesday', 'الخميس': 'thursday',
             'الجمعة': 'friday', 'السبت': 'saturday', 'الأحد': 'sunday'
         }
-        today_key = day_map.get(day_names[today.weekday()], '')
+        today_key        = day_map.get(day_names[today.weekday()], '')
         today_activities = PlanActivity.objects.filter(plan=plan, day=today_key)
         current_activity = today_activities.first()
-        next_activity = today_activities[1] if today_activities.count() > 1 else None
+        next_activity    = today_activities[1] if today_activities.count() > 1 else None
+
+        stored = plan.weekly_plan
+        if isinstance(stored, dict):
+            daily_routine  = stored.get('routine', [])
+            calm_tip       = stored.get('calm_tip', '')
+            behavioral_tip = stored.get('behavioral_tip', '')
 
     return render(request, 'plans/main_plan.html', {
-        'plan': plan,
-        'week_days': week_days,
-        'other_days': other_days,
+        'plan':             plan,
+        'week_days':        week_days,
+        'other_days':       other_days,
         'today_activities': today_activities,
         'current_activity': current_activity,
-        'next_activity': next_activity,
-        'today_display': f"{day_names[today.weekday()]} {today.strftime('%d %B')}",
+        'next_activity':    next_activity,
+        'today_display':    f"{day_names[today.weekday()]} {today.strftime('%d %B')}",
+        'daily_routine':    daily_routine,
+        'calm_tip':         calm_tip,
+        'behavioral_tip':   behavioral_tip,
     })
 
 
 # ==========================================
-# صفحة الفيديوهات التعليمية
+# الفيديوهات التعليمية — حسب عمر الطفل
 # ==========================================
 
 @login_required(login_url='accounts:signin')
 def video_plan_view(request: HttpRequest):
     plan = SupportPlan.objects.filter(user=request.user).first()
+    if not plan:
+        return redirect(f"{reverse('main:home_page_view')}#start")
 
     videos = []
     if plan:
+        child_age = (date.today() - plan.child.birth_date).days // 365
         videos = ResourceVideo.objects.filter(
             category__in=plan.categories,
+            age_min__lte=child_age,
+            age_max__gte=child_age,
             is_active=True
-        )[:6]
+        ).order_by('order')[:6]
 
-    return render(request, 'plans/video_plan.html', {'videos': videos, 'plan': plan})
+    return render(request, 'plans/video_plan.html', {
+        'videos': videos,
+        'plan':   plan,
+    })
 
 
 # ==========================================
-# صفحة استراتيجيات الدعم
+# استراتيجيات الدعم
 # ==========================================
 
 @login_required(login_url='accounts:signin')
@@ -221,5 +252,60 @@ def support_strategies_view(request: HttpRequest):
 
     return render(request, 'plans/support_strategies.html', {
         'strategies': strategies,
-        'plan': plan
+        'plan':       plan,
     })
+
+
+# ==========================================
+# Feedback ولي الأمر — يحدث الخطة بـ AI
+# ==========================================
+
+@login_required(login_url='accounts:signin')
+def update_plan_feedback(request):
+    if request.method != "POST":
+        return JsonResponse({'success': False})
+
+    try:
+        data     = json.loads(request.body)
+        feedback = data.get('feedback', '').strip()
+        plan     = SupportPlan.objects.filter(user=request.user).first()
+
+        if not plan or not feedback:
+            return JsonResponse({'success': False, 'error': 'بيانات غير كاملة'})
+
+        client = OpenAI(api_key=settings.OPENAI_API_KEY)
+
+        prompt = f"""
+        أنت متخصص في دعم أطفال طيف التوحد.
+        ولي الأمر أرسل هذه الملاحظة عن طفله بعد تجربة الخطة:
+
+        "{feedback}"
+
+        معلومات الطفل:
+        - التصنيفات الحالية: {', '.join(plan.categories)}
+        - ملخص الخطة: {plan.ai_summary}
+
+        بناءً على هذه الملاحظة:
+        1. حدد المشكلة الرئيسية التي يواجهها الطفل
+        2. اقترح تعديلاً محدداً على الخطة أو نشاطاً بديلاً مناسباً
+        3. أعطِ نصيحة عملية لولي الأمر يطبقها مباشرة
+
+        الرد يكون:
+        - باللغة العربية
+        - موجز وواضح وعملي
+        - بدون ترقيم أو عناوين
+        - لا يتجاوز 3 جمل
+        """
+
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.5
+        )
+
+        suggestion = response.choices[0].message.content.strip()
+
+        return JsonResponse({'success': True, 'suggestion': suggestion})
+
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})

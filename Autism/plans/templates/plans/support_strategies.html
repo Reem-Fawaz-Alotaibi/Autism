@@ -5,7 +5,6 @@
 
 {% block style %}
 <link rel="stylesheet" href="{% static 'plans/css/style.css' %}">
-
 {% endblock %}
 
 {% block content %}
@@ -15,143 +14,118 @@
 <div class="content">
 
     <!-- header -->
-
     <div class="support-header">
-
         <div>
-
-            <span class="support-tag">
-                AI Support Strategies
-            </span>
-
-            <h2>
-                استراتيجيات الدعم اليومية
-            </h2>
-
-            <p>
-                نصائح واستراتيجيات تم اقتراحها لمساعدة الطفل
-                على التفاعل والتطور بشكل أفضل.
-            </p>
-
+            <span class="support-tag">AI Support Strategies</span>
+            <h2>استراتيجيات الدعم اليومية</h2>
+            <p>نصائح واستراتيجيات تم اقتراحها لمساعدة الطفل على التفاعل والتطور بشكل أفضل.</p>
         </div>
-
         <div class="support-icon">
             <i class="bi bi-lightbulb"></i>
         </div>
-
     </div>
 
-    <!-- strategies -->
-
+    <!-- strategies من AI -->
     <div class="strategies-grid">
-
+        {% for strategy in strategies %}
         <div class="strategy-card">
-
             <div class="strategy-icon">
-                <i class="bi bi-volume-up"></i>
+                {% if 'صوت' in strategy or 'ضوضاء' in strategy or 'سماع' in strategy %}
+                    <i class="bi bi-volume-up"></i>
+                {% elif 'تشجيع' in strategy or 'إيجابي' in strategy or 'كلمات' in strategy %}
+                    <i class="bi bi-emoji-smile"></i>
+                {% elif 'بصري' in strategy or 'صور' in strategy or 'بطاقات' in strategy %}
+                    <i class="bi bi-eye"></i>
+                {% elif 'حركي' in strategy or 'لعب' in strategy or 'تمارين' in strategy %}
+                    <i class="bi bi-activity"></i>
+                {% elif 'كلام' in strategy or 'لغة' in strategy or 'كلمات' in strategy %}
+                    <i class="bi bi-chat-dots"></i>
+                {% else %}
+                    <i class="bi bi-star"></i>
+                {% endif %}
             </div>
-
-            <h3>
-                تقليل المشتتات
-            </h3>
-
-            <p>
-                حاول تقليل الأصوات العالية أثناء الأنشطة
-                لزيادة تركيز الطفل واستجابته.
-            </p>
-
+            <p>{{ strategy }}</p>
         </div>
-
-        <div class="strategy-card">
-
-            <div class="strategy-icon">
-                <i class="bi bi-emoji-smile"></i>
-            </div>
-
-            <h3>
-                التعزيز الإيجابي
-            </h3>
-
-            <p>
-                استخدم كلمات التشجيع والمكافآت البسيطة
-                عند إتمام الطفل للنشاط بنجاح.
-            </p>
-
+        {% empty %}
+        <div style="text-align:center; padding:40px; grid-column:1/-1;">
+            <p style="color:#888;">لا توجد استراتيجيات متاحة حالياً.</p>
         </div>
-
+        {% endfor %}
     </div>
 
     <!-- feedback -->
-
     <div class="feedback-box">
-
-        <h3>
-            كيف كانت استجابة الطفل؟
-        </h3>
-
-        <p>
-            ساعدنا بتحسين الخطة من خلال مشاركة ملاحظاتك اليومية.
-        </p>
+        <h3>كيف كانت استجابة الطفل؟</h3>
+        <p>ساعدنا بتحسين الخطة من خلال مشاركة ملاحظاتك اليومية.</p>
 
         <div class="feedback-actions">
-
-            <button class="feedback-btn yes">
+            <button class="feedback-btn yes" onclick="sendFeedback('positive')">
                 نعم، الوضع ممتاز
             </button>
-
-            <button class="feedback-btn no"
-                    onclick="showFeedbackField()">
+            <button class="feedback-btn no" onclick="showFeedbackField()">
                 لا، واجهنا مشكلة
             </button>
-
         </div>
 
         <textarea
             id="feedbackField"
             class="feedback-textarea"
+            style="display:none;"
             placeholder="اكتب ماذا حدث مع الطفل أو ما الصعوبة التي واجهتها..."></textarea>
 
-        <button class="action-btn submit-feedback">
-            إرسال الملاحظات
+        <button id="submitBtn" class="action-btn submit-feedback" style="display:none;" onclick="sendFeedback('negative')">
+            إرسال الملاحظات وتحديث الخطة
         </button>
+
+        <!-- نتيجة AI -->
+        <div id="ai-response" style="display:none; margin-top:20px; background:#f0faf5; border-radius:12px; padding:16px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                <i class="bi bi-stars" style="color:var(--primary-green);"></i>
+                <strong style="color:var(--primary-green);">اقتراح الذكاء الاصطناعي</strong>
+            </div>
+            <p id="ai-suggestion" style="font-size:14px; color:#444; line-height:1.8;"></p>
+            <button onclick="applyNewPlan()" class="action-btn" style="margin-top:12px; font-size:13px;">
+                تطبيق الاقتراح وتحديث الخطة
+            </button>
+        </div>
+
+        <!-- loading -->
+        <div id="ai-loading" style="display:none; text-align:center; padding:20px;">
+            <div style="color:var(--primary-green); font-size:14px;">
+                <i class="bi bi-stars"></i> جاري تحليل ملاحظاتك وتحديث الخطة...
+            </div>
+        </div>
 
     </div>
 
 </div>
 
 <!-- sidebar -->
-
 <aside class="sidebar-plan">
 
-    <a class="back-btn" href="#">
+    <a class="back-btn" href="{% url 'plans:main_plan_view' %}">
         <i class="fa-solid fa-arrow-right"></i>
         العودة للخطة
     </a>
 
-    <h2 class="sidebar-title">
-        أقسام الخطة
-    </h2>
+    <h2 class="sidebar-title">أقسام الخطة</h2>
 
     <div class="steps">
 
         <div class="step done">
-            <div>
+            <a href="{% url 'plans:support_plan_view' %}" class="step-btn">
                 <h3>الأنشطة المقترحة</h3>
                 <p>تم إكمال المرحلة</p>
-            </div>
-            <span>
-                <i class="bi bi-check-lg"></i>
-            </span>
+            </a>
+            <span><i class="bi bi-check-lg"></i></span>
         </div>
 
         <div class="step done">
-            <div>
+            <a href="{% url 'plans:video_plan_view' %}" class="step-btn">
                 <h3>فيديوهات تعليمية</h3>
                 <p>تم إكمال المرحلة</p>
-            </div>
-            <span>
-                <i class="bi bi-check-lg"></i>
-            </span>
+            </a>
+            <span><i class="bi bi-check-lg"></i></span>
         </div>
 
         <div class="step active">
@@ -169,13 +143,56 @@
 </div>
 
 <script>
-
-function showFeedbackField(){
-
+function showFeedbackField() {
     document.getElementById("feedbackField").style.display = "block";
-
+    document.getElementById("submitBtn").style.display = "block";
 }
 
+function sendFeedback(type) {
+    const feedback = document.getElementById("feedbackField").value;
+
+    if (type === 'positive') {
+        document.getElementById("ai-response").style.display = "block";
+        document.getElementById("ai-suggestion").innerText = "ممتاز! استمر على نفس النهج. الطفل يستجيب بشكل جيد للخطة الحالية.";
+        return;
+    }
+
+    if (!feedback.trim()) {
+        alert("من فضلك اكتب ما واجهته قبل الإرسال");
+        return;
+    }
+
+    document.getElementById("ai-loading").style.display = "block";
+    document.getElementById("submitBtn").disabled = true;
+
+    fetch("{% url 'plans:update_plan_feedback' %}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}",
+        },
+        body: JSON.stringify({ feedback: feedback })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("ai-loading").style.display = "none";
+        document.getElementById("ai-response").style.display = "block";
+
+        if (data.success) {
+            document.getElementById("ai-suggestion").innerText = data.suggestion;
+        } else {
+            document.getElementById("ai-suggestion").innerText = "حدث خطأ، حاول مجدداً.";
+        }
+    })
+    .catch(() => {
+        document.getElementById("ai-loading").style.display = "none";
+        document.getElementById("ai-suggestion").innerText = "حدث خطأ في الاتصال.";
+    });
+}
+
+function applyNewPlan() {
+    window.location.href = "{% url 'plans:support_plan_view' %}";
+}
 </script>
 
 {% endblock %}

@@ -37,7 +37,7 @@
             <input type="hidden" name="current_index" value="{{ current_index }}">
 
             <div class="answer-options">
-                <button type="submit" name="answer" value="always" 
+                <button type="submit" name="answer" value="always"
                     class="answer-btn {% if saved_answer == 'always' %}selected{% endif %}">
                     دائماً
                 </button>
@@ -55,40 +55,32 @@
                 </button>
             </div>
 
+            <div class="nav-actions">
+                {% if current_index > 1 %}
+                <button type="submit" name="direction" value="prev"
+                    style="background:none; border:none; color:var(--light-text); cursor:pointer;">
+                    &lt; السابق
+                </button>
+                {% else %}
+                <div></div>
+                {% endif %}
+
+                <span style="color: #bbb;">الخطوة {{ current_index }} من {{ total }}</span>
+
+                {% if current_index == total %}
+                <button type="submit" name="direction" value="finish" class="btn-next">
+                    إنهاء وتحليل
+                </button>
+                {% else %}
+                <button type="submit" name="direction" value="next" class="btn-next">
+                    السؤال التالي &gt;
+                </button>
+                {% endif %}
+            </div>
+
         </form>
 
     </section>
-
-    <div class="nav-actions">
-        <form method="POST" style="display:inline;">
-            {% csrf_token %}
-            <input type="hidden" name="question_id" value="{{ question.id }}">
-            <input type="hidden" name="current_index" value="{{ current_index }}">
-            {% if current_index > 1 %}
-            <button type="submit" name="direction" value="prev" 
-                style="background:none; border:none; color:var(--light-text); cursor:pointer;">
-                &lt; السابق
-            </button>
-            {% endif %}
-        </form>
-
-        <span style="color: #bbb;">الخطوة {{ current_index }} من {{ total }}</span>
-
-        <form method="POST" style="display:inline;">
-            {% csrf_token %}
-            <input type="hidden" name="question_id" value="{{ question.id }}">
-            <input type="hidden" name="current_index" value="{{ current_index }}">
-            {% if current_index == total %}
-            <button type="submit" name="direction" value="finish" class="btn-next">
-                إنهاء وتحليل
-            </button>
-            {% else %}
-            <button type="submit" name="direction" value="next" class="btn-next">
-                السؤال التالي &gt;
-            </button>
-            {% endif %}
-        </form>
-    </div>
 
     <footer class="bottom-grid">
         <div class="info-card">
