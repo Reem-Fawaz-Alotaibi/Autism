@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="weekly-container">
 
     <!-- TOP -->
     <div class="top">
@@ -27,11 +27,11 @@
             <div class="card-activate">
                 <div class="card-title">يحدث الآن</div>
                 {% if daily_routine %}
-                    <h1>{{ daily_routine.0.title }}</h1>
-                    <p>{{ daily_routine.0.description }}</p>
+                <h1>{{ daily_routine.0.title }}</h1>
+                <p>{{ daily_routine.0.description }}</p>
                 {% elif current_activity %}
-                    <h1>{{ current_activity.title }}</h1>
-                    <p>{{ current_activity.description }}</p>
+                <h1>{{ current_activity.title }}</h1>
+                <p>{{ current_activity.description }}</p>
                 {% endif %}
             </div>
             <a class="btn-support" href="{% url 'plans:support_plan_view' %}">بدء النشاط</a>
@@ -46,7 +46,7 @@
             {% for day in week_days %}
             <div class="day {% if day.is_today %}active{% endif %}">
                 {% if day.is_today %}
-                    <div style="font-size:32px;"><i class="bi bi-calendar-week"></i></div>
+                <div style="font-size:32px;"><i class="bi bi-calendar-week"></i></div>
                 {% endif %}
                 <h3>{{ day.name }}</h3>
                 <p>{{ day.date }}</p>

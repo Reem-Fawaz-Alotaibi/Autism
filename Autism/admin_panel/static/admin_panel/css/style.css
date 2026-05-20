@@ -96,7 +96,7 @@
     background: #4dbfff;
 }
 
-.state-text{
+.state-text {
     margin-top: 15px;
 }
 
@@ -111,14 +111,14 @@
 
 /* الأقسام */
 
-.top-section{
+.top-section {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
     margin-bottom: 20px;
 }
 
-.bottom-section{
+.bottom-section {
     width: 100%;
     margin-bottom: 20px;
 }
@@ -165,7 +165,7 @@ table td {
     font-size: 15px;
 }
 
-.table-wrapper{
+.table-wrapper {
     max-height: 320px;
     overflow-y: auto;
 }
@@ -173,7 +173,7 @@ table td {
 /* الحالات */
 
 .status {
-    padding:6px 10px;
+    padding: 6px 10px;
     border-radius: 30px;
     font-size: 10px;
     font-weight: bold;
@@ -212,7 +212,7 @@ table td {
     border-radius: 30px;
 }
 
-.actions-user{
+.actions-user {
     padding: 6px 10px;
     display: flex;
     gap: 10px;
@@ -220,7 +220,7 @@ table td {
 
 .block-btn,
 .unblock-btn,
-.delete-btn{
+.delete-btn {
     text-decoration: none;
     padding: 5px 10px;
     border-radius: 8px;
@@ -228,17 +228,18 @@ table td {
     color: white;
 }
 
-.block-btn{
+.block-btn {
     background: #ff9800;
 }
 
-.unblock-btn{
+.unblock-btn {
     background: #4caf50;
 }
 
-.delete-btn{
+.delete-btn {
     background: #f44336;
 }
+
 /* الإجراءات */
 
 .actions-btn {
@@ -248,7 +249,7 @@ table td {
     cursor: pointer;
 }
 
-.actions-btn a{
+.actions-btn a {
     color: #555;
 }
 
@@ -400,4 +401,313 @@ table td {
 .post-link:hover {
     opacity: 0.9;
     transform: translateY(-2px);
+}
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+
+    .page {
+        flex-direction: column;
+    }
+
+    .support-sidebar {
+        width: 100%;
+        order: 2;
+    }
+
+    .support-content {
+        order: 1;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .info-cards {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .activities {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .support-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .plan-duration {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .support-sidebar {
+        padding: 14px;
+    }
+
+    .steps {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .tip-box {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .tip-icon {
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 430px) {
+
+    /* الصفحة الأساسية */
+    .page {
+        flex-direction: column;
+        padding: 10px;
+        gap: 10px;
+    }
+
+    /* المحتوى */
+    .support-content {
+        padding: 16px;
+    }
+
+    /* الهيدر */
+    .support-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .plan-duration {
+        width: 100%;
+    }
+
+    /* الكروت */
+    .info-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .info-card {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    /* الأنشطة */
+    .activities-wrapper {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .activities {
+        grid-template-columns: 1fr;
+    }
+
+    /* أزرار السلايدر */
+    .slider-btn {
+        width: 100%;
+        border-radius: 12px;
+    }
+
+    /* النصوص */
+    .activity-card h3 {
+        font-size: 16px;
+    }
+
+    .activity-card p {
+        font-size: 11px;
+    }
+
+    /* sidebar */
+    .support-sidebar {
+        width: 100%;
+        order: 2;
+    }
+
+    /* steps */
+    .step {
+        padding: 14px;
+    }
+
+    .step p {
+        font-size: 11px;
+    }
+
+    /* tip box */
+    .tip-box {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .tip-icon {
+        margin-top: 10px;
+    }
+
+    /* circle progress */
+    .circle {
+        width: 80px;
+        height: 80px;
+    }
+
+    .circle span {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 430px) {
+
+    .support-sidebar {
+        width: 100%;
+        display: block;
+        /* أو flex عادي */
+    }
+
+}
+
+@media (max-width: 430px) {
+
+    .support-page {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .support-sidebar {
+        width: 100%;
+        order: 2;
+    }
+
+    .support-content {
+        width: 100%;
+        order: 1;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .weekly-container {
+        max-width: 100%;
+        padding: 0 12px;
+        overflow-x: hidden;
+    }
+
+    .top {
+        grid-template-columns: 1fr;
+    }
+
+    .moods {
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .mood {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+
+    .now-card {
+        flex-direction: column;
+    }
+
+    .btn-support {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .days {
+        gap: 8px;
+    }
+
+    .day {
+        padding: 10px 6px;
+    }
+
+    .day h3 {
+        font-size: 13px;
+    }
+
+    .day p {
+        font-size: 11px;
+    }
+
+    .days-wrapper {
+        gap: 6px;
+    }
+
+    .arrow {
+        width: 34px;
+        height: 34px;
+        font-size: 13px;
+        flex-shrink: 0;
+    }
+
+    .timeline-card {
+        padding: 14px;
+    }
+
+    .timeline-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .timeline {
+        padding-right: 36px;
+    }
+
+    .timeline-item {
+        gap: 10px;
+    }
+
+    .activity {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 12px;
+    }
+
+    .activity h2 {
+        font-size: 15px;
+    }
+
+    .activity p {
+        font-size: 12px;
+    }
+
+    .time {
+        min-width: 55px;
+        font-size: 12px;
+        padding-top: 20px;
+    }
+
+    .tag {
+        font-size: 10px;
+        padding: 6px 10px;
+    }
+
+    .bottom {
+        grid-template-columns: 1fr;
+    }
+
+    .bottom-card {
+        min-height: auto;
+    }
+
+    .closed-day h2 {
+        font-size: 15px;
+    }
 }
