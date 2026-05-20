@@ -249,7 +249,7 @@ def support_strategies_view(request: HttpRequest):
         for cat in plan.categories:
             if cat in category_strategies:
                 strategies.extend(category_strategies[cat])
-
+            strategies = strategies[:3]
     return render(request, 'plans/support_strategies.html', {
         'strategies': strategies,
         'plan':       plan,
