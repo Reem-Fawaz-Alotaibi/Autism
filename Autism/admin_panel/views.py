@@ -6,6 +6,7 @@ from community.models import Post, Report
 from support_map.models import AutismSupportPlace
 from django.utils import timezone
 from datetime import timedelta
+from assessment.models import AssessmentSession
 
 # Create your views here.
 
@@ -15,6 +16,8 @@ def dashboard_view(request:HttpRequest):
     post_count = Post.objects.count()
     reports_count = Report.objects.count()
     support_centers_count = AutismSupportPlace.objects.count()
+    video_count = AssessmentSession.objects.filter(path='video').count()
+    questionnaire_count = AssessmentSession.objects.filter(path='questionnaire').count()
 
     last_month = timezone.now() - timedelta(days=30)
 
@@ -33,6 +36,8 @@ def dashboard_view(request:HttpRequest):
         'latest_reports': latest_reports,
         'latest_users': latest_users,
         'support_centers_count': support_centers_count,
+        'video_count': video_count,
+        'questionnaire_count': questionnaire_count,
     })
 
 

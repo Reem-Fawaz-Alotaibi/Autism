@@ -76,123 +76,17 @@ body{
 .bear{
     width:220px;
     height:400px;
-    background:#d8a676;
     border-radius:130px;
     position:relative;
-    margin:auto;
-    box-shadow:0 20px 40px rgba(0,0,0,0.08);
-    margin-top: 40px;
+    margin-top: 90px;
+    margin-left: 40px;
 }
 
-.ear{
-    width:80px;
-    height:80px;
-    background:#d8a676;
+.img-bear{
     border-radius:50%;
     position:absolute;
+    left: -90px;
     top:-20px;
-}
-
-.ear::before{
-    content:'';
-    width:45px;
-    height:45px;
-    background:#b37c4b;
-    border-radius:50%;
-    position:absolute;
-    top:17px;
-    left:17px;
-}
-
-.ear.left{
-    left:10px;
-}
-
-.ear.right{
-    right:10px;
-}
-
-.eye{
-    width:22px;
-    height:30px;
-    background:#222;
-    border-radius:50%;
-    position:absolute;
-    top:105px;
-}
-
-.eye.left{
-    left:70px;
-}
-
-.eye.right{
-    right:70px;
-}
-
-.eye::after{
-    content:'';
-    width:7px;
-    height:7px;
-    background:white;
-    border-radius:50%;
-    position:absolute;
-    top:5px;
-    left:5px;
-}
-
-.nose{
-    width:55px;
-    height:40px;
-    background:#f7e5d3;
-    border-radius:50px;
-    position:absolute;
-    top:125px;
-    left:50%;
-    transform:translateX(-50%);
-}
-
-.nose::after{
-    content:'';
-    width:20px;
-    height:15px;
-    background:#3c2b22;
-    border-radius:50%;
-    position:absolute;
-    top:8px;
-    left:50%;
-    transform:translateX(-50%);
-}
-
-.mouth{
-    width:35px;
-    height:18px;
-    border-bottom:4px solid #3c2b22;
-    border-radius:0 0 40px 40px;
-    position:absolute;
-    top:140px;
-    left:50%;
-    transform:translateX(-50%);
-}
-
-.hand{
-    width:70px;
-    height:120px;
-    background:#d8a676;
-    border-radius:50px;
-    position:absolute;
-    top:145px;
-}
-
-.hand.left{
-    left:-15px;
-    transform:rotate(15deg);
-}
-
-.hand.right{
-    right:-10px;
-    transform:rotate(-30deg);
-    animation:thinking 2s ease-in-out infinite;
-    transform-origin:top;
 }
 
 @keyframes thinking{
@@ -207,28 +101,12 @@ body{
     }
 }
 
-.leg{
-    width:80px;
-    height:90px;
-    background:#d8a676;
-    border-radius:50px;
-    position:absolute;
-    bottom:-20px;
-}
-
-.leg.left{
-    left:35px;
-}
-
-.leg.right{
-    right:35px;
-}
 
 .sign{
     position:absolute;
     left:-110px;
-    bottom:120px;
-    transform:rotate(-20deg);
+    bottom:150px;
+    transform:rotate(-40deg);
 }
 
 .board{
@@ -301,8 +179,8 @@ body{
 
 .question{
     position:absolute;
-    top:-90px;
-    right:40px;
+    top:10px;
+    right:250px;
     font-size:70px;
     color:#7fb285;
     animation:bounce 2s infinite;
@@ -355,37 +233,19 @@ body{
 <body>
 
 <div class="container">
-
     <div class="left-side">
-
         <div class="blob"></div>
-
         <div class="bear-wrapper">
-
             <div class="question">؟</div>
-
-            
-
             <div class="bear">
-
-                <div class="ear left"></div>
-                <div class="ear right"></div>
-
-                <div class="eye left"></div>
-                <div class="eye right"></div>
-
-                <div class="nose"></div>
-                <div class="mouth"></div>
-
-                <div class="hand left"></div>
-                <div class="hand right"></div>
+                <img src="https://res.cloudinary.com/ddkq9ideu/image/upload/v1778738710/mupd1hhlm4w5vn23ot73.png" alt="" class="img-bear">
                 <div class="sign">
                 <div class="board">404</div>
                 <div class="stick"></div>
                 </div>
+                
 
-                <div class="leg left"></div>
-                <div class="leg right"></div>
+                
 
             </div>
 
