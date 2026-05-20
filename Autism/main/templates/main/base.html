@@ -298,10 +298,11 @@
                         <p class="footer-newsletter-desc">
                             احصل على تذكيرات لطيفة أسبوعية ونصائح دعم مباشرة في بريدك.
                         </p>
-                        <div class="footer-newsletter-form">
+                          <form action="{% url 'subscribe' %}" method="POST" class="footer-newsletter-form">
+                            {% csrf_token %}
                             <button type="submit">انضم</button>
-                            <input type="email" placeholder="البريد الإلكتروني">
-                        </div>
+                            <input type="email" name="email" placeholder="البريد الإلكتروني" required>
+                        </form>
                     </div>
 
                 </div>
@@ -330,11 +331,24 @@
                             </div>
                         </div>
                     </div>
+                    {% if user.is_authenticated %}
                     <div class="messages" id="messages"></div>
                     <div class="input-area">
                         <button onclick="sendMessage()">➤</button>
                         <input type="text" id="input" placeholder="اكتب رسالتك...">
                     </div>
+                    {% else %}
+                    <div class="guest-chat-message" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 350px; padding: 30px 20px; text-align: center; background-color: #f9fbfd; border-radius: 0 0 16px 16px;">
+                        <i class="bi bi-shield-lock" style="font-size: 3.5rem; color: var(--primary-color, #4A90E2); margin-bottom: 15px;"></i>
+                        <h4 style="color: var(--text-dark, #2d3748); font-weight: 700; margin-bottom: 10px;">عذراً، يجب تسجيل الدخول</h4>
+                        <p style="color: var(--text-muted, #718096); font-size: 0.95rem; margin-bottom: 25px; line-height: 1.6;">
+                            للحفاظ على خصوصية البيانات وتقديم استشارات مخصصة لطفلك، المساعد الذكي متاح فقط للأعضاء المسجلين.
+                        </p>
+                        <a href="{% url 'accounts:signin' %}" style="background-color: var(--primary-color, #4A90E2); color: white; text-decoration: none; border-radius: 25px; padding: 12px 30px; font-weight: 600; box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3); transition: all 0.3s ease;">
+                            تسجيل الدخول للبدء
+                        </a>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -388,12 +402,31 @@
 
         // chatbot script 
 
-        const convId = 1;
+    let convId = null;
 
-        function openChat() {
-            document.getElementById("chatModal").classList.add("active");
+    async function initChat() {
+        try {
+            let res = await fetch('/chatbot/get-conversation/');
+            let data = await res.json();
+            if (data.conv_id) {
+                convId = data.conv_id;
+            }
+        } catch (err) {
+            console.error("Fetch error:", err);
+        }
+    }
+    
+    // Initialize once on load
+    initChat();
+
+    function openChat() {
+        document.getElementById("chatModal").classList.add("active");
+        if (!convId) {
+            initChat().then(() => loadMessages());
+        } else {
             loadMessages();
         }
+    }
 
         function closeChat() {
             document.getElementById("chatModal").classList.remove("active");
@@ -405,48 +438,52 @@
             let res = await fetch(`/chatbot/conversation/${convId}/messages/`);
             let data = await res.json();
 
-            let box = document.getElementById("messages");
-            box.innerHTML = "";
+        let box = document.getElementById("messages");
+        if (!box) return;
+        box.innerHTML = "";
 
-            data.forEach(msg => {
-                let div = document.createElement("div");
-                div.classList.add("msg");
-                div.classList.add(msg.message_type === "user" ? "user" : "bot");
-                div.innerText = msg.content;
-                box.appendChild(div);
-            });
+        data.forEach(msg => {
+            let div = document.createElement("div");
+            div.classList.add("msg");
+            div.classList.add(msg.message_type === "user" ? "user" : "bot"); // Use message_type
+            div.innerText = msg.content;
+            box.appendChild(div);
+        });
 
             box.scrollTop = box.scrollHeight;
         }
 
-        async function sendMessage() {
-            let input = document.getElementById("input");
-            if (!input.value.trim() || !convId) return;
+    async function sendMessage() {
+        let input = document.getElementById("input");
+        if (!input) return;
+        let content = input.value.trim();
+        if (!content || !convId) return;
+        
+        input.value = "";
 
-            await fetch(`/chatbot/conversation/${convId}/send/`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": getCookie("csrftoken")
-                },
-                body: JSON.stringify({ content: input.value })
-            });
+        let res = await fetch(`/chatbot/conversation/${convId}/send/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken")
+            },
+            body: JSON.stringify({ content: content })
+        });
 
-            input.value = "";
+        if (res.ok) {
             loadMessages();
         }
+    }
 
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== "") {
-                document.cookie.split(";").forEach(cookie => {
-                    let c = cookie.trim();
-                    if (c.startsWith(name + "=")) {
-                        cookieValue = decodeURIComponent(c.substring(name.length + 1));
-                    }
-                });
-            }
-            return cookieValue;
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            document.cookie.split(";").forEach(cookie => {
+                let c = cookie.trim();
+                if (c.startsWith(name + "=")) {
+                    cookieValue = decodeURIComponent(c.substring(name.length + 1));
+                }
+            });
         }
 
         document.getElementById("input").addEventListener("keydown", function (e) {
@@ -554,6 +591,8 @@
     </script>
 
     {% block extra_js %}{% endblock %}
+    
+    {% include 'notifications/success_modal.html' %}
 </body>
 
 </html>
