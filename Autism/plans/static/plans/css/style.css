@@ -818,8 +818,8 @@
 }
 
 .start-btn{
-    background:var(--primary-green);
-    color:#fff;
+    background:#f3f3f3;
+    color: #333;
     text-decoration:none;
     padding:12px 18px;
     border-radius:14px;

@@ -251,9 +251,9 @@ def processing_view(request):
         # معلومات الطفل
         child_info = {
             'نوع التواصل':      child.get_communication_type_display(),
-            'الحساسية الحسية':  child.get_sensory_sensitivities_display(),
+            # 'الحساسية الحسية':  child.get_sensory_sensitivities_display(),
             'الأهداف الحالية':  child.goals,
-            'ملاحظات ولي الأمر': child.notes,
+            # 'ملاحظات ولي الأمر': child.notes,
         }
 
         # إرسال لـ OpenAI — التصنيفات والأنشطة

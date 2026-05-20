@@ -35,20 +35,20 @@
         <h2>تم إنشاء أنشطة مخصصة لـ {{ child.name }}</h2>
         <p>
           {% if plan.session.path == 'video' %}
-            تم اختيار هذه الأنشطة بناءً على تحليل الفيديو ونتائج التقييم الخاصة بالطفل.
+          تم اختيار هذه الأنشطة بناءً على تحليل الفيديو ونتائج التقييم الخاصة بالطفل.
           {% else %}
-            تم اختيار هذه الأنشطة بناءً على نتائج التقييم الخاصة بالطفل.
+          تم اختيار هذه الأنشطة بناءً على نتائج التقييم الخاصة بالطفل.
           {% endif %}
         </p>
         <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
           {% for cat in categories %}
-            <span style="background:#e8f5e9; color:#1D9E75; padding:4px 12px; border-radius:20px; font-size:12px;">
-              {% if cat == 'visual' %}👁️ بصري
-              {% elif cat == 'sensory' %}👂 حسي
-              {% elif cat == 'motor' %}🏃 حركي
-              {% elif cat == 'language' %}🗣️ لغوي
-              {% endif %}
-            </span>
+          <span style="background:#e8f5e9; color:#1D9E75; padding:4px 12px; border-radius:20px; font-size:12px;">
+            {% if cat == 'visual' %}👁️ بصري
+            {% elif cat == 'sensory' %}👂 حسي
+            {% elif cat == 'motor' %}🏃 حركي
+            {% elif cat == 'language' %}🗣️ لغوي
+            {% endif %}
+          </span>
           {% endfor %}
         </div>
       </div>
@@ -139,7 +139,7 @@
             </div>
             {% if item.activity_id %}
             <a href="{% url 'activity:activity_play' item.activity_id %}"
-               style="font-size:12px; color:var(--primary-green); text-decoration:none; border:1px solid var(--primary-green); padding:4px 10px; border-radius:8px;">
+              style="font-size:12px; color:var(--primary-green); text-decoration:none; border:1px solid var(--primary-green); padding:4px 10px; border-radius:8px;">
               ابدأ
             </a>
             {% endif %}
@@ -156,9 +156,9 @@
         <h3>نصيحة اليوم</h3>
         <p>
           {% if ai_summary %}
-            {{ ai_summary }}
+          {{ ai_summary }}
           {% else %}
-            التفاعل وخلق بيئة هادئة يساعد على زيادة تركيز طفلك واستجابته للنشاط.
+          التفاعل وخلق بيئة هادئة يساعد على زيادة تركيز طفلك واستجابته للنشاط.
           {% endif %}
         </p>
       </div>

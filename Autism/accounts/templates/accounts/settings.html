@@ -43,7 +43,7 @@
                 <line x1="12" y1="9" x2="12" y2="13" />
                 <line x1="12" y1="17" x2="12.01" y2="17" />
             </svg>
-            الحذف
+            إدارة الحساب
         </button>
     </div>
 
@@ -206,7 +206,9 @@
 
             <div class="theme-options">
 
-                <a href="{% url 'main:set_theme' 'default' %}?next={{ request.path }}" class="theme-option active">
+                <!-- الافتراضي ✅ صح -->
+                <a href="{% url 'main:set_theme' 'default' %}?next={{ request.get_full_path }}"
+                    class="theme-option {% if theme == 'default' %}active{% endif %}">
                     <div class="theme-preview light-preview">
                         <div class="theme-prev-sidebar"></div>
                         <div class="theme-prev-content">
@@ -217,7 +219,9 @@
                     <span>الافتراضي</span>
                 </a>
 
-                <a href="{% url 'main:set_theme' 'pink' %}?next={{ request.path }}" class="theme-option">
+                <!-- وردي -->
+                <a href="{% url 'main:set_theme' 'pink' %}?next={{ request.get_full_path }}"
+                    class="theme-option {% if theme == 'pink' %}active{% endif %}">
                     <div class="theme-preview pink-preview">
                         <div class="theme-prev-sidebar"></div>
                         <div class="theme-prev-content">
@@ -228,9 +232,10 @@
                     <span>وردي</span>
                 </a>
 
-
-                <a href="{% url 'main:set_theme' 'blue' %}?next={{ request.path }}" class="theme-option">
-                    <div class="theme-preview pink-preview">
+                <!-- الأزرق -->
+                <a href="{% url 'main:set_theme' 'blue' %}?next={{ request.get_full_path }}"
+                    class="theme-option {% if theme == 'blue' %}active{% endif %}">
+                    <div class="theme-preview blue-preview">
                         <div class="theme-prev-sidebar"></div>
                         <div class="theme-prev-content">
                             <div class="theme-prev-bar"></div>
@@ -240,9 +245,10 @@
                     <span>الازرق</span>
                 </a>
 
-
-                <a href="{% url 'main:set_theme' 'purple' %}?next={{ request.path }}" class="theme-option">
-                    <div class="theme-preview pink-preview">
+                <!-- البنفسجي -->
+                <a href="{% url 'main:set_theme' 'purple' %}?next={{ request.get_full_path }}"
+                    class="theme-option {% if theme == 'purple' %}active{% endif %}">
+                    <div class="theme-preview purple-preview">
                         <div class="theme-prev-sidebar"></div>
                         <div class="theme-prev-content">
                             <div class="theme-prev-bar"></div>
@@ -251,7 +257,6 @@
                     </div>
                     <span>البنفسجي</span>
                 </a>
-
             </div>
         </div>
 
@@ -266,7 +271,14 @@
             </div>
             <div class="font-size-row">
                 <span class="font-label small">ص</span>
-                <input type="range" class="font-slider" min="1" max="3" value="2" oninput="updateFontLabel(this)" />
+                <input
+                    type="range"
+                    id="fontSlider"
+                    class="font-slider"
+                    min="1"
+                    max="3"
+                    value="2"
+                    oninput="updateFontLabel(this)" />
                 <span class="font-label large">ص</span>
             </div>
             <p class="field-hint" id="font-size-label">متوسط</p>
@@ -393,17 +405,58 @@
         return match ? match[2] : null;
     }
 
+    window.addEventListener("load", () => {
+
+        let saved = getCookie("fontSize");
+
+        const slider = document.getElementById("fontSlider");
+
+        // إذا ما فيه حجم محفوظ
+        if (!saved) {
+
+            saved = 2;
+
+            setCookie("fontSize", 2, 30);
+        }
+
+        if (slider) {
+
+            slider.value = saved;
+
+            applyFontSize(saved);
+
+            const labels = ['صغير', 'متوسط', 'كبير'];
+
+            document.getElementById('font-size-label')
+                .textContent = labels[saved - 1];
+        }
+    });
     function applyFontSize(value) {
-        let size;
 
-        if (value == 1) size = "14px";
-        else if (value == 2) size = "16px";
-        else size = "18px";
+        let fontSize;
+        let zoom;
 
-        document.documentElement.style.setProperty('--font-size', size);
+        if (value == 1) {
+            fontSize = "13px";
+            zoom = "0.85";
+        }
+        else if (value == 2) {
+            fontSize = "16px";
+            zoom = "1";
+        }
+        else {
+            fontSize = "22px";
+            zoom = "1.20";
+        }
+
+        document.documentElement.style
+            .setProperty('--base-font-size', fontSize);
+
+        document.documentElement.style
+            .setProperty('--zoom-size', zoom);
     }
 
-    // عند التغيير
+
     function updateFontLabel(input) {
         const labels = ['صغير', 'متوسط', 'كبير'];
         document.getElementById('font-size-label').textContent = labels[input.value - 1];

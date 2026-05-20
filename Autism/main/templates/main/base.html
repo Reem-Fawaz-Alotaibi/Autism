@@ -24,6 +24,10 @@
 </head>
 
 <body id="top">
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="فتح القائمة">
+        <i class="bi bi-list"></i>
+    </button>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <div class="app-shell">
 
         <aside class="sidebar">
@@ -71,12 +75,12 @@
 
                     <!-- Children appear here once added -->
                     {% if user.is_authenticated %}
-                        {% for child in user.children.all %}
-                        <a href="{% url 'children:profile' child.id %}" class="nav-link-item child-item">
-                            <span class="nav-label">{{ child.name }}</span>
-                            <i class="bi bi-person-circle nav-icon"></i>
-                        </a>
-                        {% endfor %}
+                    {% for child in user.children.all %}
+                    <a href="{% url 'children:profile' child.id %}" class="nav-link-item child-item">
+                        <span class="nav-label">{{ child.name }}</span>
+                        <i class="bi bi-person-circle nav-icon"></i>
+                    </a>
+                    {% endfor %}
                     {% endif %}
                 </div>
 
@@ -459,8 +463,96 @@
             });
         });
 
+        // بعد - داخل DOMContentLoaded ✅
+        document.addEventListener('DOMContentLoaded', function () {
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            function openSidebar() {
+                sidebar.classList.add('open');
+                overlay.classList.add('active');
+                hamburgerBtn.innerHTML = '<i class="bi bi-x-lg"></i>';
+            }
+
+            function closeSidebar() {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+                hamburgerBtn.innerHTML = '<i class="bi bi-list"></i>';
+            }
+
+            hamburgerBtn.addEventListener('click', () => {
+                sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+            });
+
+            overlay.addEventListener('click', closeSidebar);
+
+            document.querySelectorAll('.nav-link-item').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth <= 768) closeSidebar();
+                });
+            });
+        });
+        function setCookie(name, value, days) {
+
+            let date = new Date();
+
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+
+            document.cookie =
+                name + "=" + value +
+                ";expires=" + date.toUTCString() +
+                ";path=/";
+        }
+
+        function getCookie(name) {
+
+            let match = document.cookie.match(
+                new RegExp('(^| )' + name + '=([^;]+)')
+            );
+
+            return match ? match[2] : null;
+        }
+
+        function applyFontSize(value) {
+
+            let fontSize;
+            let zoom;
+
+            if (value == 1) {
+                fontSize = "13px";
+                zoom = "0.90";
+            }
+            else if (value == 2) {
+                fontSize = "16px";
+                zoom = "1";
+            }
+            else {
+                fontSize = "20px";
+                zoom = "1.10";
+            }
+
+            document.documentElement.style
+                .setProperty('--base-font-size', fontSize);
+
+            document.documentElement.style
+                .setProperty('--zoom-size', zoom);
+        }
+
+        window.addEventListener("load", () => {
+
+            let saved = getCookie("fontSize");
+
+            if (!saved) {
+                saved = 2;
+            }
+
+            applyFontSize(saved);
+        });
+
 
     </script>
+
     {% block extra_js %}{% endblock %}
 </body>
 
