@@ -29,36 +29,36 @@
 
     </div>
 
-    <div class="stats-row">
-        <div class="stat-card">
-            <div class="stat-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                    <polyline points="14 2 14 8 20 8" />
-                </svg>
-            </div>
-            <div class="stat-num">12</div>
-            <div class="stat-label">جلسة مسجّلة</div>
+ <div class="stats-row">
+    <div class="stat-card">
+        <div class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+            </svg>
         </div>
-        <div class="stat-card">
-            <div class="stat-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                </svg>
-            </div>
-            <div class="stat-num">5</div>
-            <div class="stat-label">مهارة مُتابَعة</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M18 20V10M12 20V4M6 20v-6" />
-                </svg>
-            </div>
-            <div class="stat-num">3</div>
-            <div class="stat-label">هدف نشط</div>
-        </div>
+        <div class="stat-num">{{ sessions_count }}</div>
+        <div class="stat-label">جلسة مسجّلة</div>
     </div>
+    <div class="stat-card">
+        <div class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+            </svg>
+        </div>
+        <div class="stat-num">{{ skills_count }}</div>
+        <div class="stat-label">مهارة مُتابَعة</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 20V10M12 20V4M6 20v-6" />
+            </svg>
+        </div>
+        <div class="stat-num">{{ activities_count }}</div>
+        <div class="stat-label">هدف نشط</div>
+    </div>
+</div>
 
     <div class="section-title">المعلومات الأساسية</div>
     <div class="info-grid">
@@ -151,67 +151,37 @@
 
     <div class="section-title">تقدم المهارات</div>
 
-    <div class="cp-skill-row">
-        <div class="cp-skill-info">
-            <span class="cp-skill-name">التواصل البصري</span>
-            <span class="cp-skill-level">في التطور</span>
-        </div>
-        <div class="cp-skill-bar">
-            <div class="cp-skill-fill" style="width: 65%;"></div>
-        </div>
-        <span class="cp-skill-pct">65%</span>
+{% for skill in skill_progress %}
+<div class="cp-skill-row">
+    <div class="cp-skill-info">
+        <span class="cp-skill-name">{{ skill.name }}</span>
+        <span class="cp-skill-level">{{ skill.level }}</span>
     </div>
-
-    <div class="cp-skill-row">
-        <div class="cp-skill-info">
-            <span class="cp-skill-name">اتباع التعليمات</span>
-            <span class="cp-skill-level">جيد</span>
-        </div>
-        <div class="cp-skill-bar">
-            <div class="cp-skill-fill" style="width: 80%;"></div>
-        </div>
-        <span class="cp-skill-pct">80%</span>
+    <div class="cp-skill-bar">
+        <div class="cp-skill-fill" style="width: {{ skill.pct }}%;"></div>
     </div>
+    <span class="cp-skill-pct">{{ skill.pct }}%</span>
+</div>
+{% empty %}
+<p style="color:#aaa; font-size:13px;">لا توجد بيانات بعد</p>
+{% endfor %}
 
-    <div class="cp-skill-row">
-        <div class="cp-skill-info">
-            <span class="cp-skill-name">اللعب الاجتماعي</span>
-            <span class="cp-skill-level">يحتاج دعم</span>
-        </div>
-        <div class="cp-skill-bar">
-            <div class="cp-skill-fill" style="width: 40%;"></div>
-        </div>
-        <span class="cp-skill-pct">40%</span>
+<div class="section-title">آخر الجلسات</div>
+
+{% for session in last_sessions %}
+<div class="cp-session-row">
+    <div class="cp-session-dot"></div>
+    <div class="cp-session-info">
+        <span class="cp-session-title">
+            {% if session.path == 'video' %}تقييم فيديو{% else %}تقييم استبيان{% endif %}
+        </span>
+        <span class="cp-session-date">{{ session.created_at|date:"d F Y" }}</span>
     </div>
-
-    <div class="section-title">آخر الجلسات</div>
-
-    <div class="cp-session-row">
-        <div class="cp-session-dot"></div>
-        <div class="cp-session-info">
-            <span class="cp-session-title">جلسة ABA الأسبوعية</span>
-            <span class="cp-session-date">12 مايو 2025</span>
-        </div>
-        <span class="cp-session-badge">جيدة</span>
-    </div>
-
-    <div class="cp-session-row">
-        <div class="cp-session-dot"></div>
-        <div class="cp-session-info">
-            <span class="cp-session-title">تمارين النطق</span>
-            <span class="cp-session-date">10 مايو 2025</span>
-        </div>
-        <span class="cp-session-badge difficult">صعبة</span>
-    </div>
-
-    <div class="cp-session-row">
-        <div class="cp-session-dot"></div>
-        <div class="cp-session-info">
-            <span class="cp-session-title">نشاط اللعب الجماعي</span>
-            <span class="cp-session-date">8 مايو 2025</span>
-        </div>
-        <span class="cp-session-badge neutral">محايدة</span>
-    </div>
+    <span class="cp-session-badge">{{ session.get_status_display }}</span>
+</div>
+{% empty %}
+<p style="color:#aaa; font-size:13px;">لا توجد جلسات بعد</p>
+{% endfor %}
 
     <div class="section-title">الأهداف الحالية</div>
     <div class="info-card" style="border-right: 3px solid var(--green-main);">
@@ -229,10 +199,6 @@
             تعديل الملف
         </a>
 
-
-        <a href="{% url 'plans:download_report' child.id %}" class="btn-primary">
-            تحميل التقرير PDF
-        </a>
     </div>
 
 </div>
