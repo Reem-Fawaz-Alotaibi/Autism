@@ -22,44 +22,28 @@
         </div>
     </div>
 
-    <a href="{%url 'main:home_page_view'%}"
-   style="background: none;
-          border: 1px solid #ddd;
-          padding: 8px 15px;
-          border-radius: 8px;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          color: #666;
-          font-size: 14px;
-          text-decoration: none;">
-
-    رجوع
-
-    <i class="bi bi-arrow-left"></i>
-
-</a>
+    <a href="{% url 'main:home_page_view' %}"
+       style="background:none; border:1px solid #ddd; padding:8px 15px; border-radius:8px;
+              cursor:pointer; display:flex; align-items:center; gap:8px; color:#666;
+              font-size:14px; text-decoration:none;">
+        رجوع
+        <i class="bi bi-arrow-left"></i>
+    </a>
 </div>
 
 <div class="main-content-area">
 
     <div class="header-title">
         <h2>قبل بناء الخطة، نحتاج إلى بيانات من الطفل</h2>
-        <p>
-    قم برفع مقطع فيديو قصير للطفل ليتم تحليله باستخدام الذكاء الاصطناعي وبناء خطة مناسبة له.
-</p>
+        <p>قم برفع مقطع فيديو قصير للطفل ليتم تحليله باستخدام الذكاء الاصطناعي وبناء خطة مناسبة له.</p>
     </div>
 
     <div class="questionnaire-wrapper">
 
-        <!-- رفع الفيديو -->
         <div class="card-option">
 
             <div class="card-icon-header">
-                <h4 style="margin:0">
-                    1. رفع فيديو للطفل
-                </h4>
+                <h4 style="margin:0">1. رفع فيديو للطفل</h4>
             </div>
 
             <p style="font-size:13px; color:var(--text-gray);">
@@ -74,61 +58,37 @@
 
                 <!-- اختيار الطفل -->
                 <div style="margin-bottom:15px;">
-
                     <label style="display:block; margin-bottom:8px; font-size:14px; font-weight:bold;">
                         اختر الطفل
                     </label>
-
-                    <select name="child"
-                            required
+                    <select name="child" required
                             style="width:100%; padding:12px; border-radius:10px; border:1px solid #ddd;">
-
                         {% for child in children %}
-                            <option value="{{ child.id }}">
-                                {{ child.name }}
-                            </option>
+                            <option value="{{ child.id }}">{{ child.name }}</option>
                         {% endfor %}
-
                     </select>
-
                 </div>
 
-                <!-- رفع الفيديو -->
-                <label for="video-upload" class="upload-box-v2" style="cursor:pointer; display:block; text-align:center;">
-
-                    <div style="font-size:40px; margin-bottom:10px;">
-                        ☁️
-                    </div>
-
-                    <div style="font-weight:bold; font-size:15px;">
-                        اضغط لرفع الفيديو
-                    </div>
-
-                    <div style="font-size:12px; color:#aaa; margin-top:5px;">
-                        أو اسحب الملف هنا
-                    </div>
-
+                <!-- منطقة رفع الفيديو -->
+                <label for="video-upload" class="upload-box-v2"
+                       style="cursor:pointer; display:block; text-align:center;">
+                    <div style="font-size:40px; margin-bottom:10px;">☁️</div>
+                    <div style="font-weight:bold; font-size:15px;">اضغط لرفع الفيديو</div>
+                    <div style="font-size:12px; color:#aaa; margin-top:5px;">أو اسحب الملف هنا</div>
                     <input type="file"
                            id="video-upload"
                            name="video"
                            accept="video/*"
                            required
                            hidden>
-                           <div id="videoPreviewContainer" style="display:none; margin-top:15px;">
-
-    <video id="videoPreview"
-           controls
-           style="
-                width:100%;
-                border-radius:16px;
-                max-height:300px;
-                object-fit:cover;
-           ">
-    </video>
-
-</div>
-
                 </label>
+
+                <!-- معاينة الفيديو خارج الـ label -->
+                <div id="videoPreviewContainer" style="display:none; margin-top:15px;">
+                    <video id="videoPreview" controls
+                           style="width:100%; border-radius:16px; max-height:300px; object-fit:cover;">
+                    </video>
+                </div>
 
                 <div class="privacy-footer">
                     <b>خصوصية وأمان:</b>
@@ -142,33 +102,24 @@
             </form>
 
         </div>
-        
 
     </div>
 
 </div>
 
 <script>
-
 const videoInput = document.getElementById('video-upload');
-
 const videoPreview = document.getElementById('videoPreview');
-
 const videoPreviewContainer = document.getElementById('videoPreviewContainer');
 
 videoInput.addEventListener('change', function () {
-
     const file = this.files[0];
-
     if (file) {
-
         const videoURL = URL.createObjectURL(file);
-
         videoPreview.src = videoURL;
-
         videoPreviewContainer.style.display = 'block';
     }
 });
-
 </script>
+
 {% endblock %}
