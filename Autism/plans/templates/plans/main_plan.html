@@ -11,17 +11,7 @@
 
     <!-- TOP -->
     <div class="top">
-
-        <div class="card">
-            <div class="card-title">مؤشر المزاج</div>
-            <div class="moods">
-                <div class="mood active"><i class="bi bi-emoji-grin"></i></div>
-                <div class="mood"><i class="bi bi-emoji-smile"></i></div>
-                <div class="mood"><i class="bi bi-emoji-neutral"></i></div>
-                <div class="mood"><i class="bi bi-emoji-frown"></i></div>
-                <div class="mood"><i class="bi bi-emoji-tear"></i></div>
-            </div>
-        </div>
+        
 
         <div class="card now-card">
             <div class="card-activate">
@@ -57,45 +47,60 @@
     </div>
 
     <!-- TIMELINE -->
-    <div class="timeline-card">
+    <!-- TIMELINE -->
+<div class="timeline-card">
 
-        <div class="timeline-top">
-            <div style="display:flex;align-items:center;gap:10px;">
-                <h2 style="font-size:34px;">{{ today_display }}</h2>
-                <div class="today-badge">اليوم</div>
-            </div>
-            <div class="close-btn">إغلاق اليوم ⌃</div>
+    <div class="timeline-top">
+        <div style="display:flex;align-items:center;gap:10px;">
+            <h2 style="font-size:34px;">{{ today_display }}</h2>
+            <div class="today-badge">اليوم</div>
         </div>
 
-        <div class="timeline">
-            <div class="line"></div>
-
-            {% for item in daily_routine %}
-            <div class="timeline-item">
-                <div class="dot"></div>
-                <div class="time">{{ item.time }}</div>
-                <div class="activity">
-                    <div class="activity-left">
-                        <div class="icon
-                            {% if item.tag_color == 'yellow' %}yellow
-                            {% elif item.tag_color == 'purple' %}purple
-                            {% elif item.tag_color == 'blue' %}blue
-                            {% elif item.tag_color == 'green' %}green
-                            {% else %}orange{% endif %}">
-                            {{ item.icon }}
-                        </div>
-                        <div>
-                            <h2>{{ item.title }}</h2>
-                            <p>{{ item.description }}</p>
-                        </div>
-                    </div>
-                    <div class="tag tag-{{ item.tag_color }}">{{ item.tag }}</div>
-                </div>
-            </div>
-            {% endfor %}
-
+        <div class="close-btn" onclick="toggleTimeline(this)">
+            إغلاق اليوم ⌃
         </div>
     </div>
+
+    <div class="timeline">
+
+        <div class="line"></div>
+
+        {% for item in daily_routine %}
+        <div class="timeline-item">
+            <div class="dot"></div>
+
+            <div class="time">{{ item.time }}</div>
+
+            <div class="activity">
+
+                <div class="activity-left">
+
+                    <div class="icon
+                        {% if item.tag_color == 'yellow' %}yellow
+                        {% elif item.tag_color == 'purple' %}purple
+                        {% elif item.tag_color == 'blue' %}blue
+                        {% elif item.tag_color == 'green' %}green
+                        {% else %}orange{% endif %}">
+                        {{ item.icon }}
+                    </div>
+
+                    <div>
+                        <h2>{{ item.title }}</h2>
+                        <p>{{ item.description }}</p>
+                    </div>
+
+                </div>
+
+                <div class="tag tag-{{ item.tag_color }}">
+                    {{ item.tag }}
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
 
     <!-- CLOSED DAYS -->
     {% for day in other_days %}
@@ -131,4 +136,45 @@
     </div>
 
 </div>
+<script>
+
+function toggleTimeline(button){
+
+    const timelineCard = button.closest(".timeline-card");
+
+    timelineCard.classList.toggle("closed");
+
+    if(timelineCard.classList.contains("closed")){
+        button.innerHTML = 'فتح اليوم ⌄';
+    }else{
+        button.innerHTML = 'إغلاق اليوم ⌃';
+    }
+
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const closedDays = document.querySelectorAll(".closed-day");
+
+    closedDays.forEach(day => {
+
+        day.addEventListener("click", function () {
+
+            const timeline = document.querySelector(".timeline-card");
+
+            timeline.classList.remove("closed");
+
+            document.querySelector(".close-btn").innerHTML = 'إغلاق اليوم ⌃';
+
+            closedDays.forEach(d => d.classList.remove("active"));
+
+            this.classList.add("active");
+
+        });
+
+    });
+
+});
+
+</script>
 {% endblock %}

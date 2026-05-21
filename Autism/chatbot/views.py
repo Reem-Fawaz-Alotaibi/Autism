@@ -67,40 +67,26 @@ def send_message(request, conv_id):
         openai_api_key = config('OPENAI_API_KEY', default='')
         
         system_prompt = (
-            "أنت مساعد ذكي مخصص لمساعدة المتخصصين (وليس أولياء الأمور) في تحليل وفهم سلوكيات الأطفال المصابين بالتوحد. "
-            "يجب عليك الالتزام بالقواعد التالية: "
-            "1. عدم تشخيص حالة الطفل بأي شكل من الأشكال. "
-            "2. عدم تقديم أي معلومات حساسة أو طبية خاصة. "
-            "3. هذا الشات خاص بالمختصين فقط وليس مرتبطاً بولي الأمر، لذلك يمكنك التحدث بمصطلحات مهنية. "
-            "4. التركيز على تقديم معلومات وأفكار تخص سلوك الطفل المتوحد بناءً على استفسارات المختص. "
-            "5. إذا طُلب منك تشخيص أو تقديم دواء، اعتذر ووضح أن دورك هو تحليل السلوك فقط."
-        )
+                    "أنت مساعد ذكي يساعد أولياء الأمور على فهم سلوكيات أطفالهم "
+                    "وتقديم معلومات مبسطة وداعمة حول اضطراب طيف التوحد."
+
+                    "يجب الالتزام بالتالي: "
+
+                    "1. لا تقم بتشخيص الطفل بشكل مؤكد. "
+                    "2. اشرح العلامات والسلوكيات والأسباب المحتملة بطريقة بسيطة وواضحة. "
+                    "3. قدم نصائح عملية لدعم الطفل في الحياة اليومية. "
+                    "4. استخدم أسلوبًا ودودًا ومطمئنًا ومناسبًا لولي الأمر. "
+                    "5. تجنب الردود القصيرة أو العامة جدًا. "
+                    "6. لا تكرر عبارات مثل: أنا هنا للمساعدة في كل رد. "
+                    "7. إذا سأل المستخدم عن سبب سلوك معين، قدم تفسيرًا مبسطًا واحتمالات ممكنة دون تشخيص قاطع."
+                )
 
         recent_messages = ChatMessage.objects.filter(conversation=conv).order_by('created_at')[:20]
 
         # Flag to track if successfully generated
         generated = False
 
-        # 1. Try Gemini
-        if gemini_api_key and gemini_api_key != "your_gemini_api_key_here":
-            try:
-                genai.configure(api_key=gemini_api_key)
-                model = genai.GenerativeModel(
-                    model_name='gemini-1.5-flash',
-                    system_instruction=system_prompt
-                )
-                
-                messages_for_gemini = []
-                for m in recent_messages:
-                    role = 'user' if m.message_type == 'user' else 'model'
-                    messages_for_gemini.append({"role": role, "parts": [m.content]})
-                
-                response = model.generate_content(contents=messages_for_gemini)
-                ai_content = response.text
-                generated = True
-            except Exception as e_gemini:
-                # Fallback to OpenAI if Gemini fails
-                pass
+        
 
         # 2. Try OpenAI Fallback
         if not generated and openai_api_key:
@@ -118,11 +104,17 @@ def send_message(request, conv_id):
                 response = client.chat.completions.create(
                     model="gpt-4o-mini",
                     messages=messages_for_ai,
-                    max_tokens=1000,
+                    temperature=0.7,
+                    max_tokens=300,
+                    presence_penalty=0.3,
                 )
+                print(response)
                 ai_content = response.choices[0].message.content
+                print(ai_content)
                 generated = True
             except Exception as e_openai:
+                print("OPENAI ERROR:", e_openai)
+
                 ai_content = f"حدث خطأ أثناء التواصل مع الذكاء الاصطناعي (OpenAI): {str(e_openai)}"
         
         # 3. If neither worked
@@ -145,7 +137,10 @@ def send_message(request, conv_id):
         content=ai_content
     )
 
-    return Response(ChatMessageSerializer(msg).data)
+    return Response({
+    "user_message": ChatMessageSerializer(msg).data,
+    "ai_message": ChatMessageSerializer(ai_msg).data
+})
 
 
 # API: get messages

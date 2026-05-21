@@ -5,18 +5,18 @@
 
 /* TOP */
 
-.top {
-  display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  gap: 16px;
-  margin-bottom: 20px;
+.top{
+   
+    gap:16px;
+    margin-bottom:20px;
 }
 
-.card {
-  background: white;
-  border-radius: 22px;
-  padding: 10px 18px;
-  border: 1px solid #ececec;
+.card{
+
+    background:white;
+    border-radius:22px;
+    padding:30px 18px;
+    border:1px solid #ececec;
 }
 
 .card-title {
@@ -184,18 +184,22 @@
   margin-right: 8px;
 }
 
-.close-btn {
-  background: #f5f5f2;
-  padding: 10px 16px;
-  border-radius: 14px;
-  font-weight: 700;
-  color: #666;
-  font-size: 12px;
+.close-btn{
+    background:#f5f5f2;
+    padding:10px 16px;
+    border-radius:14px;
+    font-weight:700;
+    color:#666;
+    font-size:12px;
+    cursor: pointer;
 }
 
-.timeline {
-  position: relative;
-  padding-right: 45px;
+.timeline-card.closed .timeline{
+    display:none;
+}
+.timeline{
+    position:relative;
+    padding-right:45px;
 }
 
 .line {
@@ -1913,4 +1917,21 @@
     flex-direction: column;
   }
 
+}
+
+.timeline-card.closed .timeline{
+    display:none;
+}
+
+.timeline-card.closed{
+    padding-bottom:20px;
+}
+
+.closed-day{
+    cursor:pointer;
+    transition:.3s;
+}
+
+.closed-day.active{
+    border:2px solid #8ba07d;
 }
