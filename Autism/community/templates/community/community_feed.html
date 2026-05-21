@@ -136,44 +136,44 @@
             <span>منذ {{ post.created_at|timesince }}</span>
           </div>
         </div>
-          <div class="menu-wrapper">
-            <button class="menu-btn">
-              ⋯
+        <div class="menu-wrapper">
+          <button class="menu-btn">
+            ⋯
+          </button>
+          <div class="dropdown-menu">
+            <button class="report-btn" onclick="openReportModal()">
+              <i class="fa-solid fa-flag"></i>
+              إبلاغ عن المحتوى
             </button>
-            <div class="dropdown-menu">
-              <button class="report-btn" onclick="openReportModal()">
-                <i class="fa-solid fa-flag"></i>
-                إبلاغ عن المحتوى
-              </button>
-            </div>
           </div>
-        
-              <div class="report-modal" id="reportModal">
-              <div class="report-box">
+        </div>
 
-                <h3>سبب الإبلاغ</h3>
+        <div class="report-modal" id="reportModal">
+          <div class="report-box">
 
-                <form method="POST" action="{% url 'community:report_post' post.id %}">
-                  {% csrf_token %}
+            <h3>سبب الإبلاغ</h3>
 
-                  {% for value, label in reasons %}
-                  <label>
-                    <input type="radio" name="reason" value="{{ value }}">
-                    {{ label }}
-                  </label>
-                  {% endfor %}
-                  <div class="report-actions">
-                    <button type="submit" class="send-report">
-                      إرسال البلاغ
-                    </button>
-                    <button type="button" class="cancel-report" onclick="closeReportModal()">
-                      إلغاء
-                    </button>
-                  </div>
-                </form>
+            <form method="POST" action="{% url 'community:report_post' post.id %}">
+              {% csrf_token %}
 
+              {% for value, label in reasons %}
+              <label>
+                <input type="radio" name="reason" value="{{ value }}">
+                {{ label }}
+              </label>
+              {% endfor %}
+              <div class="report-actions">
+                <button type="submit" class="send-report">
+                  إرسال البلاغ
+                </button>
+                <button type="button" class="cancel-report" onclick="closeReportModal()">
+                  إلغاء
+                </button>
               </div>
-            </div>
+            </form>
+
+          </div>
+        </div>
       </div>
       <div class="post-text">
         {{ post.title }}
@@ -187,20 +187,19 @@
         {% endfor %}
       </div>
       <div class="post-footer">
+
         <div class="stats">
-          <span> {{ post.likes.count }} إعجاب</span>
-          <span> {{ post.comments.count }} تعليق</span>
+          <span>{{ post.likes.count }} إعجاب</span>
+          <span>{{ post.comments.count }} تعليق</span>
         </div>
-        <div class="post-footer">
-          
-           <div style="display: flex; gap: 10px; align-items: center;">
-          <a href="{%url 'community:details_post_view' post.id%}" class="join-btn">
+
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <a href="{% url 'community:details_post_view' post.id %}" class="join-btn">
             دخول النقاش
           </a>
         </div>
+
       </div>
-
-
     </div>
     {% endfor %}
     {% else %}
@@ -224,5 +223,5 @@
       document.getElementById("reportModal").style.display = "none";
     }
 
-</script>
-{% endblock %}
+  </script>
+  {% endblock %}

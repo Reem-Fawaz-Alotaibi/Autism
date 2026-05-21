@@ -313,7 +313,7 @@
                 </div>
 
             </footer>
-            <a href="" onclick="openChat(); return false;" class="floating-profile" aria-label="chat">
+            <a href="#" onclick="openChat(); return false;" class="floating-profile" aria-label="chat">
                 <i class="fas fa-robot"></i>
             </a>
 
@@ -357,243 +357,344 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Active nav highlight helper -->
-    <script>
+<script>
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const current = window.location.pathname;
-            document.querySelectorAll('.nav-link-item').forEach(function (link) {
-                if (link.getAttribute('href') === current) {
-                    link.classList.add('active');
+document.addEventListener('DOMContentLoaded', function () {
+    const current = window.location.pathname;
+
+    document.querySelectorAll('.nav-link-item').forEach(function (link) {
+        if (link.getAttribute('href') === current) {
+            link.classList.add('active');
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const faqItems = document.querySelectorAll('.faq-item');
+
+    faqItems.forEach(item => {
+
+        const question = item.querySelector('.faq-question');
+
+        question.addEventListener('click', () => {
+
+            faqItems.forEach(otherItem => {
+                if (otherItem !== item) {
+                    otherItem.classList.remove('active');
                 }
             });
+
+            item.classList.toggle('active');
         });
+    });
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const faqItems = document.querySelectorAll('.faq-item');
+    document.querySelectorAll('.toc-link').forEach(link => {
+        link.addEventListener('click', function (e) {
 
-            faqItems.forEach(item => {
-                const question = item.querySelector('.faq-question');
+            e.preventDefault();
 
-                question.addEventListener('click', () => {
-                    // إغلاق أي سؤال آخر مفتوح (اختياري)
-                    faqItems.forEach(otherItem => {
-                        if (otherItem !== item) {
-                            otherItem.classList.remove('active');
-                        }
-                    });
+            const targetId = this.getAttribute('href');
 
-                    // تبديل حالة السؤال الحالي
-                    item.classList.toggle('active');
-                });
-            });
-
-            // تحسين حركة التنقل السلس (Smooth Scroll) للروابط الجانبية
-            document.querySelectorAll('.toc-link').forEach(link => {
-                link.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    document.querySelector(targetId).scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                });
+            document.querySelector(targetId).scrollIntoView({
+                behavior: 'smooth'
             });
         });
+    });
+});
 
-        // chatbot script 
+// chatbot script
 
-    let convId = null;
+let convId = null;
 
-    async function initChat() {
-        try {
-            let res = await fetch('/chatbot/get-conversation/');
-            let data = await res.json();
-            if (data.conv_id) {
-                convId = data.conv_id;
-            }
-        } catch (err) {
-            console.error("Fetch error:", err);
+async function initChat() {
+
+    try {
+
+        let res = await fetch('/chatbot/get-conversation/');
+        let data = await res.json();
+
+        if (data.conv_id) {
+            convId = data.conv_id;
         }
+
+    } catch (err) {
+        console.error("Fetch error:", err);
     }
-    
-    // Initialize once on load
-    initChat();
+}
 
-    function openChat() {
-        document.getElementById("chatModal").classList.add("active");
-        if (!convId) {
-            initChat().then(() => loadMessages());
-        } else {
-            loadMessages();
-        }
+initChat();
+
+function openChat() {
+
+    document.getElementById("chatModal").classList.add("active");
+
+    if (!convId) {
+        initChat().then(() => loadMessages());
+    } else {
+        loadMessages();
+    }
+}
+
+function closeChat() {
+    document.getElementById("chatModal").classList.remove("active");
+}
+
+async function loadMessages() {
+
+    if (!convId) return;
+
+    let res = await fetch(`/chatbot/conversation/${convId}/messages/`);
+    let data = await res.json();
+
+    let box = document.getElementById("messages");
+
+    if (!box) return;
+
+    box.innerHTML = "";
+
+    data.forEach(msg => {
+
+        let div = document.createElement("div");
+
+        div.classList.add("msg");
+        div.classList.add(msg.message_type === "user" ? "user" : "bot");
+
+        div.innerText = msg.content;
+
+        box.appendChild(div);
+    });
+
+    box.scrollTop = box.scrollHeight;
+}
+
+async function sendMessage() {
+
+    let input = document.getElementById("input");
+
+    if (!input) return;
+
+    let content = input.value.trim();
+
+    if (!content || !convId) return;
+
+    input.value = "";
+
+    let box = document.getElementById("messages");
+
+    // رسالة المستخدم تظهر فورًا
+    let userDiv = document.createElement("div");
+
+    userDiv.classList.add("msg", "user");
+
+    userDiv.innerText = content;
+
+    box.appendChild(userDiv);
+
+    box.scrollTop = box.scrollHeight;
+
+    // جاري الكتابة
+    let typingDiv = document.createElement("div");
+
+    typingDiv.classList.add("msg", "bot");
+
+    typingDiv.id = "typing-indicator";
+
+    typingDiv.innerText = "جاري الكتابة...";
+
+    box.appendChild(typingDiv);
+
+    box.scrollTop = box.scrollHeight;
+
+    let res = await fetch(`/chatbot/conversation/${convId}/send/`, {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie("csrftoken")
+        },
+
+        body: JSON.stringify({
+            content: content
+        })
+    });
+
+    if (res.ok) {
+
+        let tries = 0;
+
+        const interval = setInterval(async () => {
+
+            await loadMessages();
+
+            let typing = document.getElementById("typing-indicator");
+
+            // إذا رد البوت وصل نحذف جاري الكتابة
+            if (typing) {
+                typing.remove();
+            }
+
+            tries++;
+
+            if (tries >= 5) {
+                clearInterval(interval);
+            }
+
+        }, 700);
+    }
+}
+
+function getCookie(name) {
+
+    let cookieValue = null;
+
+    if (document.cookie && document.cookie !== "") {
+
+        document.cookie.split(";").forEach(cookie => {
+
+            let c = cookie.trim();
+
+            if (c.startsWith(name + "=")) {
+
+                cookieValue = decodeURIComponent(
+                    c.substring(name.length + 1)
+                );
+            }
+        });
     }
 
-        function closeChat() {
-            document.getElementById("chatModal").classList.remove("active");
-        }
+    return cookieValue;
+}
 
-        async function loadMessages() {
-            if (!convId) return;
+document.addEventListener('DOMContentLoaded', function () {
 
-            let res = await fetch(`/chatbot/conversation/${convId}/messages/`);
-            let data = await res.json();
+    const input = document.getElementById("input");
 
-        let box = document.getElementById("messages");
-        if (!box) return;
-        box.innerHTML = "";
+    if (input) {
+        input.addEventListener("keydown", function (e) {
 
-        data.forEach(msg => {
-            let div = document.createElement("div");
-            div.classList.add("msg");
-            div.classList.add(msg.message_type === "user" ? "user" : "bot"); // Use message_type
-            div.innerText = msg.content;
-            box.appendChild(div);
+            if (e.key === "Enter") {
+                sendMessage();
+            }
         });
+    }
+});
 
-            box.scrollTop = box.scrollHeight;
-        }
+document.querySelectorAll('.toc-link').forEach(link => {
 
-    async function sendMessage() {
-        let input = document.getElementById("input");
-        if (!input) return;
-        let content = input.value.trim();
-        if (!content || !convId) return;
-        
-        input.value = "";
+    link.addEventListener('click', function (e) {
 
-        let res = await fetch(`/chatbot/conversation/${convId}/send/`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": getCookie("csrftoken")
-            },
-            body: JSON.stringify({ content: content })
+        e.preventDefault();
+
+        const targetId = this.getAttribute('href');
+
+        document.querySelector(targetId).scrollIntoView({
+            behavior: 'smooth'
         });
+    });
+});
 
-        if (res.ok) {
-            loadMessages();
-        }
+document.addEventListener('DOMContentLoaded', function () {
+
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+
+    function openSidebar() {
+
+        sidebar.classList.add('open');
+        overlay.classList.add('active');
+
+        hamburgerBtn.innerHTML = '<i class="bi bi-x-lg"></i>';
     }
 
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== "") {
-            document.cookie.split(";").forEach(cookie => {
-                let c = cookie.trim();
-                if (c.startsWith(name + "=")) {
-                    cookieValue = decodeURIComponent(c.substring(name.length + 1));
-                }
-            });
-        }
+    function closeSidebar() {
+
+        sidebar.classList.remove('open');
+        overlay.classList.remove('active');
+
+        hamburgerBtn.innerHTML = '<i class="bi bi-list"></i>';
     }
 
-        document.getElementById("input").addEventListener("keydown", function (e) {
-            if (e.key === "Enter") sendMessage();
+    hamburgerBtn.addEventListener('click', () => {
+
+        sidebar.classList.contains('open')
+            ? closeSidebar()
+            : openSidebar();
+    });
+
+    overlay.addEventListener('click', closeSidebar);
+
+    document.querySelectorAll('.nav-link-item').forEach(link => {
+
+        link.addEventListener('click', () => {
+
+            if (window.innerWidth <= 768) {
+                closeSidebar();
+            }
         });
-        // تحسين حركة التنقل السلس (Smooth Scroll) للروابط الجانبية
-        document.querySelectorAll('.toc-link').forEach(link => {
-            link.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                document.querySelector(targetId).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
+    });
+});
 
-        // بعد - داخل DOMContentLoaded ✅
-        document.addEventListener('DOMContentLoaded', function () {
-            const hamburgerBtn = document.getElementById('hamburgerBtn');
-            const sidebar = document.querySelector('.sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
+function setCookie(name, value, days) {
 
-            function openSidebar() {
-                sidebar.classList.add('open');
-                overlay.classList.add('active');
-                hamburgerBtn.innerHTML = '<i class="bi bi-x-lg"></i>';
-            }
+    let date = new Date();
 
-            function closeSidebar() {
-                sidebar.classList.remove('open');
-                overlay.classList.remove('active');
-                hamburgerBtn.innerHTML = '<i class="bi bi-list"></i>';
-            }
+    date.setTime(
+        date.getTime() + (days * 24 * 60 * 60 * 1000)
+    );
 
-            hamburgerBtn.addEventListener('click', () => {
-                sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
-            });
+    document.cookie =
+        name + "=" + value +
+        ";expires=" + date.toUTCString() +
+        ";path=/";
+}
 
-            overlay.addEventListener('click', closeSidebar);
+function applyFontSize(value) {
 
-            document.querySelectorAll('.nav-link-item').forEach(link => {
-                link.addEventListener('click', () => {
-                    if (window.innerWidth <= 768) closeSidebar();
-                });
-            });
-        });
-        function setCookie(name, value, days) {
+    let fontSize;
+    let zoom;
 
-            let date = new Date();
+    if (value == 1) {
 
-            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        fontSize = "13px";
+        zoom = "0.90";
 
-            document.cookie =
-                name + "=" + value +
-                ";expires=" + date.toUTCString() +
-                ";path=/";
-        }
+    } else if (value == 2) {
 
-        function getCookie(name) {
+        fontSize = "16px";
+        zoom = "1";
 
-            let match = document.cookie.match(
-                new RegExp('(^| )' + name + '=([^;]+)')
-            );
+    } else {
 
-            return match ? match[2] : null;
-        }
+        fontSize = "20px";
+        zoom = "1.10";
+    }
 
-        function applyFontSize(value) {
+    document.documentElement.style
+        .setProperty('--base-font-size', fontSize);
 
-            let fontSize;
-            let zoom;
+    document.documentElement.style
+        .setProperty('--zoom-size', zoom);
+}
 
-            if (value == 1) {
-                fontSize = "13px";
-                zoom = "0.90";
-            }
-            else if (value == 2) {
-                fontSize = "16px";
-                zoom = "1";
-            }
-            else {
-                fontSize = "20px";
-                zoom = "1.10";
-            }
+window.addEventListener("load", () => {
 
-            document.documentElement.style
-                .setProperty('--base-font-size', fontSize);
+    let saved = getCookie("fontSize");
 
-            document.documentElement.style
-                .setProperty('--zoom-size', zoom);
-        }
+    if (!saved) {
+        saved = 2;
+    }
 
-        window.addEventListener("load", () => {
+    applyFontSize(saved);
+});
 
-            let saved = getCookie("fontSize");
+</script>
 
-            if (!saved) {
-                saved = 2;
-            }
+{% block extra_js %}{% endblock %}
 
-            applyFontSize(saved);
-        });
+{% include 'notifications/success_modal.html' %}
 
-
-    </script>
-
-    {% block extra_js %}{% endblock %}
-    
-    {% include 'notifications/success_modal.html' %}
 </body>
-
 </html>

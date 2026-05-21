@@ -9,20 +9,20 @@ client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
 
 def analyze_video(video_file_path):
-    print("جاري رفع الفيديو إلى سيرفرات Gemini...")
+    print("Uploading video to Gemini servers...")
     uploaded_file = client.files.upload(file=video_file_path)
-    print(f"تم الرفع بنجاح. المعرف: {uploaded_file.name}")
+    print(f"Upload successful. File ID: {uploaded_file.name}")
 
-    print("جاري معالجة الفيديو...")
+    print("Processing video...")
     while True:
         file_info = client.files.get(name=uploaded_file.name)
-        print(f"حالة الفيديو: {file_info.state.name}")
+        print(f"Video status: {file_info.state.name}")
 
         if file_info.state.name == "ACTIVE":
-            print("الفيديو جاهز للتحليل.")
+            print("The video is ready for analysis.")
             break
         elif file_info.state.name == "FAILED":
-            raise Exception("فشلت معالجة الفيديو.")
+            raise Exception("Video processing failed.")
 
         time.sleep(7)
 
@@ -63,11 +63,11 @@ def analyze_video(video_file_path):
     كن دقيقاً وموضوعياً، ولا تضع تشخيصاً طبياً.
     """
 
-    print("جاري تحليل الفيديو بالذكاء الاصطناعي...")
+    print("Analyzing video with AI...")
     response = client.models.generate_content(
         model='gemini-2.5-flash',
         contents=[prompt, uploaded_file]
     )
 
-    print("اكتمل التحليل!")
+    print("Analysis complete!")
     return response.text
