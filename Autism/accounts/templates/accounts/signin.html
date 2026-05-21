@@ -12,7 +12,21 @@
 </head>
 
 <body>
+  {% if messages %}
+  <div class="messages-container">
+    {% for message in messages %}
+    <div class="message message-{{ message.tags }}">
 
+      <span class="message-text">{{ message }}</span>
+
+      <button class="close-btn" onclick="this.parentElement.remove()">
+        &times;
+      </button>
+
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
   <div class="auth-wrapper">
 
     <!--  LEFT PANEL  -->

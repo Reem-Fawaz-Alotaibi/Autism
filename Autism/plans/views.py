@@ -330,21 +330,45 @@ def update_plan_feedback(request):
 
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
-    
+   
+
+
+
+import os
+import io
+import matplotlib.pyplot as plt
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.conf import settings
+from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
+from reportlab.pdfgen import canvas
+from reportlab.lib.utils import ImageReader
+
+# ملاحظة: تأكد من استيراد الدوال ونماذج قواعد البيانات الخاصة بك هنا
+# from .models import Child, VideoAnalysis
+# from .utils import ar 
+
 @login_required
 def download_report(request, child_id):
-
+    # =========================================================================
+    # 1. جلب البيانات والتحقق من الصلاحيات (DATA FETCHING & AUTH)
+    # =========================================================================
     child = get_object_or_404(
         Child,
         id=child_id,
         user=request.user
     )
-
     analysis = VideoAnalysis.objects.filter(child=child).last()
 
+    # تجهيز استجابة الـ PDF وربطها بملف التحميل
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="{child.name}_report.pdf"'
 
+    # =========================================================================
+    # 2. إعدادات الخطوط والمظهر (FONTS & ASSETS CONFIG)
+    # =========================================================================
     font_path = os.path.join(
         settings.BASE_DIR,
         'Autism',
@@ -359,14 +383,13 @@ def download_report(request, child_id):
 
     pdfmetrics.registerFont(TTFont("Arabic", font_path))
 
-    # =========================
-    # الرسم البياني
-    # =========================
+    # =========================================================================
+    # 3. توليد الرسم البياني (CHART GENERATION)
+    # =========================================================================
     chart_image = None
 
     if analysis:
         labels = ["Eye Contact", "Attention", "Repetitive", "Interaction"]
-
         values = [
             analysis.eye_contact_score,
             analysis.attention_score,
@@ -386,50 +409,46 @@ def download_report(request, child_id):
         chart_image = ImageReader(buffer)
         plt.close()
 
-    # =========================
-    # PDF START
-    # =========================
-
+    # =========================================================================
+    # 4. إعداد صفحة الـ PDF والخلفية (PDF CANVAS & BACKGROUND)
+    # =========================================================================
     p = canvas.Canvas(response, pagesize=A4)
     width, height = A4
 
-    # =========================
-    # 🔵 BACKGROUND (خفيف)
-    # =========================
+    # رسم الخلفية العامة (خفيف)
     p.setFillColor(colors.whitesmoke)
     p.rect(0, 0, width, height, fill=1)
 
-    # =========================
-    # 🔷 HEADER BAR
-    # =========================
+    # رسم الهيدر العلوي (Header Bar)
     p.setFillColor(colors.HexColor("#4F46E5"))
     p.rect(0, height - 70, width, 70, fill=1)
 
+    # عنوان التقرير داخل الهيدر
     p.setFillColor(colors.white)
     p.setFont("Arabic", 18)
     p.drawRightString(width - 30, height - 45, ar("تقرير تحليل الطفل"))
 
-    # =========================
-    # 🧾 CARD BOX
-    # =========================
+    # رسم الكارد الأبيض الرئيسي (Card Box) لترتيب المحتوى داخله
     p.setFillColor(colors.white)
     p.setStrokeColor(colors.lightgrey)
-    p.roundRect(30, 120, width - 60, height - 220, 15, fill=1, stroke=1)
+    p.roundRect(30, 40, width - 60, height - 130, 15, fill=1, stroke=1)
 
-    # =========================
-    # 👶 بيانات الطفل
-    # =========================
-    y = height - 140
+    # =========================================================================
+    # 5. رسم وكتابة البيانات داخل الـ PDF (CONTENT RENDERING)
+    # =========================================================================
+    
+    # --- [أ] بيانات الطفل الأساسية ---
+    y_position = height - 120
     p.setFillColor(colors.black)
     p.setFont("Arabic", 13)
 
-    p.drawRightString(width - 50, y, ar(f"اسم الطفل: {child.name}")); y -= 25
+    p.drawRightString(width - 50, y_position, ar(f"اسم الطفل: {child.name}")); y_position -= 25
 
     gender = "ذكر" if child.gender == "male" else "أنثى"
-    p.drawRightString(width - 50, y, ar(f"الجنس: {gender}")); y -= 25
+    p.drawRightString(width - 50, y_position, ar(f"الجنس: {gender}")); y_position -= 25
 
     communication = "لفظي" if child.communication_type == "verbal" else "غير لفظي"
-    p.drawRightString(width - 50, y, ar(f"التواصل: {communication}")); y -= 25
+    p.drawRightString(width - 50, y_position, ar(f"التواصل: {communication}")); y_position -= 25
 
     sensory_map = {
         "sound": "الصوت",
@@ -437,48 +456,49 @@ def download_report(request, child_id):
         "light": "الضوء",
         "none": "لا توجد"
     }
-
     sensory = sensory_map.get(child.sensory_sensitivities, "غير محدد")
-    p.drawRightString(width - 50, y, ar(f"الحساسية: {sensory}"))
+    p.drawRightString(width - 50, y_position, ar(f"الحساسية: {sensory}"))
 
-    # =========================
-    # 📊 Chart
-    # =========================
+    # --- [ب] الرسم البياني والدرجات الرقمية ---
+    # نزلنا الـ Y عشان نضمن عدم تداخل الرسم البياني مع البيانات الأساسية فوقه
+    chart_y = y_position - 180 
+    
     if analysis and chart_image:
         p.drawImage(
             chart_image,
             50,
-            220,
+            chart_y,
             width=250,
             height=150
         )
 
-    # =========================
-    # 📈 SCORES
-    # =========================
     if analysis:
         p.setFont("Arabic", 12)
+        # محاذاة النصوص رقمياً بجانب الرسم البياني
+        p.drawRightString(width - 50, chart_y + 110, ar(f"التواصل البصري: {analysis.eye_contact_score}"))
+        p.drawRightString(width - 50, chart_y + 85, ar(f"الانتباه: {analysis.attention_score}"))
+        p.drawRightString(width - 50, chart_y + 60, ar(f"التكرار: {analysis.repetitive_behavior_score}"))
+        p.drawRightString(width - 50, chart_y + 35, ar(f"التفاعل: {analysis.interaction_level_score}"))
 
-        p.drawRightString(width - 50, 250, ar(f"التواصل البصري: {analysis.eye_contact_score}"))
-        p.drawRightString(width - 50, 230, ar(f"الانتباه: {analysis.attention_score}"))
-        p.drawRightString(width - 50, 210, ar(f"التكرار: {analysis.repetitive_behavior_score}"))
-        p.drawRightString(width - 50, 190, ar(f"التفاعل: {analysis.interaction_level_score}"))
-
-    # =========================
-    # 📝 SUMMARY BOX
-    # =========================
+    # --- [ج] صندوق الملخص النصي (Summary Box) ---
     if analysis:
+        summary_y = chart_y - 40
         p.setFont("Arabic", 14)
-        p.drawRightString(width - 50, 150, ar("ملخص التحليل"))
+        p.drawRightString(width - 50, summary_y, ar("ملخص التحليل"))
 
-        text = p.beginText(width - 50, 130)
+        text = p.beginText(width - 50, summary_y - 20)
         text.setFont("Arabic", 11)
+        # تحديد المسافة بين السطور لضمان عدم تداخل النص العربي
+        text.setLeading(16) 
 
         for line in (analysis.ai_summary or "").splitlines():
             text.textLine(ar(line))
 
         p.drawText(text)
 
+    # =========================================================================
+    # إنهاء وحفظ ملف الـ PDF
+    # =========================================================================
     p.showPage()
     p.save()
 

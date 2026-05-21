@@ -42,6 +42,8 @@ def signup_view(request):
             messages.success(request, 'تم إنشاء الحساب بنجاح')
             return redirect('accounts:signin')
 
+        else:
+            messages.error(request, 'يرجى التأكد من إدخال البيانات بشكل صحيح')
     return render(request, 'accounts/signup.html', {'form': form})
 
 
@@ -65,6 +67,7 @@ def signin_view(request):
 
         if user is not None:
             login(request, user)
+            messages.success(request, 'تم تسجيل الدخول بنجاح ') 
             request.session.pop('is_guest', None)
             request.session.pop('guest_name', None)
             if request.POST.get('remember_me'):
@@ -84,7 +87,7 @@ def signin_view(request):
 
 def logout_view(request):
     logout(request)
-    messages.success(request, "You have been logged out successfully.")
+    messages.success(request, "تم تسجيل الخروج بنجاح")
     return redirect("accounts:signin")
 
 def reset_view(request):

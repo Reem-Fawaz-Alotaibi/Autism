@@ -2,8 +2,12 @@ from django.shortcuts import render,redirect
 from django.http import HttpRequest
 from chatbot.models import Conversation
 from children.models import Child
+from django.core.mail import send_mail
+from django.contrib import messages
+from django.conf import settings
 
 def home_page_view(request: HttpRequest):
+
     conv_id = None
     children = []
 
@@ -17,13 +21,47 @@ def home_page_view(request: HttpRequest):
         'children': children
     })
 
+    return render(request, 'main/home.html', {
+        "conv_id": conv_id,
+        "children": children
+    })
 
 def about_us_view(request: HttpRequest):
     return render(request, 'main/about_us.html')
 
 
-def contact_us_view(request: HttpRequest):
-    return render(request, 'main/contact_us.html')
+def contact_us_view(request):
+
+    if request.method == "POST":
+
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        topic = request.POST.get("topic")
+        message = request.POST.get("message")
+
+        full_message = f"""
+الاسم: {name}
+
+الإيميل: {email}
+
+الموضوع: {topic}
+
+الرسالة:
+{message}
+"""
+
+        send_mail(
+            subject=f"رسالة جديدة - {topic}",
+            message=full_message,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=["reemfawazalotaibi11@gmail.com"],
+        )
+
+        messages.success(request, "تم إرسال الرسالة بنجاح ✨")
+
+        return redirect("main:contact_us")
+
+    return render(request, "main/contact_us.html")
 
 
 def how_it_works_view(request: HttpRequest):
