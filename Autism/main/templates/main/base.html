@@ -497,13 +497,19 @@
                 let c = cookie.trim();
                 if (c.startsWith(name + "=")) {
                     cookieValue = decodeURIComponent(c.substring(name.length + 1));
-                }
-            });
-        }
+             }
+        });
+    }
+
+    return cookieValue;
+}
 
         document.getElementById("input").addEventListener("keydown", function (e) {
             if (e.key === "Enter") sendMessage();
         });
+
+
+
         // تحسين حركة التنقل السلس (Smooth Scroll) للروابط الجانبية
         document.querySelectorAll('.toc-link').forEach(link => {
             link.addEventListener('click', function (e) {

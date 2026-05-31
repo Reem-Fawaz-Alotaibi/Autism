@@ -1914,3 +1914,68 @@
   }
 
 }
+
+@media (max-width: 768px) {
+  .weekly-container .activity {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px;
+  }
+  .weekly-container .time {
+    min-width: 55px;
+    font-size: 12px;
+    padding-top: 20px;
+  }
+  .weekly-container .bottom {
+    grid-template-columns: 1fr;
+  }
+  .weekly-container .bottom-card {
+    min-height: auto;
+  }
+  .weekly-container .tag {
+    font-size: 10px;
+    padding: 6px 10px;
+  }
+  .weekly-container .top {
+    grid-template-columns: 1fr;
+  }
+  .weekly-container .moods {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .weekly-container .mood {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+  .weekly-container .now-card {
+    flex-direction: column;
+  }
+  .weekly-container .btn-support {
+    width: 100%;
+    margin-top: 10px;
+  }
+  .weekly-container .days { gap: 8px; }
+  .weekly-container .day { padding: 10px 6px; }
+  .weekly-container .day h3 { font-size: 13px; }
+  .weekly-container .day p { font-size: 11px; }
+  .weekly-container .days-wrapper { gap: 6px; }
+  .weekly-container .arrow {
+    width: 34px;
+    height: 34px;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  .weekly-container .timeline-card { padding: 14px; }
+  .weekly-container .timeline-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .weekly-container .timeline { padding-right: 36px; }
+  .weekly-container .timeline-item { gap: 10px; }
+  .weekly-container .activity h2 { font-size: 15px; }
+  .weekly-container .activity p { font-size: 12px; }
+  .weekly-container .closed-day h2 { font-size: 15px; }
+}
