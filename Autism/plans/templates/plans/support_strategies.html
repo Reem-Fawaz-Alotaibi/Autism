@@ -149,9 +149,11 @@ function resetFeedbackUI() {
     document.getElementById("feedbackField").style.display = "none";
 }
 function showFeedbackField() {
+    resetFeedbackUI();
     document.getElementById("feedbackField").style.display = "block";
     document.getElementById("submitBtn").style.display = "block";
 }
+
 
 function sendFeedback(type) {
     resetFeedbackUI();
