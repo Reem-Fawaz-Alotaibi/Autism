@@ -22,153 +22,127 @@
         </div>
     </div>
 
-    <a href="{%url 'main:home_page_view'%}"
-   style="background: none;
-          border: 1px solid #ddd;
-          padding: 8px 15px;
-          border-radius: 8px;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          color: #666;
-          font-size: 14px;
-          text-decoration: none;">
-
-    رجوع
-
-    <i class="bi bi-arrow-left"></i>
-
-</a>
+    <a href="{% url 'main:home_page_view' %}"
+       style="background:none; border:1px solid #ddd; padding:8px 15px; border-radius:8px;
+              cursor:pointer; display:flex; align-items:center; gap:8px; color:#666;
+              font-size:14px; text-decoration:none;">
+        رجوع
+        <i class="bi bi-arrow-left"></i>
+    </a>
 </div>
 
 <div class="main-content-area">
 
     <div class="header-title">
         <h2>قبل بناء الخطة، نحتاج إلى بيانات من الطفل</h2>
-        <p>
-    قم برفع مقطع فيديو قصير للطفل ليتم تحليله باستخدام الذكاء الاصطناعي وبناء خطة مناسبة له.
-</p>
+        <p>قم برفع مقطع فيديو قصير للطفل ليتم تحليله باستخدام الذكاء الاصطناعي وبناء خطة مناسبة له.</p>
     </div>
 
     <div class="questionnaire-wrapper">
 
-        <!-- رفع الفيديو -->
         <div class="card-option">
 
             <div class="card-icon-header">
-                <h4 style="margin:0">
-                    1. رفع فيديو للطفل
-                </h4>
+                <h4 style="margin:0">1. رفع فيديو للطفل</h4>
             </div>
 
             <p style="font-size:13px; color:var(--text-gray);">
                 قم برفع مقطع فيديو قصير للطفل أثناء قيامه بأنشطة يومية لمدة 3-5 دقائق.
             </p>
 
+            <div id="uploadingNotice" style="display:none; background:#f0faf5; border:1px solid #1D9E75; border-radius:12px; padding:14px 16px; margin-bottom:16px; display:none; align-items:center; gap:10px;">
+                <i class="bi bi-stars" style="color:#1D9E75; font-size:20px;"></i>
+                <div>
+                    <div style="font-weight:bold; color:#1D9E75; font-size:14px;">جاري رفع الفيديو وتحليله...</div>
+                    <div style="font-size:12px; color:#666; margin-top:2px;">قد تستغرق العملية بضع دقائق، يرجى الانتظار.</div>
+                </div>
+                <div style="margin-right:auto;">
+                    <div style="width:20px; height:20px; border:2px solid #1D9E75; border-top-color:transparent; border-radius:50%; animation:spin 0.8s linear infinite;"></div>
+                </div>
+            </div>
+
             <form method="POST"
                   action="{% url 'assessment:upload_video' %}"
-                  enctype="multipart/form-data">
+                  enctype="multipart/form-data"
+                  id="uploadForm">
 
                 {% csrf_token %}
 
-                <!-- اختيار الطفل -->
                 <div style="margin-bottom:15px;">
-
                     <label style="display:block; margin-bottom:8px; font-size:14px; font-weight:bold;">
                         اختر الطفل
                     </label>
-
-                    <select name="child"
-                            required
+                    <select name="child" required
                             style="width:100%; padding:12px; border-radius:10px; border:1px solid #ddd;">
-
                         {% for child in children %}
-                            <option value="{{ child.id }}">
-                                {{ child.name }}
-                            </option>
+                            <option value="{{ child.id }}">{{ child.name }}</option>
                         {% endfor %}
-
                     </select>
-
                 </div>
 
-                <!-- رفع الفيديو -->
-                <label for="video-upload" class="upload-box-v2" style="cursor:pointer; display:block; text-align:center;">
-
-                    <div style="font-size:40px; margin-bottom:10px;">
-                        ☁️
-                    </div>
-
-                    <div style="font-weight:bold; font-size:15px;">
-                        اضغط لرفع الفيديو
-                    </div>
-
-                    <div style="font-size:12px; color:#aaa; margin-top:5px;">
-                        أو اسحب الملف هنا
-                    </div>
-
+                <label for="video-upload" id="uploadBox" class="upload-box-v2"
+                       style="cursor:pointer; display:block; text-align:center;">
+                    <div style="font-size:40px; margin-bottom:10px;">☁️</div>
+                    <div style="font-weight:bold; font-size:15px;">اضغط لرفع الفيديو</div>
+                    <div style="font-size:12px; color:#aaa; margin-top:5px;">أو اسحب الملف هنا</div>
                     <input type="file"
                            id="video-upload"
                            name="video"
                            accept="video/*"
                            required
                            hidden>
-                           <div id="videoPreviewContainer" style="display:none; margin-top:15px;">
-
-    <video id="videoPreview"
-           controls
-           style="
-                width:100%;
-                border-radius:16px;
-                max-height:300px;
-                object-fit:cover;
-           ">
-    </video>
-
-</div>
-
                 </label>
+
+                <div id="videoPreviewContainer" style="display:none; margin-top:15px;">
+                    <video id="videoPreview" controls
+                           style="width:100%; border-radius:16px; max-height:300px; object-fit:cover;">
+                    </video>
+                </div>
 
                 <div class="privacy-footer">
                     <b>خصوصية وأمان:</b>
                     يتم تشفير جميع الفيديوهات المرفوعة ولا يتم مشاركتها مع أي جهة خارجية.
                 </div>
 
-                <button type="submit" class="action-btn">
+                <button type="submit" id="submitBtn" class="action-btn">
                     متابعة
                 </button>
 
             </form>
 
         </div>
-        
 
     </div>
 
 </div>
 
+<style>
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+</style>
+
 <script>
-
 const videoInput = document.getElementById('video-upload');
-
 const videoPreview = document.getElementById('videoPreview');
-
 const videoPreviewContainer = document.getElementById('videoPreviewContainer');
+const uploadBox = document.getElementById('uploadBox');
 
 videoInput.addEventListener('change', function () {
-
     const file = this.files[0];
-
     if (file) {
-
         const videoURL = URL.createObjectURL(file);
-
         videoPreview.src = videoURL;
-
+        uploadBox.style.display = 'none';
         videoPreviewContainer.style.display = 'block';
     }
 });
 
+document.getElementById('uploadForm').addEventListener('submit', function () {
+    document.getElementById('uploadingNotice').style.display = 'flex';
+    document.getElementById('submitBtn').disabled = true;
+    document.getElementById('submitBtn').innerText = 'جاري الرفع...';
+});
 </script>
+
 {% endblock %}

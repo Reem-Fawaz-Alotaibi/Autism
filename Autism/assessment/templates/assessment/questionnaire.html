@@ -22,42 +22,52 @@
             السؤال {{ current_index }} من {{ total }} — {{ progress }}%
         </div>
 
-        <div class="progress-bar-v2" style="margin-bottom:20px;">
-            <div class="progress-fill-v2" style="width:{{ progress }}%;"></div>
-        </div>
+<div class="progress-bar-v2" style="margin-bottom:20px;">
+    <div class="progress-fill-v2" style="--dynamic-width: {{ progress }}%;"></div>
+</div>
 
         <h2>{{ question.text }}</h2>
         <div style="font-size:12px; color:#aaa; margin-bottom:16px;">
             المصدر: {{ question.source }}
         </div>
 
-        <form method="POST">
+        <div id="error-msg" style="display:none; color:red; font-size:13px; margin-bottom:12px; text-align:center;">
+            ⚠️ يرجى اختيار إجابة قبل المتابعة
+        </div>
+
+        <form method="POST" id="questionForm">
             {% csrf_token %}
             <input type="hidden" name="question_id" value="{{ question.id }}">
             <input type="hidden" name="current_index" value="{{ current_index }}">
+            <input type="hidden" name="direction" id="directionInput" value="next">
+            <input type="hidden" name="answer" id="answerInput" value="">
 
             <div class="answer-options">
-                <button type="submit" name="answer" value="always"
-                    class="answer-btn {% if saved_answer == 'always' %}selected{% endif %}">
+                <button type="button" onclick="selectAnswer('always')"
+                    class="answer-btn {% if saved_answer == 'always' %}selected{% endif %}"
+                    data-value="always">
                     دائماً
                 </button>
-                <button type="submit" name="answer" value="sometimes"
-                    class="answer-btn {% if saved_answer == 'sometimes' %}selected{% endif %}">
+                <button type="button" onclick="selectAnswer('sometimes')"
+                    class="answer-btn {% if saved_answer == 'sometimes' %}selected{% endif %}"
+                    data-value="sometimes">
                     أحياناً
                 </button>
-                <button type="submit" name="answer" value="rarely"
-                    class="answer-btn {% if saved_answer == 'rarely' %}selected{% endif %}">
+                <button type="button" onclick="selectAnswer('rarely')"
+                    class="answer-btn {% if saved_answer == 'rarely' %}selected{% endif %}"
+                    data-value="rarely">
                     نادراً
                 </button>
-                <button type="submit" name="answer" value="never"
-                    class="answer-btn {% if saved_answer == 'never' %}selected{% endif %}">
+                <button type="button" onclick="selectAnswer('never')"
+                    class="answer-btn {% if saved_answer == 'never' %}selected{% endif %}"
+                    data-value="never">
                     أبداً
                 </button>
             </div>
 
             <div class="nav-actions">
                 {% if current_index > 1 %}
-                <button type="submit" name="direction" value="prev"
+                <button type="button" onclick="goDirection('prev')"
                     style="background:none; border:none; color:var(--light-text); cursor:pointer;">
                     &lt; السابق
                 </button>
@@ -68,11 +78,11 @@
                 <span style="color: #bbb;">الخطوة {{ current_index }} من {{ total }}</span>
 
                 {% if current_index == total %}
-                <button type="submit" name="direction" value="finish" class="btn-next">
+                <button type="button" onclick="goDirection('finish')" class="btn-next">
                     إنهاء وتحليل
                 </button>
                 {% else %}
-                <button type="submit" name="direction" value="next" class="btn-next">
+                <button type="button" onclick="goDirection('next')" class="btn-next">
                     السؤال التالي &gt;
                 </button>
                 {% endif %}
@@ -82,29 +92,38 @@
 
     </section>
 
-    <footer class="bottom-grid">
-        <div class="info-card">
-            <span>🔍</span>
-            <div>
-                <strong>كيف نستخدم هذا؟</strong>
-                <p>تعرف على منطق التقييم لدينا.</p>
-            </div>
-        </div>
-        <div class="info-card">
-            <span>💾</span>
-            <div>
-                <strong>حفظ وخروج</strong>
-                <p>أكمل من حيث توقفت لاحقاً.</p>
-            </div>
-        </div>
-        <div class="info-card">
-            <span>💬</span>
-            <div>
-                <strong>تحتاج مساعدة؟</strong>
-                <p>تحدث مع فريق الدعم لدينا.</p>
-            </div>
-        </div>
-    </footer>
-
 </div>
+<script>
+    const savedAnswer = "{{ saved_answer }}";
+    let userSelected = false;
+
+    if (savedAnswer) {
+        document.getElementById('answerInput').value = savedAnswer;
+    }
+
+    function selectAnswer(value) {
+        userSelected = true;
+        document.getElementById('answerInput').value = value;
+
+        document.querySelectorAll('.answer-btn').forEach(btn => {
+            btn.classList.remove('selected');
+            if (btn.dataset.value === value) {
+                btn.classList.add('selected');
+            }
+        });
+
+        document.getElementById('error-msg').style.display = 'none';
+    }
+
+    function goDirection(direction) {
+        if (direction !== 'prev' && !userSelected && !savedAnswer) {
+            document.getElementById('error-msg').style.display = 'block';
+            return;
+        }
+
+        document.getElementById('directionInput').value = direction;
+        document.getElementById('questionForm').submit();
+    }
+</script>
+
 {% endblock %}

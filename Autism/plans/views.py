@@ -43,9 +43,7 @@ def support_plan_redirect(request):
 
     return redirect('plans:main_plan_view')
 
-# ==========================================
-# صفحة الأنشطة المقترحة
-# ==========================================
+
 
 @login_required(login_url='accounts:signin')
 def support_plan_view(request: HttpRequest):
@@ -69,24 +67,56 @@ def support_plan_view(request: HttpRequest):
         if not session:
             return redirect('assessment:questionnaire')
 
-        # جلب الأنشطة
-        activities = list(Activity.objects.filter(id__in=activity_ids))
+        child_age = (date.today() - session.child.birth_date).days // 365
 
-        # الخطة الأسبوعية — أنشطة موزعة على الأيام
+        
+        selected_activities = []
+        for cat in categories[:2]:
+            activity = Activity.objects.filter(
+                category=cat,
+                age_min__lte=child_age,
+                age_max__gte=child_age,
+                is_active=True
+            ).order_by('order').first()
+            if activity:
+                selected_activities.append(activity)
+
+        
+        if len(selected_activities) < 2:
+            extra = list(Activity.objects.filter(id__in=activity_ids))
+            for act in extra:
+                if act not in selected_activities:
+                    selected_activities.append(act)
+                if len(selected_activities) >= 2:
+                    break
+
+        
         days = ['saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday']
         weekly_activities = []
-        for i, day in enumerate(days):
-            activity = activities[i % len(activities)] if activities else None
-            weekly_activities.append({
-                'day':         day,
-                'activity':    activity.title if activity else '',
-                'description': activity.description if activity else '',
-                'category':    activity.category if activity else '',
-                'duration':    activity.duration_minutes if activity else 15,
-                'activity_id': activity.id if activity else None,
-            })
 
-        # نحفظ الروتين من AI + الأنشطة الأسبوعية معاً
+        for i, day in enumerate(days):
+            act1 = selected_activities[(i * 2) % len(selected_activities)] if selected_activities else None
+            act2 = selected_activities[(i * 2 + 1) % len(selected_activities)] if len(selected_activities) > 1 else None
+
+            if act1:
+                weekly_activities.append({
+                    'day':         day,
+                    'activity':    act1.title,
+                    'description': act1.description,
+                    'category':    act1.category,
+                    'duration':    act1.duration_minutes,
+                    'activity_id': act1.id,
+                })
+            if act2:
+                weekly_activities.append({
+                    'day':         day,
+                    'activity':    act2.title,
+                    'description': act2.description,
+                    'category':    act2.category,
+                    'duration':    act2.duration_minutes,
+                    'activity_id': act2.id,
+                })
+
         weekly_plan = {
             'routine':         daily_routine_data.get('routine', []),
             'calm_tip':        daily_routine_data.get('calm_tip', ''),
@@ -117,12 +147,10 @@ def support_plan_view(request: HttpRequest):
         for key in ['result_categories', 'result_activities', 'result_videos', 'ai_summary', 'daily_routine']:
             request.session.pop(key, None)
 
-    # جلب الأنشطة
     plan_activities  = PlanActivity.objects.filter(plan=plan)
     current_activity = plan_activities.first()
     next_activity    = plan_activities[1] if plan_activities.count() > 1 else None
 
-    # جلب الفيديوهات حسب التصنيف وعمر الطفل
     child_age = (date.today() - plan.child.birth_date).days // 365
     videos = ResourceVideo.objects.filter(
         category__in=plan.categories,
@@ -148,13 +176,13 @@ def support_plan_view(request: HttpRequest):
     })
 
 
-# ==========================================
-# الخطة الرئيسية — الروتين اليومي من AI
-# ==========================================
 
 @login_required(login_url='accounts:signin')
 def main_plan_view(request: HttpRequest):
     plan = SupportPlan.objects.filter(user=request.user).first()
+
+    if not plan:
+        return redirect('assessment:questionnaire')
 
     today     = date.today()
     day_names = ['الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت', 'الأحد']
@@ -177,22 +205,21 @@ def main_plan_view(request: HttpRequest):
     next_activity    = None
     today_activities = []
 
-    if plan:
-        day_map = {
-            'الاثنين': 'monday', 'الثلاثاء': 'tuesday',
-            'الأربعاء': 'wednesday', 'الخميس': 'thursday',
-            'الجمعة': 'friday', 'السبت': 'saturday', 'الأحد': 'sunday'
-        }
-        today_key        = day_map.get(day_names[today.weekday()], '')
-        today_activities = PlanActivity.objects.filter(plan=plan, day=today_key)
-        current_activity = today_activities.first()
-        next_activity    = today_activities[1] if today_activities.count() > 1 else None
+    day_map = {
+        'الاثنين': 'monday', 'الثلاثاء': 'tuesday',
+        'الأربعاء': 'wednesday', 'الخميس': 'thursday',
+        'الجمعة': 'friday', 'السبت': 'saturday', 'الأحد': 'sunday'
+    }
+    today_key        = day_map.get(day_names[today.weekday()], '')
+    today_activities = PlanActivity.objects.filter(plan=plan, day=today_key)
+    current_activity = today_activities.first()
+    next_activity    = today_activities[1] if today_activities.count() > 1 else None
 
-        stored = plan.weekly_plan
-        if isinstance(stored, dict):
-            daily_routine  = stored.get('routine', [])
-            calm_tip       = stored.get('calm_tip', '')
-            behavioral_tip = stored.get('behavioral_tip', '')
+    stored = plan.weekly_plan
+    if isinstance(stored, dict):
+        daily_routine  = stored.get('routine', [])
+        calm_tip       = stored.get('calm_tip', '')
+        behavioral_tip = stored.get('behavioral_tip', '')
 
     return render(request, 'plans/main_plan.html', {
         'plan':             plan,
@@ -208,9 +235,7 @@ def main_plan_view(request: HttpRequest):
     })
 
 
-# ==========================================
-# الفيديوهات التعليمية — حسب عمر الطفل
-# ==========================================
+
 
 @login_required(login_url='accounts:signin')
 def video_plan_view(request: HttpRequest):
@@ -234,9 +259,7 @@ def video_plan_view(request: HttpRequest):
     })
 
 
-# ==========================================
-# استراتيجيات الدعم
-# ==========================================
+
 
 @login_required(login_url='accounts:signin')
 def support_strategies_view(request: HttpRequest):
@@ -270,16 +293,15 @@ def support_strategies_view(request: HttpRequest):
         for cat in plan.categories:
             if cat in category_strategies:
                 strategies.extend(category_strategies[cat])
-            strategies = strategies[:3]
+        strategies = strategies[:3]
+
     return render(request, 'plans/support_strategies.html', {
         'strategies': strategies,
         'plan':       plan,
     })
 
 
-# ==========================================
-# Feedback ولي الأمر — يحدث الخطة بـ AI
-# ==========================================
+
 
 @login_required(login_url='accounts:signin')
 def update_plan_feedback(request):
@@ -330,6 +352,7 @@ def update_plan_feedback(request):
 
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
+
    
 
 
@@ -345,161 +368,3 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
-
-# ملاحظة: تأكد من استيراد الدوال ونماذج قواعد البيانات الخاصة بك هنا
-# from .models import Child, VideoAnalysis
-# from .utils import ar 
-
-@login_required
-def download_report(request, child_id):
-    # =========================================================================
-    # 1. جلب البيانات والتحقق من الصلاحيات (DATA FETCHING & AUTH)
-    # =========================================================================
-    child = get_object_or_404(
-        Child,
-        id=child_id,
-        user=request.user
-    )
-    analysis = VideoAnalysis.objects.filter(child=child).last()
-
-    # تجهيز استجابة الـ PDF وربطها بملف التحميل
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="{child.name}_report.pdf"'
-
-    # =========================================================================
-    # 2. إعدادات الخطوط والمظهر (FONTS & ASSETS CONFIG)
-    # =========================================================================
-    font_path = os.path.join(
-        settings.BASE_DIR,
-        'Autism',
-        'static',
-        'fonts',
-        'Tajawal',
-        'Tajawal-Regular.ttf'
-    )
-
-    if not os.path.exists(font_path):
-        raise Exception(f"❌ Font file not found: {font_path}")
-
-    pdfmetrics.registerFont(TTFont("Arabic", font_path))
-
-    # =========================================================================
-    # 3. توليد الرسم البياني (CHART GENERATION)
-    # =========================================================================
-    chart_image = None
-
-    if analysis:
-        labels = ["Eye Contact", "Attention", "Repetitive", "Interaction"]
-        values = [
-            analysis.eye_contact_score,
-            analysis.attention_score,
-            analysis.repetitive_behavior_score,
-            analysis.interaction_level_score
-        ]
-
-        plt.figure(figsize=(4, 2.5))
-        plt.bar(labels, values)
-        plt.title("AI Analysis Scores")
-        plt.ylim(0, 100)
-        plt.tight_layout()
-
-        buffer = io.BytesIO()
-        plt.savefig(buffer, format='png')
-        buffer.seek(0)
-        chart_image = ImageReader(buffer)
-        plt.close()
-
-    # =========================================================================
-    # 4. إعداد صفحة الـ PDF والخلفية (PDF CANVAS & BACKGROUND)
-    # =========================================================================
-    p = canvas.Canvas(response, pagesize=A4)
-    width, height = A4
-
-    # رسم الخلفية العامة (خفيف)
-    p.setFillColor(colors.whitesmoke)
-    p.rect(0, 0, width, height, fill=1)
-
-    # رسم الهيدر العلوي (Header Bar)
-    p.setFillColor(colors.HexColor("#4F46E5"))
-    p.rect(0, height - 70, width, 70, fill=1)
-
-    # عنوان التقرير داخل الهيدر
-    p.setFillColor(colors.white)
-    p.setFont("Arabic", 18)
-    p.drawRightString(width - 30, height - 45, ar("تقرير تحليل الطفل"))
-
-    # رسم الكارد الأبيض الرئيسي (Card Box) لترتيب المحتوى داخله
-    p.setFillColor(colors.white)
-    p.setStrokeColor(colors.lightgrey)
-    p.roundRect(30, 40, width - 60, height - 130, 15, fill=1, stroke=1)
-
-    # =========================================================================
-    # 5. رسم وكتابة البيانات داخل الـ PDF (CONTENT RENDERING)
-    # =========================================================================
-    
-    # --- [أ] بيانات الطفل الأساسية ---
-    y_position = height - 120
-    p.setFillColor(colors.black)
-    p.setFont("Arabic", 13)
-
-    p.drawRightString(width - 50, y_position, ar(f"اسم الطفل: {child.name}")); y_position -= 25
-
-    gender = "ذكر" if child.gender == "male" else "أنثى"
-    p.drawRightString(width - 50, y_position, ar(f"الجنس: {gender}")); y_position -= 25
-
-    communication = "لفظي" if child.communication_type == "verbal" else "غير لفظي"
-    p.drawRightString(width - 50, y_position, ar(f"التواصل: {communication}")); y_position -= 25
-
-    sensory_map = {
-        "sound": "الصوت",
-        "touch": "اللمس",
-        "light": "الضوء",
-        "none": "لا توجد"
-    }
-    sensory = sensory_map.get(child.sensory_sensitivities, "غير محدد")
-    p.drawRightString(width - 50, y_position, ar(f"الحساسية: {sensory}"))
-
-    # --- [ب] الرسم البياني والدرجات الرقمية ---
-    # نزلنا الـ Y عشان نضمن عدم تداخل الرسم البياني مع البيانات الأساسية فوقه
-    chart_y = y_position - 180 
-    
-    if analysis and chart_image:
-        p.drawImage(
-            chart_image,
-            50,
-            chart_y,
-            width=250,
-            height=150
-        )
-
-    if analysis:
-        p.setFont("Arabic", 12)
-        # محاذاة النصوص رقمياً بجانب الرسم البياني
-        p.drawRightString(width - 50, chart_y + 110, ar(f"التواصل البصري: {analysis.eye_contact_score}"))
-        p.drawRightString(width - 50, chart_y + 85, ar(f"الانتباه: {analysis.attention_score}"))
-        p.drawRightString(width - 50, chart_y + 60, ar(f"التكرار: {analysis.repetitive_behavior_score}"))
-        p.drawRightString(width - 50, chart_y + 35, ar(f"التفاعل: {analysis.interaction_level_score}"))
-
-    # --- [ج] صندوق الملخص النصي (Summary Box) ---
-    if analysis:
-        summary_y = chart_y - 40
-        p.setFont("Arabic", 14)
-        p.drawRightString(width - 50, summary_y, ar("ملخص التحليل"))
-
-        text = p.beginText(width - 50, summary_y - 20)
-        text.setFont("Arabic", 11)
-        # تحديد المسافة بين السطور لضمان عدم تداخل النص العربي
-        text.setLeading(16) 
-
-        for line in (analysis.ai_summary or "").splitlines():
-            text.textLine(ar(line))
-
-        p.drawText(text)
-
-    # =========================================================================
-    # إنهاء وحفظ ملف الـ PDF
-    # =========================================================================
-    p.showPage()
-    p.save()
-
-    return response

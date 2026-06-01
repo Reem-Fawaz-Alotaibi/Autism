@@ -2,7 +2,6 @@
     padding: 30px;
 }
 
-/* العنوان */
 
 .dashboard-header {
     background: white;
@@ -37,7 +36,6 @@
     color: #4caf50;
 }
 
-/* الإحصائيات */
 
 .stats-grid {
     display: grid;
@@ -109,7 +107,6 @@
     color: #777;
 }
 
-/* الأقسام */
 
 .top-section {
     display: grid;
@@ -133,7 +130,6 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
-/* العناوين */
 
 .card-title {
     margin-bottom: 40px;
@@ -144,7 +140,6 @@
     font-size: 24px;
 }
 
-/* الجداول */
 
 table {
     width: 100%;
@@ -170,7 +165,6 @@ table td {
     overflow-y: auto;
 }
 
-/* الحالات */
 
 .status {
     padding: 6px 10px;
@@ -194,7 +188,6 @@ table td {
     color: #20b97a;
 }
 
-/* المستخدم */
 
 .active-user {
     background: #e6fff2;
@@ -240,7 +233,6 @@ table td {
     background: #f44336;
 }
 
-/* الإجراءات */
 
 .actions-btn {
     display: flex;
@@ -253,7 +245,6 @@ table td {
     color: #555;
 }
 
-/* النشاط */
 
 .activity-item {
     display: flex;
