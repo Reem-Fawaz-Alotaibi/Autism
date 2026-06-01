@@ -141,12 +141,20 @@
 </div>
 
 <script>
+
+function resetFeedbackUI() {
+    document.getElementById("ai-response").style.display = "none";
+    document.getElementById("ai-loading").style.display = "none";
+    document.getElementById("submitBtn").style.display = "none";
+    document.getElementById("feedbackField").style.display = "none";
+}
 function showFeedbackField() {
     document.getElementById("feedbackField").style.display = "block";
     document.getElementById("submitBtn").style.display = "block";
 }
 
 function sendFeedback(type) {
+    resetFeedbackUI();
     const feedback = document.getElementById("feedbackField").value;
 
     if (type === 'positive') {
